@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { auth } from "./firebaseConfig";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut 
+} from "firebase/auth";
+
+const provider = new GoogleAuthProvider();
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -12,8 +20,7 @@ const Auth = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
-      setError(""); // Clear error message on success
-      console.log("User signed up:", userCredential.user);
+      setError(""); 
     } catch (err) {
       setError(err.message);
     }
@@ -23,8 +30,17 @@ const Auth = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
-      setError(""); // Clear error message on success
-      console.log("User signed in:", userCredential.user);
+      setError(""); 
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const userCredential = await signInWithPopup(auth, provider);
+      setUser(userCredential.user);
+      setError("");
     } catch (err) {
       setError(err.message);
     }
@@ -34,7 +50,6 @@ const Auth = () => {
     try {
       await signOut(auth);
       setUser(null);
-      console.log("User logged out");
     } catch (err) {
       console.error(err.message);
     }
@@ -51,20 +66,11 @@ const Auth = () => {
         </div>
       ) : (
         <div>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button onClick={signUp}>Sign Up</button>
           <button onClick={signIn}>Sign In</button>
+          <button onClick={signInWithGoogle}>Sign In with Google</button>
           {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
       )}
