@@ -36,7 +36,7 @@ const Auth = () => {
     }
   };
 
-  const signInWithGoogle = async () => {git
+  const signInWithGoogle = async () => {
     try {
       const userCredential = await signInWithPopup(auth, provider);
       setUser(userCredential.user);
