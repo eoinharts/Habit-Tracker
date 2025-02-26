@@ -3,13 +3,13 @@ import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore"
 
 export const addDocuments = async (collectionName, data) => {
   try {
+    console.log(`📌 Attempting to add document to ${collectionName} with data:`, data);
     const docRef = await addDoc(collection(db, collectionName), data);
-    console.log(`🔥 Document added with ID: ${docRef.id}`);
+    console.log("✅ Document added with ID:", docRef.id);
   } catch (error) {
-    console.error("❌ Error adding document:", error);
+    console.error("❌ Error adding document: ", error);
   }
 };
-
 
 // Function to fetch all documents from a collection
 export const getDocuments = async (collectionName) => {
