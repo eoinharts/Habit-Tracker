@@ -7,9 +7,9 @@ import {
     signInWithEmailAndPassword,
     signOut
 } from "firebase/auth";
+import { getDocuments,addDocuments } from "../utils/firestore";
 
 const provider = new GoogleAuthProvider();
-
 const Auth = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -20,21 +20,27 @@ const Auth = () => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
+            console.log("✅ User signed up:", userCredential.user);
             setError("");
         } catch (err) {
+            console.error("❌ Signup error:", err);
             setError(err.message);
         }
     };
+    
 
     const signIn = async () => {
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            setUser(userCredential.user);
-            setError("");
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          setUser(userCredential.user);
+          setError("");
+          await addDocuments("testCollection", { message: "Now Firestore is working!", timestamp: new Date() });
+          console.log("User signed in & test document added!");
         } catch (err) {
-            setError(err.message);
+          setError(err.message);
         }
-    };
+      };
+      
 
     const signInWithGoogle = async () => {
         try {
