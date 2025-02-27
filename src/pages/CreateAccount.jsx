@@ -6,7 +6,7 @@ const CreateAccount = () => {
     const navigate = useNavigate();
     return (
         <div>
-            <h1>Go to Sign Up / Login</h1>
+            <h2>Go to Sign Up / Login</h2>
             <Button onClick={() => navigate("/auth")}>Sign Up / Login</Button>
         </div>
     );
