@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { Routes, Route } from 'react-router'
+import { Routes, Route } from 'react-router-dom';
 import CreateAccount from './pages/CreateAccount'
+import WelcomePage from './pages/WelcomePage'
 import Auth from './components/Auth'
 import { useEffect } from 'react'
 import { Layout } from 'antd'
@@ -25,7 +26,9 @@ function App() {
       }}
     >
       <Routes>
-        <Route path="/" element={<CreateAccount />} />
+        {/* Welcome Page is now the default */}
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/signup" element={<CreateAccount />} />
         <Route path="/auth" element={<Auth />} />
       </Routes>
     </Layout>
