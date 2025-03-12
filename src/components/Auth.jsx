@@ -1,20 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";  // Added useEffect
 import { auth } from "../utils/firebaseConfig";
 import {
     GoogleAuthProvider,
     signInWithPopup,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut
+    signOut,
+    onAuthStateChanged,  // Added this
 } from "firebase/auth";
-import { getDocuments,addDocuments } from "../utils/firestore";
+import { getDocuments, addDocuments } from "../utils/firestore";
 
 const provider = new GoogleAuthProvider();
+
 const Auth = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
     const [error, setError] = useState("");
+
+    //  Restore session on page load
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+                console.log("🔄 User session restored:", user);
+            } else {
+                setUser(null);
+            }
+        });
+
+        return () => unsubscribe();  // Cleanup listener on unmount
+    }, []);
 
     const signUp = async () => {
         try {
@@ -27,20 +43,18 @@ const Auth = () => {
             setError(err.message);
         }
     };
-    
 
     const signIn = async () => {
         try {
-          const userCredential = await signInWithEmailAndPassword(auth, email, password);
-          setUser(userCredential.user);
-          setError("");
-          await addDocuments("testCollection", { message: "Now Firestore is working!", timestamp: new Date() });
-          console.log("User signed in & test document added!");
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            setUser(userCredential.user);
+            setError("");
+            await addDocuments("testCollection", { message: "Now Firestore is working!", timestamp: new Date() });
+            console.log("✅ User signed in & test document added!");
         } catch (err) {
-          setError(err.message);
+            setError(err.message);
         }
-      };
-      
+    };
 
     const signInWithGoogle = async () => {
         try {
