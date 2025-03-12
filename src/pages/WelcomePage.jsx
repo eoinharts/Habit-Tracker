@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button, Typography, Layout } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import logo from "../assets/logo.png"; 
 
 const { Title, Paragraph } = Typography;
