@@ -1,0 +1,174 @@
+# # Example queries for a simple movie app.
+
+# # @auth() directives control who can call each operation.
+# # Anyone should be able to list all movies, so the auth level is set to PUBLIC
+# query ListMovies @auth(level: PUBLIC) {
+#   movies {
+#     id
+#     title
+#     imageUrl
+#     genre
+#   }
+# }
+
+# # List all users, only admins should be able to list all users, so we use NO_ACCESS
+# query ListUsers @auth(level: NO_ACCESS) {
+#   users {
+#     id
+#     username
+#   }
+# }
+
+# # Logged in users can list all their reviews and movie titles associated with the review
+# # Since the query uses the uid of the current authenticated user, we set auth level to USER
+# query ListUserReviews @auth(level: USER) {
+#   user(key: { id_expr: "auth.uid" }) {
+#     id
+#     username
+#     # <field>_on_<foreign_key_field> makes it easy to grab info from another table
+#     # Here, we use it to grab all the reviews written by the user.
+#     reviews: reviews_on_user {
+#       rating
+#       reviewDate
+#       reviewText
+#       movie {
+#         id
+#         title
+#       }
+#     }
+#   }
+# }
+
+# # Get movie by id
+# query GetMovieById($id: UUID!) @auth(level: PUBLIC) {
+#   movie(id: $id) {
+#     id
+#     title
+#     imageUrl
+#     genre
+#     metadata: movieMetadata_on_movie {
+#       rating
+#       releaseYear
+#       description
+#     }
+#     reviews: reviews_on_movie {
+#       reviewText
+#       reviewDate
+#       rating
+#       user {
+#         id
+#         username
+#       }
+#     }
+#   }
+# }
+
+# # Search for movies, actors, and reviews
+# query SearchMovie($titleInput: String, $genre: String) @auth(level: PUBLIC) {
+#   movies(
+#     where: {
+#       _and: [{ genre: { eq: $genre } }, { title: { contains: $titleInput } }]
+#     }
+#   ) {
+#     id
+#     title
+#     genre
+#     imageUrl
+#   }
+# }
+
+
+# Firebase Data Connect GraphQL Queries for Habit Tracker
+
+# Get User Details
+query GetUserDetails @auth(level: USER) {
+  user(key: { id: "auth.uid" }) {
+    id
+    name
+    email
+    imageUrl
+    totalStreak
+  }
+}
+
+# List all friends
+query ListFriends @auth(level: USER) {
+  friendships(where: { user1Id: { eq: "auth.uid" } }) {
+    user2Id
+    status
+    friendDetails: user2 {
+      id
+      name
+    }
+  }
+}
+
+# Get user habits
+query GetUserHabits @auth(level: USER) {
+  habits(where: { creatorId: { eq: "auth.uid" } }) {
+    id
+    title
+    description
+    category
+    streakGoal
+  }
+}
+
+# Get a habit by ID
+query GetHabitById($habitId: UUID!) @auth(level: USER) {
+  habit(id: $habitId) {
+    id
+    title
+    description
+    category
+    streakGoal
+    userHabitData: userHabits_on_habit(where: { userId: { eq: "auth.uid" } }) {
+      currentStreak
+      longestStreak
+      lastTrackedDate
+    }
+  }
+}
+
+# # Get all challenges
+# query GetChallenges @auth(level: PUBLIC) {
+#   challenges {
+#     id
+#     name
+#     description
+#     startDate
+#     endDate
+#     createdBy
+#     habit {
+#       title
+#     }
+#   }
+# }
+
+# # Get challenges joined by user
+# query GetUserChallenges @auth(level: USER) {
+#   userChallenges(where: { userId_expr: "auth.uid" }) {
+#     challenge {
+#       id
+#       name
+#       description
+#       startDate
+#       endDate
+#       habit {
+#         title
+#       }
+#     }
+#     progress
+#   }
+# }
+
+# # Get challenge participants
+# query GetChallengeParticipants($challengeId: UUID!) @auth(level: PUBLIC) {
+#   userChallenges(where: { challengeId: $challengeId }) {
+#     user {
+#       id
+#       username
+#     }
+#     progress
+#   }
+# }

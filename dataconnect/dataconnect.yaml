@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "momentum-data-connect"
+location: "europe-west2"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "momentum-be"
+      cloudSql:
+        instanceId: "momentum-sql"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

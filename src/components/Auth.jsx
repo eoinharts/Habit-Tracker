@@ -8,6 +8,8 @@ import {
     signOut
 } from "firebase/auth";
 import { getDocuments,addDocuments } from "../utils/firestore";
+import { useCreateUser, useGetUserDetails } from "@firebasegen/default-connector/react";
+import { getUserDetails } from "@firebasegen/default-connector";
 
 const provider = new GoogleAuthProvider();
 const Auth = () => {
@@ -15,6 +17,9 @@ const Auth = () => {
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
     const [error, setError] = useState("");
+
+    const { isLoading, data1, error1 } = useGetUserDetails();
+    console.log(data1)
 
     const signUp = async () => {
         try {
@@ -27,14 +32,19 @@ const Auth = () => {
             setError(err.message);
         }
     };
-    
 
     const signIn = async () => {
         try {
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           setUser(userCredential.user);
+          console.log(userCredential.user)
+                                  const res = await getUserDetails();
+                                  console.log(res);
           setError("");
           await addDocuments("testCollection", { message: "Now Firestore is working!", timestamp: new Date() });
+        //   const { isLoading, data1, error } = useCreateUser({username: "Test User",
+        //     email: userCredential.user.email,
+        //   });
           console.log("User signed in & test document added!");
         } catch (err) {
           setError(err.message);

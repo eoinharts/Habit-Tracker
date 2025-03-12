@@ -7,6 +7,8 @@ import { App as AntdApp } from "antd";
 import { ConfigProvider } from "antd";
 import { theme } from "./utils/theme.js";
 import { BrowserRouter } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -16,7 +18,9 @@ createRoot(document.getElementById("root")).render(
       <AntdApp style={{ height: "100vh" }}>
         {/* Initialize react router */}
         <BrowserRouter>
-          <App />
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
         </BrowserRouter>
       </AntdApp>
     </ConfigProvider>
