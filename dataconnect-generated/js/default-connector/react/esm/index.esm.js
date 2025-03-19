@@ -1,4 +1,4 @@
-import { createUserRef, addFriendRef, removeFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, getUserDetailsRef, listFriendsRef, getUserHabitsRef, getHabitByIdRef, connectorConfig } from '../../esm/index.esm.js';
+import { createUserRef, addFriendRef, removeFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, getUserDetailsRef, getAllUsersRef, listFriendsRef, getUserHabitsRef, getHabitByIdRef, connectorConfig } from '../../esm/index.esm.js';
 import { validateArgs, CallerSdkTypeEnum } from 'firebase/data-connect';
 import { useDataConnectQuery, useDataConnectMutation } from '@tanstack-query-firebase/react/data-connect';
 
@@ -59,9 +59,15 @@ export function useUpdateHabitStreak(dcOrOptions, options) {
 }
 
 
-export function useGetUserDetails(dc, options) {
+export function useGetUserDetails(dcOrVars, vars, options) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, false);
+  const ref = getUserDetailsRef(dcInstance, inputVars);
+  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
+}
+
+export function useGetAllUsers(dc, options) {
   const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined, false);
-  const ref = getUserDetailsRef(dcInstance);
+  const ref = getAllUsersRef(dcInstance);
   return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
 }
 

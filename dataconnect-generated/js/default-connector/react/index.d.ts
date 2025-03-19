@@ -1,4 +1,4 @@
-import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, RemoveFriendData, RemoveFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, GetUserDetailsData, ListFriendsData, GetUserHabitsData, GetHabitByIdData, GetHabitByIdVariables } from '../';
+import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, RemoveFriendData, RemoveFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, GetUserHabitsData, GetHabitByIdData, GetHabitByIdVariables } from '../';
 import { FlattenedQueryResult, useDataConnectQueryOptions, FlattenedMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
 import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
@@ -26,8 +26,11 @@ export function useDeleteHabit(dc: DataConnect, options?: useDataConnectMutation
 export function useUpdateHabitStreak(options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseMutationResult<FlattenedMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>, FirebaseError, UpdateHabitStreakVariables>;
 export function useUpdateHabitStreak(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseMutationResult<FlattenedMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>, FirebaseError, UpdateHabitStreakVariables>;
 
-export function useGetUserDetails(options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, undefined>, FirebaseError>;
-export function useGetUserDetails(dc: DataConnect, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, undefined>, FirebaseError>;
+export function useGetUserDetails(vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
+export function useGetUserDetails(dc: DataConnect, vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
+
+export function useGetAllUsers(options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
+export function useGetAllUsers(dc: DataConnect, options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
 
 export function useListFriends(options?: useDataConnectQueryOptions<ListFriendsData>): UseQueryResult<FlattenedQueryResult<ListFriendsData, undefined>, FirebaseError>;
 export function useListFriends(dc: DataConnect, options?: useDataConnectQueryOptions<ListFriendsData>): UseQueryResult<FlattenedQueryResult<ListFriendsData, undefined>, FirebaseError>;

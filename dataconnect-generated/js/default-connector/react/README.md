@@ -7,6 +7,7 @@
   - [*Connecting to the local Emulator*](#connecting-to-the-local-emulator)
 - [**Queries**](#queries)
   - [*GetUserDetails*](#getuserdetails)
+  - [*GetAllUsers*](#getallusers)
   - [*ListFriends*](#listfriends)
   - [*GetUserHabits*](#getuserhabits)
   - [*GetHabitById*](#gethabitbyid)
@@ -119,15 +120,21 @@ Below are examples of how to use the `default` connector's generated Query hook 
 ## GetUserDetails
 You can execute the `GetUserDetails` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
 ```javascript
-useGetUserDetails(options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, undefined>, FirebaseError>;
+useGetUserDetails(vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
 ```
 You can also pass in a `DataConnect` instance to the Query hook function.
 ```javascript
-useGetUserDetails(dc: DataConnect, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, undefined>, FirebaseError>;
+useGetUserDetails(dc: DataConnect, vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
 ```
 
 ### Variables
-The `GetUserDetails` Query has no variables.
+The `GetUserDetails` Query requires an argument of type `GetUserDetailsVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface GetUserDetailsVariables {
+  userId: string;
+}
+```
 ### Return Type
 Recall that calling the `GetUserDetails` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
 
@@ -136,13 +143,13 @@ To check the status of a Query, use the `UseQueryResult.status` field. You can a
 To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `GetUserDetails` Query is of type `GetUserDetailsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
 ```javascript
 export interface GetUserDetailsData {
-  user?: {
+  users: ({
     id: string;
     name: string;
     email: string;
     imageUrl?: string | null;
     totalStreak: number;
-  } & User_Key;
+  } & User_Key)[];
 }
 ```
 
@@ -152,18 +159,24 @@ To learn more about the `UseQueryResult` object, see the [TanStack React Query d
 
 ```javascript
 import { getDataConnect, DataConnect } from 'firebase/data-connect';
-import { connectorConfig } from '@firebasegen/default-connector';
+import { connectorConfig, GetUserDetailsVariables } from '@firebasegen/default-connector';
 import { useGetUserDetails } from '@firebasegen/default-connector/react'
 
 export default function GetUserDetailsComponent() {
+  // The `useGetUserDetails` Query hook requires an argument of type `GetUserDetailsVariables`:
+  const getUserDetailsVars: GetUserDetailsVariables = {
+    userId: ..., 
+  };
 
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
-  const query = useGetUserDetails();
+  const query = useGetUserDetails(getUserDetailsVars);
+  // Variables can be defined inline as well.
+  const query = useGetUserDetails({ userId: ..., });
 
   // You can also pass in a `DataConnect` instance to the Query hook function.
   const dataConnect = getDataConnect(connectorConfig);
-  const query = useGetUserDetails(dataConnect);
+  const query = useGetUserDetails(dataConnect, getUserDetailsVars);
 
   // Then, you can render your component dynamically based on the status of the Query.
   if (query.isPending) {
@@ -176,7 +189,73 @@ export default function GetUserDetailsComponent() {
 
   // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
   if (query.isSuccess) {
-    console.log(query.data.user);
+    console.log(query.data.users);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## GetAllUsers
+You can execute the `GetAllUsers` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+```javascript
+useGetAllUsers(options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useGetAllUsers(dc: DataConnect, options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
+```
+
+### Variables
+The `GetAllUsers` Query has no variables.
+### Return Type
+Recall that calling the `GetAllUsers` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `GetAllUsers` Query is of type `GetAllUsersData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface GetAllUsersData {
+  users: ({
+    id: string;
+    name: string;
+    email: string;
+    imageUrl?: string | null;
+    totalStreak: number;
+  } & User_Key)[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `GetAllUsers`'s Query hook function
+
+```javascript
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectorConfig } from '@firebasegen/default-connector';
+import { useGetAllUsers } from '@firebasegen/default-connector/react'
+
+export default function GetAllUsersComponent() {
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useGetAllUsers();
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useGetAllUsers(dataConnect);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.users);
   }
   return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
 }
@@ -437,7 +516,8 @@ The `CreateUser` Mutation requires an argument of type `CreateUserVariables`, wh
 
 ```javascript
 export interface CreateUserVariables {
-  username?: string;
+  id?: string;
+  name?: string;
   email?: string;
 }
 ```
@@ -474,12 +554,13 @@ export default function CreateUserComponent() {
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useCreateUser` Mutation requires an argument of type `CreateUserVariables`:
   const createUserVars: CreateUserVariables = {
-    username: ..., // optional
+    id: ..., // optional
+    name: ..., // optional
     email: ..., // optional
   };
   mutation.mutate(createUserVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ username: ..., email: ..., });
+  mutation.mutate({ id: ..., name: ..., email: ..., });
   // Since all variables are optional for this Mutation, you can omit the `CreateUserVariables` argument.
   mutation.mutate();
 

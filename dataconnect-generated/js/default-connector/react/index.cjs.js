@@ -1,4 +1,4 @@
-const { createUserRef, addFriendRef, removeFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, getUserDetailsRef, listFriendsRef, getUserHabitsRef, getHabitByIdRef, connectorConfig } = require('../index.cjs.js');
+const { createUserRef, addFriendRef, removeFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, getUserDetailsRef, getAllUsersRef, listFriendsRef, getUserHabitsRef, getHabitByIdRef, connectorConfig } = require('../index.cjs.js');
 const { validateArgs, CallerSdkTypeEnum } = require('firebase/data-connect');
 const { useDataConnectQuery, useDataConnectMutation } = require('@tanstack-query-firebase/react/data-connect');
 
@@ -59,9 +59,15 @@ exports.useUpdateHabitStreak = function useUpdateHabitStreak(dcOrOptions, option
 }
 
 
-exports.useGetUserDetails = function useGetUserDetails(dc, options) {
+exports.useGetUserDetails = function useGetUserDetails(dcOrVars, vars, options) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, false);
+  const ref = getUserDetailsRef(dcInstance, inputVars);
+  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useGetAllUsers = function useGetAllUsers(dc, options) {
   const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined, false);
-  const ref = getUserDetailsRef(dcInstance);
+  const ref = getAllUsersRef(dcInstance);
   return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
 }
 

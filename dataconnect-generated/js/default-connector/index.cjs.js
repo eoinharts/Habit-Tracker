@@ -63,13 +63,21 @@ exports.updateHabitStreakRef = function updateHabitStreakRef(dcOrVars, vars) {
 exports.updateHabitStreak = function updateHabitStreak(dcOrVars, vars) {
   return executeMutation(updateHabitStreakRef(dcOrVars, vars));
 };
-exports.getUserDetailsRef = function getUserDetailsRef(dc) {
+exports.getUserDetailsRef = function getUserDetailsRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetUserDetails', inputVars);
+}
+exports.getUserDetails = function getUserDetails(dcOrVars, vars) {
+  return executeQuery(getUserDetailsRef(dcOrVars, vars));
+};
+exports.getAllUsersRef = function getAllUsersRef(dc) {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetUserDetails');
+  return queryRef(dcInstance, 'GetAllUsers');
 }
-exports.getUserDetails = function getUserDetails(dc) {
-  return executeQuery(getUserDetailsRef(dc));
+exports.getAllUsers = function getAllUsers(dc) {
+  return executeQuery(getAllUsersRef(dc));
 };
 exports.listFriendsRef = function listFriendsRef(dc) {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);

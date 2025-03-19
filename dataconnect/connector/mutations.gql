@@ -35,8 +35,8 @@
 # Firebase Data Connect GraphQL Mutations for Habit Tracker
 
 # Create a user
-mutation CreateUser($username: String! = "Testing Name", $email: String! = "Testing Email") @auth(level: NO_ACCESS) {
-  user_insert(data: { name: $username, email: $email})
+mutation CreateUser($id: String! = "auth.uid", $name: String! = "Testing Name", $email: String! = "Testing Email") @auth(level: USER) {
+  user_insert(data: { id: $id,name: $name, email: $email})
 }
 
 # Add a friend

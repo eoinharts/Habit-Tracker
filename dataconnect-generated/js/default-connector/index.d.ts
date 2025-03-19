@@ -32,7 +32,8 @@ export interface CreateUserData {
 }
 
 export interface CreateUserVariables {
-  username?: string;
+  id?: string;
+  name?: string;
   email?: string;
 }
 
@@ -48,6 +49,16 @@ export interface Friendship_Key {
   user1Id: string;
   user2Id: string;
   __typename?: 'Friendship_Key';
+}
+
+export interface GetAllUsersData {
+  users: ({
+    id: string;
+    name: string;
+    email: string;
+    imageUrl?: string | null;
+    totalStreak: number;
+  } & User_Key)[];
 }
 
 export interface GetHabitByIdData {
@@ -70,13 +81,17 @@ export interface GetHabitByIdVariables {
 }
 
 export interface GetUserDetailsData {
-  user?: {
+  users: ({
     id: string;
     name: string;
     email: string;
     imageUrl?: string | null;
     totalStreak: number;
-  } & User_Key;
+  } & User_Key)[];
+}
+
+export interface GetUserDetailsVariables {
+  userId: string;
 }
 
 export interface GetUserHabitsData {
@@ -204,12 +219,20 @@ export function updateHabitStreak(vars: UpdateHabitStreakVariables): MutationPro
 export function updateHabitStreak(dc: DataConnect, vars: UpdateHabitStreakVariables): MutationPromise<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 
 /* Allow users to create refs without passing in DataConnect */
-export function getUserDetailsRef(): QueryRef<GetUserDetailsData, undefined>;
+export function getUserDetailsRef(vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
 /* Allow users to pass in custom DataConnect instances */
-export function getUserDetailsRef(dc: DataConnect): QueryRef<GetUserDetailsData, undefined>;
+export function getUserDetailsRef(dc: DataConnect, vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
 
-export function getUserDetails(): QueryPromise<GetUserDetailsData, undefined>;
-export function getUserDetails(dc: DataConnect): QueryPromise<GetUserDetailsData, undefined>;
+export function getUserDetails(vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
+export function getUserDetails(dc: DataConnect, vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function getAllUsersRef(): QueryRef<GetAllUsersData, undefined>;
+/* Allow users to pass in custom DataConnect instances */
+export function getAllUsersRef(dc: DataConnect): QueryRef<GetAllUsersData, undefined>;
+
+export function getAllUsers(): QueryPromise<GetAllUsersData, undefined>;
+export function getAllUsers(dc: DataConnect): QueryPromise<GetAllUsersData, undefined>;
 
 /* Allow users to create refs without passing in DataConnect */
 export function listFriendsRef(): QueryRef<ListFriendsData, undefined>;

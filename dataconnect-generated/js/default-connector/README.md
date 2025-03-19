@@ -4,6 +4,7 @@
   - [*Connecting to the local Emulator*](#connecting-to-the-local-emulator)
 - [**Queries**](#queries)
   - [*GetUserDetails*](#getuserdetails)
+  - [*GetAllUsers*](#getallusers)
   - [*ListFriends*](#listfriends)
   - [*GetUserHabits*](#getuserhabits)
   - [*GetHabitById*](#gethabitbyid)
@@ -71,55 +72,67 @@ Below are examples of how to use the `default` connector's generated functions t
 ## GetUserDetails
 You can execute the `GetUserDetails` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
 ```javascript
-getUserDetails(): QueryPromise<GetUserDetailsData, undefined>;
+getUserDetails(vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
 
-getUserDetailsRef(): QueryRef<GetUserDetailsData, undefined>;
+getUserDetailsRef(vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```javascript
-getUserDetails(dc: DataConnect): QueryPromise<GetUserDetailsData, undefined>;
+getUserDetails(dc: DataConnect, vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
 
-getUserDetailsRef(dc: DataConnect): QueryRef<GetUserDetailsData, undefined>;
+getUserDetailsRef(dc: DataConnect, vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
 ```
 
 ### Variables
-The `GetUserDetails` query has no variables.
+The `GetUserDetails` query requires an argument of type `GetUserDetailsVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+
+```javascript
+export interface GetUserDetailsVariables {
+  userId: string;
+}
+```
 ### Return Type
 Recall that executing the `GetUserDetails` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `GetUserDetailsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 ```javascript
 export interface GetUserDetailsData {
-  user?: {
+  users: ({
     id: string;
     name: string;
     email: string;
     imageUrl?: string | null;
     totalStreak: number;
-  } & User_Key;
+  } & User_Key)[];
 }
 ```
 ### Using `GetUserDetails`'s action shortcut function
 
 ```javascript
 import { getDataConnect, DataConnect } from 'firebase/data-connect';
-import { connectorConfig, getUserDetails } from '@firebasegen/default-connector';
+import { connectorConfig, getUserDetails, GetUserDetailsVariables } from '@firebasegen/default-connector';
 
+// The `GetUserDetails` query requires an argument of type `GetUserDetailsVariables`:
+const getUserDetailsVars: GetUserDetailsVariables = {
+  userId: ..., 
+};
 
 // Call the `getUserDetails()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await getUserDetails();
+const { data } = await getUserDetails(getUserDetailsVars);
+// Variables can be defined inline as well.
+const { data } = await getUserDetails({ userId: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await getUserDetails(dataConnect);
+const { data } = await getUserDetails(dataConnect, getUserDetailsVars);
 
-console.log(data.user);
+console.log(data.users);
 
 // Or, you can use the `Promise` API.
-getUserDetails().then((response) => {
+getUserDetails(getUserDetailsVars).then((response) => {
   const data = response.data;
-  console.log(data.user);
+  console.log(data.users);
 });
 ```
 
@@ -127,26 +140,114 @@ getUserDetails().then((response) => {
 
 ```javascript
 import { getDataConnect, DataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, getUserDetailsRef } from '@firebasegen/default-connector';
+import { connectorConfig, getUserDetailsRef, GetUserDetailsVariables } from '@firebasegen/default-connector';
 
+// The `GetUserDetails` query requires an argument of type `GetUserDetailsVariables`:
+const getUserDetailsVars: GetUserDetailsVariables = {
+  userId: ..., 
+};
 
 // Call the `getUserDetailsRef()` function to get a reference to the query.
-const ref = getUserDetailsRef();
+const ref = getUserDetailsRef(getUserDetailsVars);
+// Variables can be defined inline as well.
+const ref = getUserDetailsRef({ userId: ..., });
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = getUserDetailsRef(dataConnect);
+const ref = getUserDetailsRef(dataConnect, getUserDetailsVars);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeQuery(ref);
 
-console.log(data.user);
+console.log(data.users);
 
 // Or, you can use the `Promise` API.
 executeQuery(ref).then((response) => {
   const data = response.data;
-  console.log(data.user);
+  console.log(data.users);
+});
+```
+
+## GetAllUsers
+You can execute the `GetAllUsers` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+getAllUsers(): QueryPromise<GetAllUsersData, undefined>;
+
+getAllUsersRef(): QueryRef<GetAllUsersData, undefined>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```javascript
+getAllUsers(dc: DataConnect): QueryPromise<GetAllUsersData, undefined>;
+
+getAllUsersRef(dc: DataConnect): QueryRef<GetAllUsersData, undefined>;
+```
+
+### Variables
+The `GetAllUsers` query has no variables.
+### Return Type
+Recall that executing the `GetAllUsers` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetAllUsersData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface GetAllUsersData {
+  users: ({
+    id: string;
+    name: string;
+    email: string;
+    imageUrl?: string | null;
+    totalStreak: number;
+  } & User_Key)[];
+}
+```
+### Using `GetAllUsers`'s action shortcut function
+
+```javascript
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectorConfig, getAllUsers } from '@firebasegen/default-connector';
+
+
+// Call the `getAllUsers()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getAllUsers();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getAllUsers(dataConnect);
+
+console.log(data.users);
+
+// Or, you can use the `Promise` API.
+getAllUsers().then((response) => {
+  const data = response.data;
+  console.log(data.users);
+});
+```
+
+### Using `GetAllUsers`'s `QueryRef` function
+
+```javascript
+import { getDataConnect, DataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getAllUsersRef } from '@firebasegen/default-connector';
+
+
+// Call the `getAllUsersRef()` function to get a reference to the query.
+const ref = getAllUsersRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getAllUsersRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.users);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.users);
 });
 ```
 
@@ -454,7 +555,8 @@ The `CreateUser` mutation has an optional argument of type `CreateUserVariables`
 
 ```javascript
 export interface CreateUserVariables {
-  username?: string;
+  id?: string;
+  name?: string;
   email?: string;
 }
 ```
@@ -475,7 +577,8 @@ import { connectorConfig, createUser, CreateUserVariables } from '@firebasegen/d
 
 // The `CreateUser` mutation has an optional argument of type `CreateUserVariables`:
 const createUserVars: CreateUserVariables = {
-  username: ..., // optional
+  id: ..., // optional
+  name: ..., // optional
   email: ..., // optional
 };
 
@@ -483,7 +586,7 @@ const createUserVars: CreateUserVariables = {
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createUser(createUserVars);
 // Variables can be defined inline as well.
-const { data } = await createUser({ username: ..., email: ..., });
+const { data } = await createUser({ id: ..., name: ..., email: ..., });
 // Since all variables are optional for this mutation, you can omit the `CreateUserVariables` argument.
 const { data } = await createUser();
 
@@ -508,14 +611,15 @@ import { connectorConfig, createUserRef, CreateUserVariables } from '@firebasege
 
 // The `CreateUser` mutation has an optional argument of type `CreateUserVariables`:
 const createUserVars: CreateUserVariables = {
-  username: ..., // optional
+  id: ..., // optional
+  name: ..., // optional
   email: ..., // optional
 };
 
 // Call the `createUserRef()` function to get a reference to the mutation.
 const ref = createUserRef(createUserVars);
 // Variables can be defined inline as well.
-const ref = createUserRef({ username: ..., email: ..., });
+const ref = createUserRef({ id: ..., name: ..., email: ..., });
 // Since all variables are optional for this mutation, you can omit the `CreateUserVariables` argument.
 const ref = createUserRef();
 

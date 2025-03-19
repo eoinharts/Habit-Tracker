@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@ant-design/icons':
+    specifier: ^5.6.1
+    version: 5.6.1(react-dom@19.0.0)(react@19.0.0)
   '@firebasegen/default-connector':
     specifier: file:dataconnect-generated\js\default-connector
     version: file:dataconnect-generated/js/default-connector(@tanstack-query-firebase/react@1.0.7)(@tanstack/react-query@5.67.3)(firebase@11.3.1)

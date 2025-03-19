@@ -81,8 +81,18 @@
 # Firebase Data Connect GraphQL Queries for Habit Tracker
 
 # Get User Details
-query GetUserDetails @auth(level: USER) {
-  user(key: { id: "auth.uid" }) {
+query GetUserDetails($userId: String!) @auth(level: USER) {
+  users(where: { id: { eq: $userId } }) {
+    id
+    name
+    email
+    imageUrl
+    totalStreak
+  }
+}
+
+query GetAllUsers @auth(level: USER) {
+  users {
     id
     name
     email
