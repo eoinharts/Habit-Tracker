@@ -1,0 +1,748 @@
+"""
+✨ `Friendship_KeyOutput` returns the primary key fields of table type `Friendship`.
+
+It has the same format as `Friendship_Key`, but is only used as mutation return value.
+"""
+scalar Friendship_KeyOutput
+"""
+✨ `Habit_KeyOutput` returns the primary key fields of table type `Habit`.
+
+It has the same format as `Habit_Key`, but is only used as mutation return value.
+"""
+scalar Habit_KeyOutput
+"""
+✨ `User_KeyOutput` returns the primary key fields of table type `User`.
+
+It has the same format as `User_Key`, but is only used as mutation return value.
+"""
+scalar User_KeyOutput
+"""
+✨ `UserHabit_KeyOutput` returns the primary key fields of table type `UserHabit`.
+
+It has the same format as `UserHabit_Key`, but is only used as mutation return value.
+"""
+scalar UserHabit_KeyOutput
+"""
+✨ Generated data input type for table 'Friendship'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Friendship_Data {
+  """
+  ✨ Generated from Field `Friendship`.`user1Id` of type `String!`
+  """
+  user1Id: String
+  """
+  ✨ `_expr` server value variant of `user1Id` (✨ Generated from Field `Friendship`.`user1Id` of type `String!`)
+  """
+  user1Id_expr: String_Expr
+  """
+  ✨ Generated from Field `Friendship`.`user2Id` of type `String!`
+  """
+  user2Id: String
+  """
+  ✨ `_expr` server value variant of `user2Id` (✨ Generated from Field `Friendship`.`user2Id` of type `String!`)
+  """
+  user2Id_expr: String_Expr
+  """
+  ✨ Generated from Field `Friendship`.`user1` of type `User!`
+  """
+  user1: User_Key
+  """
+  ✨ Generated from Field `Friendship`.`user2` of type `User!`
+  """
+  user2: User_Key
+  """
+  ✨ Generated from Field `Friendship`.`status` of type `String!`
+  """
+  status: String
+  """
+  ✨ `_expr` server value variant of `status` (✨ Generated from Field `Friendship`.`status` of type `String!`)
+  """
+  status_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'Friendship'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Friendship_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Friendship_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Friendship_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Friendship_Filter!]
+  """
+  ✨ Generated from Field `Friendship`.`user1Id` of type `String!`
+  """
+  user1Id: String_Filter
+  """
+  ✨ Generated from Field `Friendship`.`user2Id` of type `String!`
+  """
+  user2Id: String_Filter
+  """
+  ✨ Generated from Field `Friendship`.`user1` of type `User!`
+  """
+  user1: User_Filter
+  """
+  ✨ Generated from Field `Friendship`.`user2` of type `User!`
+  """
+  user2: User_Filter
+  """
+  ✨ Generated from Field `Friendship`.`status` of type `String!`
+  """
+  status: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'Friendship'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Friendship_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Friendship_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Friendship_Filter
+}
+"""
+✨ Generated key input type for table 'Friendship'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Friendship_Key {
+  """
+  ✨ Generated from Field `Friendship`.`user1Id` of type `String!`
+  """
+  user1Id: String
+  """
+  ✨ `_expr` server value variant of `user1Id` (✨ Generated from Field `Friendship`.`user1Id` of type `String!`)
+  """
+  user1Id_expr: String_Expr
+  """
+  ✨ Generated from Field `Friendship`.`user2Id` of type `String!`
+  """
+  user2Id: String
+  """
+  ✨ `_expr` server value variant of `user2Id` (✨ Generated from Field `Friendship`.`user2Id` of type `String!`)
+  """
+  user2Id_expr: String_Expr
+}
+"""
+✨ Generated list filter input type for table 'Friendship'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Friendship_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Friendship_Filter
+}
+"""
+✨ Generated order input type for table 'Friendship'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Friendship_Order {
+  """
+  ✨ Generated from Field `Friendship`.`user1Id` of type `String!`
+  """
+  user1Id: OrderDirection
+  """
+  ✨ Generated from Field `Friendship`.`user2Id` of type `String!`
+  """
+  user2Id: OrderDirection
+  """
+  ✨ Generated from Field `Friendship`.`user1` of type `User!`
+  """
+  user1: User_Order
+  """
+  ✨ Generated from Field `Friendship`.`user2` of type `User!`
+  """
+  user2: User_Order
+  """
+  ✨ Generated from Field `Friendship`.`status` of type `String!`
+  """
+  status: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Habit'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Habit_Data {
+  """
+  ✨ Generated from Field `Habit`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Habit`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Habit`.`creatorId` of type `String!`
+  """
+  creatorId: String
+  """
+  ✨ `_expr` server value variant of `creatorId` (✨ Generated from Field `Habit`.`creatorId` of type `String!`)
+  """
+  creatorId_expr: String_Expr
+  """
+  ✨ Generated from Field `Habit`.`creator` of type `User!`
+  """
+  creator: User_Key
+  """
+  ✨ Generated from Field `Habit`.`category` of type `String`
+  """
+  category: String
+  """
+  ✨ `_expr` server value variant of `category` (✨ Generated from Field `Habit`.`category` of type `String`)
+  """
+  category_expr: String_Expr
+  """
+  ✨ Generated from Field `Habit`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `Habit`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `Habit`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ Generated from Field `Habit`.`description` of type `String`
+  """
+  description: String
+  """
+  ✨ `_expr` server value variant of `description` (✨ Generated from Field `Habit`.`description` of type `String`)
+  """
+  description_expr: String_Expr
+  """
+  ✨ Generated from Field `Habit`.`streakGoal` of type `Int!`
+  """
+  streakGoal: Int
+  """
+  ✨ `_expr` server value variant of `streakGoal` (✨ Generated from Field `Habit`.`streakGoal` of type `Int!`)
+  """
+  streakGoal_expr: Int_Expr
+  """
+  ✨ Generated from Field `Habit`.`title` of type `String!`
+  """
+  title: String
+  """
+  ✨ `_expr` server value variant of `title` (✨ Generated from Field `Habit`.`title` of type `String!`)
+  """
+  title_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'Habit'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Habit_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Habit_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Habit_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Habit_Filter!]
+  """
+  ✨ Generated from Field `Habit`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Habit`.`creatorId` of type `String!`
+  """
+  creatorId: String_Filter
+  """
+  ✨ Generated from Field `Habit`.`creator` of type `User!`
+  """
+  creator: User_Filter
+  """
+  ✨ Generated from Field `Habit`.`category` of type `String`
+  """
+  category: String_Filter
+  """
+  ✨ Generated from Field `Habit`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `Habit`.`description` of type `String`
+  """
+  description: String_Filter
+  """
+  ✨ Generated from Field `Habit`.`streakGoal` of type `Int!`
+  """
+  streakGoal: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`title` of type `String!`
+  """
+  title: String_Filter
+  """
+  ✨ Generated from Field `Habit`.`userHabits_on_habit` of type `[UserHabit!]!`
+  """
+  userHabits_on_habit: UserHabit_ListFilter
+  """
+  ✨ Generated from Field `Habit`.`users_via_UserHabit` of type `[User!]!`
+  """
+  users_via_UserHabit: User_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'Habit'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Habit_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Habit_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Habit_Filter
+}
+"""
+✨ Generated key input type for table 'Habit'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Habit_Key {
+  """
+  ✨ Generated from Field `Habit`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Habit`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'Habit'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Habit_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Habit_Filter
+}
+"""
+✨ Generated order input type for table 'Habit'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Habit_Order {
+  """
+  ✨ Generated from Field `Habit`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Habit`.`creatorId` of type `String!`
+  """
+  creatorId: OrderDirection
+  """
+  ✨ Generated from Field `Habit`.`creator` of type `User!`
+  """
+  creator: User_Order
+  """
+  ✨ Generated from Field `Habit`.`category` of type `String`
+  """
+  category: OrderDirection
+  """
+  ✨ Generated from Field `Habit`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `Habit`.`description` of type `String`
+  """
+  description: OrderDirection
+  """
+  ✨ Generated from Field `Habit`.`streakGoal` of type `Int!`
+  """
+  streakGoal: OrderDirection
+  """
+  ✨ Generated from Field `Habit`.`title` of type `String!`
+  """
+  title: OrderDirection
+}
+"""
+✨ Generated data input type for table 'User'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input User_Data {
+  """
+  ✨ Generated from Field `User`.`id` of type `String!`
+  """
+  id: String
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `User`.`id` of type `String!`)
+  """
+  id_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`email` of type `String!`
+  """
+  email: String
+  """
+  ✨ `_expr` server value variant of `email` (✨ Generated from Field `User`.`email` of type `String!`)
+  """
+  email_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`imageUrl` of type `String`
+  """
+  imageUrl: String
+  """
+  ✨ `_expr` server value variant of `imageUrl` (✨ Generated from Field `User`.`imageUrl` of type `String`)
+  """
+  imageUrl_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`name` of type `String!`
+  """
+  name: String
+  """
+  ✨ `_expr` server value variant of `name` (✨ Generated from Field `User`.`name` of type `String!`)
+  """
+  name_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`totalStreak` of type `Int!`
+  """
+  totalStreak: Int
+  """
+  ✨ `_expr` server value variant of `totalStreak` (✨ Generated from Field `User`.`totalStreak` of type `Int!`)
+  """
+  totalStreak_expr: Int_Expr
+}
+"""
+✨ Generated filter input type for table 'User'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input User_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [User_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: User_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [User_Filter!]
+  """
+  ✨ Generated from Field `User`.`id` of type `String!`
+  """
+  id: String_Filter
+  """
+  ✨ Generated from Field `User`.`email` of type `String!`
+  """
+  email: String_Filter
+  """
+  ✨ Generated from Field `User`.`imageUrl` of type `String`
+  """
+  imageUrl: String_Filter
+  """
+  ✨ Generated from Field `User`.`name` of type `String!`
+  """
+  name: String_Filter
+  """
+  ✨ Generated from Field `User`.`totalStreak` of type `Int!`
+  """
+  totalStreak: Int_Filter
+  """
+  ✨ Generated from Field `User`.`friendships_on_user1` of type `[Friendship!]!`
+  """
+  friendships_on_user1: Friendship_ListFilter
+  """
+  ✨ Generated from Field `User`.`friendships_on_user2` of type `[Friendship!]!`
+  """
+  friendships_on_user2: Friendship_ListFilter
+  """
+  ✨ Generated from Field `User`.`habits_on_creator` of type `[Habit!]!`
+  """
+  habits_on_creator: Habit_ListFilter
+  """
+  ✨ Generated from Field `User`.`userHabits_on_user` of type `[UserHabit!]!`
+  """
+  userHabits_on_user: UserHabit_ListFilter
+  """
+  ✨ Generated from Field `User`.`habits_via_UserHabit` of type `[Habit!]!`
+  """
+  habits_via_UserHabit: Habit_ListFilter
+  """
+  ✨ Generated from Field `User`.`users_via_Friendship_on_user1` of type `[User!]!`
+  """
+  users_via_Friendship_on_user1: User_ListFilter
+  """
+  ✨ Generated from Field `User`.`users_via_Friendship_on_user2` of type `[User!]!`
+  """
+  users_via_Friendship_on_user2: User_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'User'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input User_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [User_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: User_Filter
+}
+"""
+✨ Generated key input type for table 'User'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input User_Key {
+  """
+  ✨ Generated from Field `User`.`id` of type `String!`
+  """
+  id: String
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `User`.`id` of type `String!`)
+  """
+  id_expr: String_Expr
+}
+"""
+✨ Generated list filter input type for table 'User'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input User_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: User_Filter
+}
+"""
+✨ Generated order input type for table 'User'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input User_Order {
+  """
+  ✨ Generated from Field `User`.`id` of type `String!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `User`.`email` of type `String!`
+  """
+  email: OrderDirection
+  """
+  ✨ Generated from Field `User`.`imageUrl` of type `String`
+  """
+  imageUrl: OrderDirection
+  """
+  ✨ Generated from Field `User`.`name` of type `String!`
+  """
+  name: OrderDirection
+  """
+  ✨ Generated from Field `User`.`totalStreak` of type `Int!`
+  """
+  totalStreak: OrderDirection
+}
+"""
+✨ Generated data input type for table 'UserHabit'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input UserHabit_Data {
+  """
+  ✨ Generated from Field `UserHabit`.`habitId` of type `UUID!`
+  """
+  habitId: UUID
+  """
+  ✨ `_expr` server value variant of `habitId` (✨ Generated from Field `UserHabit`.`habitId` of type `UUID!`)
+  """
+  habitId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `UserHabit`.`userId` of type `String!`
+  """
+  userId: String
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `UserHabit`.`userId` of type `String!`)
+  """
+  userId_expr: String_Expr
+  """
+  ✨ Generated from Field `UserHabit`.`habit` of type `Habit!`
+  """
+  habit: Habit_Key
+  """
+  ✨ Generated from Field `UserHabit`.`user` of type `User!`
+  """
+  user: User_Key
+  """
+  ✨ Generated from Field `UserHabit`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `UserHabit`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `UserHabit`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ Generated from Field `UserHabit`.`currentStreak` of type `Int!`
+  """
+  currentStreak: Int
+  """
+  ✨ `_expr` server value variant of `currentStreak` (✨ Generated from Field `UserHabit`.`currentStreak` of type `Int!`)
+  """
+  currentStreak_expr: Int_Expr
+  """
+  ✨ Generated from Field `UserHabit`.`lastTrackedDate` of type `Timestamp`
+  """
+  lastTrackedDate: Timestamp
+  """
+  ✨ `_expr` server value variant of `lastTrackedDate` (✨ Generated from Field `UserHabit`.`lastTrackedDate` of type `Timestamp`)
+  """
+  lastTrackedDate_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `lastTrackedDate` (✨ Generated from Field `UserHabit`.`lastTrackedDate` of type `Timestamp`)
+  """
+  lastTrackedDate_time: Timestamp_Relative
+  """
+  ✨ Generated from Field `UserHabit`.`longestStreak` of type `Int!`
+  """
+  longestStreak: Int
+  """
+  ✨ `_expr` server value variant of `longestStreak` (✨ Generated from Field `UserHabit`.`longestStreak` of type `Int!`)
+  """
+  longestStreak_expr: Int_Expr
+}
+"""
+✨ Generated filter input type for table 'UserHabit'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input UserHabit_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [UserHabit_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: UserHabit_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [UserHabit_Filter!]
+  """
+  ✨ Generated from Field `UserHabit`.`habitId` of type `UUID!`
+  """
+  habitId: UUID_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`userId` of type `String!`
+  """
+  userId: String_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`habit` of type `Habit!`
+  """
+  habit: Habit_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`user` of type `User!`
+  """
+  user: User_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`currentStreak` of type `Int!`
+  """
+  currentStreak: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`lastTrackedDate` of type `Timestamp`
+  """
+  lastTrackedDate: Timestamp_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`longestStreak` of type `Int!`
+  """
+  longestStreak: Int_Filter
+}
+"""
+✨ Generated first-row input type for table 'UserHabit'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input UserHabit_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [UserHabit_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: UserHabit_Filter
+}
+"""
+✨ Generated key input type for table 'UserHabit'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input UserHabit_Key {
+  """
+  ✨ Generated from Field `UserHabit`.`habitId` of type `UUID!`
+  """
+  habitId: UUID
+  """
+  ✨ `_expr` server value variant of `habitId` (✨ Generated from Field `UserHabit`.`habitId` of type `UUID!`)
+  """
+  habitId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `UserHabit`.`userId` of type `String!`
+  """
+  userId: String
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `UserHabit`.`userId` of type `String!`)
+  """
+  userId_expr: String_Expr
+}
+"""
+✨ Generated list filter input type for table 'UserHabit'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input UserHabit_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: UserHabit_Filter
+}
+"""
+✨ Generated order input type for table 'UserHabit'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input UserHabit_Order {
+  """
+  ✨ Generated from Field `UserHabit`.`habitId` of type `UUID!`
+  """
+  habitId: OrderDirection
+  """
+  ✨ Generated from Field `UserHabit`.`userId` of type `String!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `UserHabit`.`habit` of type `Habit!`
+  """
+  habit: Habit_Order
+  """
+  ✨ Generated from Field `UserHabit`.`user` of type `User!`
+  """
+  user: User_Order
+  """
+  ✨ Generated from Field `UserHabit`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `UserHabit`.`currentStreak` of type `Int!`
+  """
+  currentStreak: OrderDirection
+  """
+  ✨ Generated from Field `UserHabit`.`lastTrackedDate` of type `Timestamp`
+  """
+  lastTrackedDate: OrderDirection
+  """
+  ✨ Generated from Field `UserHabit`.`longestStreak` of type `Int!`
+  """
+  longestStreak: OrderDirection
+}

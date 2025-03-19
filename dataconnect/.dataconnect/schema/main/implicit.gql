@@ -1,0 +1,26 @@
+extend type Friendship {
+  """
+  ✨ Implicit foreign key field based on `Friendship`.`user1`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  user1Id: String! @fdc_generated(from: "Friendship.user1", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Friendship`.`user2`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  user2Id: String! @fdc_generated(from: "Friendship.user2", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Habit {
+  """
+  ✨ Implicit foreign key field based on `Habit`.`creator`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  creatorId: String! @fdc_generated(from: "Habit.creator", purpose: IMPLICIT_REF_FIELD)
+}
+extend type UserHabit {
+  """
+  ✨ Implicit foreign key field based on `UserHabit`.`habit`. It must match the value of `Habit`.`id`. See `@ref` for how to customize it.
+  """
+  habitId: UUID! @fdc_generated(from: "UserHabit.habit", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `UserHabit`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: String! @fdc_generated(from: "UserHabit.user", purpose: IMPLICIT_REF_FIELD)
+}

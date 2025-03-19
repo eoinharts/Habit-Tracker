@@ -1,0 +1,240 @@
+extend type Friendship {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Friendship", purpose: METADATA_FIELD)
+}
+extend type Habit {
+  """
+  ✨ List `UserHabit` objects in a one-to-many relationship (where `UserHabit`.`habit` is this object).
+  """
+  userHabits_on_habit(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: UserHabit_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [UserHabit_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [UserHabit!]! @fdc_generated(from: "UserHabit.habit", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `User` objects using `UserHabit` as the join table (a `UserHabit` object exists where its `habit` is this and its `user` is that).
+  """
+  users_via_UserHabit(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: UserHabit_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [UserHabit_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [User!]! @fdc_generated(from: "UserHabit", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Habit", purpose: METADATA_FIELD)
+}
+extend type User {
+  """
+  ✨ List `Friendship` objects in a one-to-many relationship (where `Friendship`.`user1` is this object).
+  """
+  friendships_on_user1(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Friendship_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Friendship_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [Friendship!]! @fdc_generated(from: "Friendship.user1", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Friendship` objects in a one-to-many relationship (where `Friendship`.`user2` is this object).
+  """
+  friendships_on_user2(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Friendship_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Friendship_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [Friendship!]! @fdc_generated(from: "Friendship.user2", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Habit` objects in a one-to-many relationship (where `Habit`.`creator` is this object).
+  """
+  habits_on_creator(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Habit_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Habit_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [Habit!]! @fdc_generated(from: "Habit.creator", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `UserHabit` objects in a one-to-many relationship (where `UserHabit`.`user` is this object).
+  """
+  userHabits_on_user(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: UserHabit_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [UserHabit_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [UserHabit!]! @fdc_generated(from: "UserHabit.user", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `Habit` objects using `UserHabit` as the join table (a `UserHabit` object exists where its `user` is this and its `habit` is that).
+  """
+  habits_via_UserHabit(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: UserHabit_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [UserHabit_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [Habit!]! @fdc_generated(from: "UserHabit", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
+  """
+  ✨ List `User` objects using `Friendship` as the join table (a `Friendship` object exists where its `user2` is this and its `user1` is that).
+  """
+  users_via_Friendship_on_user1(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Friendship_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Friendship_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [User!]! @fdc_generated(from: "Friendship", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
+  """
+  ✨ List `User` objects using `Friendship` as the join table (a `Friendship` object exists where its `user1` is this and its `user2` is that).
+  """
+  users_via_Friendship_on_user2(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Friendship_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Friendship_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+  ): [User!]! @fdc_generated(from: "Friendship", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "User", purpose: METADATA_FIELD)
+}
+extend type UserHabit {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "UserHabit", purpose: METADATA_FIELD)
+}

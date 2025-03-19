@@ -1,0 +1,118 @@
+# # Example mutations for a simple movie app
+
+# # Create a movie based on user input
+# mutation CreateMovie($title: String!, $genre: String!, $imageUrl: String!)
+# @auth(level: USER_EMAIL_VERIFIED) {
+#   movie_insert(data: { title: $title, genre: $genre, imageUrl: $imageUrl })
+# }
+
+# # Upsert (update or insert) a user's username based on their auth.uid
+# mutation UpsertUser($username: String!) @auth(level: USER) {
+#   # The "auth.uid" server value ensures that users can only register their own user.
+#   user_upsert(data: { id_expr: "auth.uid", username: $username })
+# }
+
+# # Add a review for a movie
+# mutation AddReview($movieId: UUID!, $rating: Int!, $reviewText: String!)
+# @auth(level: USER) {
+#   review_upsert(
+#     data: {
+#       userId_expr: "auth.uid"
+#       movieId: $movieId
+#       rating: $rating
+#       reviewText: $reviewText
+#       # reviewDate defaults to today in the schema. No need to set it manually.
+#     }
+#   )
+# }
+
+# # Logged in user can delete their review for a movie
+# mutation DeleteReview($movieId: UUID!) @auth(level: USER) {
+#   # The "auth.uid" server value ensures that users can only delete their own reviews.
+#   review_delete(key: { userId_expr: "auth.uid", movieId: $movieId })
+# }
+
+# Firebase Data Connect GraphQL Mutations for Habit Tracker
+
+# Create a user
+mutation CreateUser($id: String! = "auth.uid", $name: String! = "Testing Name", $email: String! = "Testing Email") @auth(level: USER) {
+  user_insert(data: { id: $id,name: $name, email: $email})
+}
+
+# Add a friend
+mutation AddFriend($friendId: String!) @auth(level: USER) {
+  friendship_insert(
+    data: { user1Id : "auth.uid", user2Id: $friendId, status: "pending" }
+  )
+}
+
+# Remove a friend
+mutation RemoveFriend($friendId: String!) @auth(level: USER) {
+  friendship_delete(
+    key: { user1Id: "auth.uid", user2Id: $friendId }
+  )
+}
+
+# Create a habit
+mutation CreateHabit($title: String!, $description: String!, $category: String!, $streakGoal: Int!) @auth(level: USER) {
+  habit_insert(
+    data: { creatorId: "auth.uid", title: $title, description: $description, category: $category, streakGoal: $streakGoal }
+  )
+}
+
+# Update a habit
+mutation UpdateHabit($habitId: UUID!, $title: String, $description: String, $category: String, $streakGoal: Int) @auth(level: USER) {
+  habit_update(
+    key: { id: $habitId }
+    data: { title: $title, description: $description, category: $category, streakGoal: $streakGoal }
+  )
+}
+
+# Delete a habit
+mutation DeleteHabit($habitId: UUID!) @auth(level: USER) {
+  habit_delete(
+    key: { id: $habitId }
+  )
+}
+
+# Update habit streak
+mutation UpdateHabitStreak($habitId: UUID!, $currentStreak: Int!, $longestStreak: Int!, $lastTrackedDate: Timestamp!) @auth(level: USER) {
+  userHabit_upsert(
+    data: {
+      habitId: $habitId,
+      userId_expr: "auth.uid",
+      currentStreak: $currentStreak,
+      longestStreak: $longestStreak,
+      lastTrackedDate: $lastTrackedDate
+    }
+  )
+}
+
+# # Create a challenge
+# mutation CreateChallenge($habitId: UUID!, $name: String!, $description: String!, $startDate: Timestamp!, $endDate: Timestamp!) @auth(level: USER) {
+#   challenge_insert(
+#     data: {
+#       habitId: $habitId,
+#       name: $name,
+#       description: $description,
+#       startDate: $startDate,
+#       endDate: $endDate,
+#       createdBy: "auth.uid"
+#     }
+#   )
+# }
+
+# # Join a challenge
+# mutation JoinChallenge($challengeId: UUID!) @auth(level: USER) {
+#   userChallenges_insert(
+#     data: { challengeId: $challengeId, userId_expr: "auth.uid", progress: 0 }
+#   )
+# }
+
+# # Update challenge progress
+# mutation UpdateChallengeProgress($challengeId: UUID!, $progress: Int!) @auth(level: USER) {
+#   userChallenges_update(
+#     key: { challengeId: $challengeId, userId_expr: "auth.uid" }
+#     data: { progress: $progress }
+#   )
+# }

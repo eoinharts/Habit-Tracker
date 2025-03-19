@@ -9,6 +9,8 @@ import {
     onAuthStateChanged,  // Added this
 } from "firebase/auth";
 import { getDocuments, addDocuments } from "../utils/firestore";
+import { getUserDetails } from "@firebasegen/default-connector";
+import { createUser } from "@firebasegen/default-connector";
 
 const provider = new GoogleAuthProvider();
 
@@ -20,10 +22,12 @@ const Auth = () => {
 
     //  Restore session on page load
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async(user) => {
             if (user) {
                 setUser(user);
-                console.log("🔄 User session restored:", user);
+                console.log("🔄 User session restored:", user.uid);
+                const userDetails = await getUserDetails({userId: user.uid});
+                console.log(userDetails, "userDetails");
             } else {
                 setUser(null);
             }
@@ -36,6 +40,11 @@ const Auth = () => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
+            const res = await createUser({
+              id: userCredential.user.uid,
+              name: "test name",
+              email: userCredential.user.email,
+            });
             console.log("✅ User signed up:", userCredential.user);
             setError("");
         } catch (err) {
@@ -48,6 +57,7 @@ const Auth = () => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
+            // console.log(res, "result");
             setError("");
             await addDocuments("testCollection", { message: "Now Firestore is working!", timestamp: new Date() });
             console.log("✅ User signed in & test document added!");

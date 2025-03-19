@@ -1,0 +1,440 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `Friendship` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  friendship_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Friendship_Data!
+  ): Friendship_KeyOutput! @fdc_generated(from: "Friendship", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Habit` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  habit_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Habit_Data!
+  ): Habit_KeyOutput! @fdc_generated(from: "Habit", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `User` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `UserHabit` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  userHabit_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: UserHabit_Data!
+  ): UserHabit_KeyOutput! @fdc_generated(from: "UserHabit", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `Friendship` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  friendship_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Friendship_Data!]!
+  ): [Friendship_KeyOutput!]! @fdc_generated(from: "Friendship", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Habit` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  habit_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Habit_Data!]!
+  ): [Habit_KeyOutput!]! @fdc_generated(from: "Habit", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `User` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `UserHabit` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  userHabit_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [UserHabit_Data!]!
+  ): [UserHabit_KeyOutput!]! @fdc_generated(from: "UserHabit", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `Friendship` into the table, based on the primary key. Returns the key of the newly inserted `Friendship`.
+  """
+  friendship_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Friendship_Data!
+  ): Friendship_KeyOutput! @fdc_generated(from: "Friendship", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Habit` into the table, based on the primary key. Returns the key of the newly inserted `Habit`.
+  """
+  habit_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Habit_Data!
+  ): Habit_KeyOutput! @fdc_generated(from: "Habit", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `User` into the table, based on the primary key. Returns the key of the newly inserted `User`.
+  """
+  user_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `UserHabit` into the table, based on the primary key. Returns the key of the newly inserted `UserHabit`.
+  """
+  userHabit_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: UserHabit_Data!
+  ): UserHabit_KeyOutput! @fdc_generated(from: "UserHabit", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `Friendship` objects into the table, based on the primary key. Returns the key of the newly inserted `Friendship`.
+  """
+  friendship_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Friendship_Data!]!
+  ): [Friendship_KeyOutput!]! @fdc_generated(from: "Friendship", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Habit` objects into the table, based on the primary key. Returns the key of the newly inserted `Habit`.
+  """
+  habit_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Habit_Data!]!
+  ): [Habit_KeyOutput!]! @fdc_generated(from: "Habit", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `User` objects into the table, based on the primary key. Returns the key of the newly inserted `User`.
+  """
+  user_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `UserHabit` objects into the table, based on the primary key. Returns the key of the newly inserted `UserHabit`.
+  """
+  userHabit_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [UserHabit_Data!]!
+  ): [UserHabit_KeyOutput!]! @fdc_generated(from: "UserHabit", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `Friendship` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  friendship_update(
+    """
+    The key used to identify the object.
+    """
+    key: Friendship_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Friendship_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Friendship_Data!
+  ): Friendship_KeyOutput @fdc_generated(from: "Friendship", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Habit` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  habit_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Habit_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Habit_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Habit_Data!
+  ): Habit_KeyOutput @fdc_generated(from: "Habit", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `User` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  user_update(
+    """
+    The unique ID of the object.
+    """
+    id: String
+
+    """
+    ✨ `_expr` server value variant of `id` (The unique ID of the object.)
+    """
+    id_expr: String_Expr
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: User_Data!
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `UserHabit` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  userHabit_update(
+    """
+    The key used to identify the object.
+    """
+    key: UserHabit_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: UserHabit_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: UserHabit_Data!
+  ): UserHabit_KeyOutput @fdc_generated(from: "UserHabit", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `Friendship` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  friendship_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Friendship_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Friendship_Data!
+  ): Int! @fdc_generated(from: "Friendship", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Habit` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  habit_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Habit_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Habit_Data!
+  ): Int! @fdc_generated(from: "Habit", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `User` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  user_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: User_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: User_Data!
+  ): Int! @fdc_generated(from: "User", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `UserHabit` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  userHabit_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: UserHabit_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: UserHabit_Data!
+  ): Int! @fdc_generated(from: "UserHabit", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `Friendship` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  friendship_delete(
+    """
+    The key used to identify the object.
+    """
+    key: Friendship_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Friendship_FirstRow
+  ): Friendship_KeyOutput @fdc_generated(from: "Friendship", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Habit` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  habit_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Habit_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Habit_FirstRow
+  ): Habit_KeyOutput @fdc_generated(from: "Habit", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `User` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  user_delete(
+    """
+    The unique ID of the object.
+    """
+    id: String
+
+    """
+    ✨ `_expr` server value variant of `id` (The unique ID of the object.)
+    """
+    id_expr: String_Expr
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `UserHabit` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  userHabit_delete(
+    """
+    The key used to identify the object.
+    """
+    key: UserHabit_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: UserHabit_FirstRow
+  ): UserHabit_KeyOutput @fdc_generated(from: "UserHabit", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `Friendship` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  friendship_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Friendship_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Friendship", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Habit` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  habit_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Habit_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Habit", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `User` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  user_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: User_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "User", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `UserHabit` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  userHabit_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: UserHabit_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "UserHabit", purpose: DELETE_MULTIPLE)
+}

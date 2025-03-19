@@ -5,6 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@ant-design/icons':
+    specifier: ^5.6.1
+    version: 5.6.1(react-dom@19.0.0)(react@19.0.0)
+  '@firebasegen/default-connector':
+    specifier: file:dataconnect-generated\js\default-connector
+    version: file:dataconnect-generated/js/default-connector(@tanstack-query-firebase/react@1.0.7)(@tanstack/react-query@5.67.3)(firebase@11.3.1)
+  '@tanstack-query-firebase/react':
+    specifier: ^1.0.7
+    version: 1.0.7(@tanstack/react-query@5.67.3)(firebase@11.3.1)
+  '@tanstack/react-query':
+    specifier: ^5.67.3
+    version: 5.67.3(react@19.0.0)
   antd:
     specifier: ^5.24.2
     version: 5.24.2(react-dom@19.0.0)(react@19.0.0)
@@ -20,6 +32,9 @@ dependencies:
   react-router:
     specifier: ^7.2.0
     version: 7.2.0(react-dom@19.0.0)(react@19.0.0)
+  react-router-dom:
+    specifier: ^7.3.0
+    version: 7.3.0(react-dom@19.0.0)(react@19.0.0)
 
 devDependencies:
   '@eslint/js':
@@ -1488,6 +1503,29 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@tanstack-query-firebase/react@1.0.7(@tanstack/react-query@5.67.3)(firebase@11.3.1):
+    resolution: {integrity: sha512-pfHZnyksCeKQVoqQbCBeIETNFjIcYzeOMmM64HncOHtixLUJNRtA7nr7crybq0HTy5/ziVSYxzWHzlKpU5qU+A==}
+    peerDependencies:
+      '@tanstack/react-query': ^5
+      firebase: ^11.3.0
+    dependencies:
+      '@tanstack/react-query': 5.67.3(react@19.0.0)
+      firebase: 11.3.1
+    dev: false
+
+  /@tanstack/query-core@5.67.3:
+    resolution: {integrity: sha512-pq76ObpjcaspAW4OmCbpXLF6BCZP2Zr/J5ztnyizXhSlNe7fIUp0QKZsd0JMkw9aDa+vxDX/OY7N+hjNY/dCGg==}
+    dev: false
+
+  /@tanstack/react-query@5.67.3(react@19.0.0):
+    resolution: {integrity: sha512-u/n2HsQeH1vpZIOzB/w2lqKlXUDUKo6BxTdGXSMvNzIq5MHYFckRMVuFABp+QB7RN8LFXWV6X1/oSkuDq+MPIA==}
+    peerDependencies:
+      react: ^18 || ^19
+    dependencies:
+      '@tanstack/query-core': 5.67.3
+      react: 19.0.0
+    dev: false
 
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -3568,8 +3606,38 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /react-router-dom@7.3.0(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-z7Q5FTiHGgQfEurX/FBinkOXhWREJIAB2RiU24lvcBa82PxUpwqvs/PAXb9lJyPjTs2jrl6UkLvCZVGJPeNuuQ==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-router: 7.3.0(react-dom@19.0.0)(react@19.0.0)
+    dev: false
+
   /react-router@7.2.0(react-dom@19.0.0)(react@19.0.0):
     resolution: {integrity: sha512-fXyqzPgCPZbqhrk7k3hPcCpYIlQ2ugIXDboHUzhJISFVy2DEPsmHgN588MyGmkIOv3jDgNfUE3kJi83L28s/LQ==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+    dependencies:
+      '@types/cookie': 0.6.0
+      cookie: 1.0.2
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      set-cookie-parser: 2.7.1
+      turbo-stream: 2.4.0
+    dev: false
+
+  /react-router@7.3.0(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-466f2W7HIWaNXTKM5nHTqNxLrHTyXybm7R0eBlVSt0k/u55tTCDO194OIx/NrYD4TS5SXKTNekXfT37kMKUjgw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -4181,3 +4249,18 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  file:dataconnect-generated/js/default-connector(@tanstack-query-firebase/react@1.0.7)(@tanstack/react-query@5.67.3)(firebase@11.3.1):
+    resolution: {directory: dataconnect-generated/js/default-connector, type: directory}
+    id: file:dataconnect-generated/js/default-connector
+    name: '@firebasegen/default-connector'
+    engines: {node: ' >=18.0'}
+    peerDependencies:
+      '@tanstack-query-firebase/react': ^1.0.5
+      '@tanstack/react-query': ^5
+      firebase: ^11.3.0
+    dependencies:
+      '@tanstack-query-firebase/react': 1.0.7(@tanstack/react-query@5.67.3)(firebase@11.3.1)
+      '@tanstack/react-query': 5.67.3(react@19.0.0)
+      firebase: 11.3.1
+    dev: false
