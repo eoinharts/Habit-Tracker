@@ -11,6 +11,9 @@ import {
 import { getDocuments, addDocuments } from "../utils/firestore";
 import { getUserDetails } from "@firebasegen/default-connector";
 import { createUser } from "@firebasegen/default-connector";
+import { useNavigate } from 'react-router-dom';
+import { Button, Space } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 const provider = new GoogleAuthProvider();
 
@@ -19,6 +22,7 @@ const Auth = () => {
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     //  Restore session on page load
     useEffect(() => {
@@ -90,20 +94,44 @@ const Auth = () => {
             <h2>Firebase Authentication</h2>
 
             {user ? (
-                <div>
+                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
                     <p>Welcome, {user.email}</p>
-                    <button onClick={logOut}>Log Out</button>
-                </div>
+                    <Space>
+                        <Button onClick={logOut}>Log Out</Button>
+                        <Button 
+                            type="primary"
+                            icon={<UserOutlined />}
+                            onClick={() => navigate('/profile')}
+                        >
+                            Go to Profile
+                        </Button>
+                    </Space>
+                </Space>
             ) : (
-                <div>
-                    <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <button onClick={signUp}>Sign Up</button>
-                    <button onClick={signIn}>Sign In</button>
-                    <button onClick={signInWithGoogle}>Sign In with Google</button>
-                    {error && <p style={{ color: "red" }}>{error}</p>}
-                </div>
+                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                    <input 
+                        type="email" 
+                        placeholder="Email" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)}
+                        style={{ padding: '8px', width: '100%' }}
+                    />
+                    <input 
+                        type="password" 
+                        placeholder="Password" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)}
+                        style={{ padding: '8px', width: '100%' }}
+                    />
+                    <Space>
+                        <Button onClick={signIn}>Sign In</Button>
+                        <Button onClick={signUp}>Sign Up</Button>
+                        <Button onClick={signInWithGoogle}>Sign In with Google</Button>
+                    </Space>
+                </Space>
             )}
+
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 };

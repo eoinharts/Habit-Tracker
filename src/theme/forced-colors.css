@@ -1,0 +1,20 @@
+@media (forced-colors: active) {
+    /* Override Ant Design's -ms-high-contrast styles */
+    * {
+      forced-color-adjust: none !important;
+    }
+  
+    /* Basic color adjustments for high contrast mode */
+    :root {
+      --antd-color-primary: CanvasText;
+      --antd-color-bg-container: Canvas;
+      --antd-color-border: CanvasText;
+      --antd-color-text: CanvasText;
+      --antd-color-text-secondary: GrayText;
+      --antd-color-link: LinkText;
+      --antd-color-success: CanvasText;
+      --antd-color-warning: CanvasText;
+      --antd-color-error: CanvasText;
+    }
+  }
+  

@@ -3,8 +3,12 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { Routes, Route } from 'react-router';
+import { ConfigProvider } from 'antd';
+import { antdConfig } from './theme/antdConfig';
 import CreateAccount from './pages/CreateAccount'
 import WelcomePage from './pages/WelcomePage'
+import ProfilePage from './pages/ProfilePage';
+import FriendPage from './pages/FriendPage';
 import Auth from './components/Auth'
 import { useEffect } from 'react'
 import { Layout } from 'antd'
@@ -24,6 +28,7 @@ function App() {
         backgroundColor: "#F6F9FF",
       }}
     >
+      <ConfigProvider {...antdConfig}>
       <Routes>
         {/* Welcome Page is now the default */}
         <Route path="/" element={<WelcomePage />} />
@@ -31,7 +36,10 @@ function App() {
         <Route path="/components" element={<Components />} />
         <Route path="/signup" element={<CreateAccount />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/friend/:friendId" element={<FriendPage />} />
       </Routes>
+      </ConfigProvider>
     </Layout>
   );
 }
