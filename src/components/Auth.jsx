@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";  // Added useEffect
+import React, { useState, useEffect } from "react";
 import { auth } from "../utils/firebaseConfig";
 import {
     GoogleAuthProvider,
@@ -6,48 +6,72 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
-    onAuthStateChanged,  // Added this
+    onAuthStateChanged,
 } from "firebase/auth";
-import { getDocuments, addDocuments } from "../utils/firestore";
 import { getUserDetails } from "@firebasegen/default-connector";
 import { createUser } from "@firebasegen/default-connector";
 import { useNavigate } from 'react-router-dom';
-import { Button, Space } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Button, Space, Input, Typography, Card } from 'antd';
+import { MailOutlined, LockOutlined, UserOutlined, GoogleOutlined } from '@ant-design/icons';
 
+const { Title, Text } = Typography;
 const provider = new GoogleAuthProvider();
+
+const contentData = [
+    {
+        image: "image1.jpg",
+        heading: "Create Good Habits",
+        text: "Change your life by slowly adding new healthy habits and sticking to them"
+    },
+    {
+        image: "image2.jpg",
+        heading: "Track Your Progress",
+        text: "Monitor your habits and see your growth over time"
+    },
+    {
+        image: "image3.jpg",
+        heading: "Stay Together and Strong",
+        text: "Find friends to discuss common topics. Complete challenges together."
+    }
+];
 
 const Auth = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
     const [error, setError] = useState("");
+    const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
-    //  Restore session on page load
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async(user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setUser(user);
                 console.log("🔄 User session restored:", user.uid);
-                const userDetails = await getUserDetails({userId: user.uid});
-                console.log(userDetails, "userDetails");
+                await getUserDetails({ userId: user.uid });
             } else {
                 setUser(null);
             }
         });
 
-        return () => unsubscribe();  // Cleanup listener on unmount
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % contentData.length);
+        }, 5000);
+        return () => clearInterval(interval);
     }, []);
 
     const signUp = async () => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
-            const res = await createUser({
-              id: userCredential.user.uid,
-              name: "test name",
-              email: userCredential.user.email,
+            await createUser({
+                id: userCredential.user.uid,
+                name: "test name",
+                email: userCredential.user.email,
             });
             console.log("✅ User signed up:", userCredential.user);
             setError("");
@@ -61,10 +85,8 @@ const Auth = () => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
-            // console.log(res, "result");
             setError("");
-            await addDocuments("testCollection", { message: "Now Firestore is working!", timestamp: new Date() });
-            console.log("✅ User signed in & test document added!");
+            console.log("✅ User signed in!");
         } catch (err) {
             setError(err.message);
         }
@@ -90,48 +112,82 @@ const Auth = () => {
     };
 
     return (
-        <div style={{ padding: 20 }}>
-            <h2>Firebase Authentication</h2>
-
-            {user ? (
-                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                    <p>Welcome, {user.email}</p>
-                    <Space>
-                        <Button onClick={logOut}>Log Out</Button>
-                        <Button 
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            backgroundImage: 'url("background.jpg")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+        }}>
+            <Card
+                style={{ width: 400, padding: '30px', borderRadius: '20px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+            >
+                <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                    <img src={contentData[currentIndex].image} alt="Feature" style={{ width: '100%', borderRadius: '10px' }} />
+                    <Title level={4}>{contentData[currentIndex].heading}</Title>
+                    <Text>{contentData[currentIndex].text}</Text>
+                    <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
+                        {contentData.map((_, index) => (
+                            <span
+                                key={index}
+                                onClick={() => setCurrentIndex(index)}
+                                style={{
+                                    width: '10px',
+                                    height: '10px',
+                                    borderRadius: '50%',
+                                    backgroundColor: currentIndex === index ? '#1890ff' : '#ccc',
+                                    cursor: 'pointer',
+                                    transition: 'background-color 0.3s',
+                                }}
+                            />
+                        ))}
+                    </div>
+                </div>
+                <Title level={3} style={{ textAlign: 'center' }}>Welcome 👋</Title>
+                {user ? (
+                    <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                        <Text strong>Signed in as: {user.email}</Text>
+                        <Button block onClick={logOut}>Log Out</Button>
+                        <Button
                             type="primary"
                             icon={<UserOutlined />}
+                            block
                             onClick={() => navigate('/profile')}
                         >
                             Go to Profile
                         </Button>
                     </Space>
-                </Space>
-            ) : (
-                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                    <input 
-                        type="email" 
-                        placeholder="Email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)}
-                        style={{ padding: '8px', width: '100%' }}
-                    />
-                    <input 
-                        type="password" 
-                        placeholder="Password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)}
-                        style={{ padding: '8px', width: '100%' }}
-                    />
-                    <Space>
-                        <Button onClick={signIn}>Sign In</Button>
-                        <Button onClick={signUp}>Sign Up</Button>
-                        <Button onClick={signInWithGoogle}>Sign In with Google</Button>
+                ) : (
+                    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                        <Input
+                            size="large"
+                            placeholder="Email"
+                            prefix={<MailOutlined />}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Input.Password
+                            size="large"
+                            placeholder="Password"
+                            prefix={<LockOutlined />}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <Button type="primary" block onClick={signIn}>Sign In</Button>
+                        <Button block onClick={signUp}>Sign Up</Button>
+                        <Button
+                            icon={<GoogleOutlined />}
+                            block
+                            onClick={signInWithGoogle}
+                        >
+                            Sign In with Google
+                        </Button>
                     </Space>
-                </Space>
-            )}
-
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+                )}
+                {error && <Text type="danger" style={{ display: 'block', marginTop: '15px' }}>{error}</Text>}
+            </Card>
         </div>
     );
 };
