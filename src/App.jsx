@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import { Layout } from 'antd'
 import Home from './pages/Home';
 import Components from './pages/Components';
+import CreateHabit from './pages/Habit/CreateHabit';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         {/* Welcome Page is now the default */}
         <Route path="/" element={<WelcomePage />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/create-habit" element={<CreateHabit />} />
         <Route path="/components" element={<Components />} />
         <Route path="/signup" element={<CreateAccount />} />
         <Route path="/auth" element={<Auth />} />
