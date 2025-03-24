@@ -2,11 +2,13 @@ import React from "react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import "./theme/forced-colors.css";
 import App from "./App.jsx";
 import { App as AntdApp } from "antd";
 import { ConfigProvider } from "antd";
 import { theme } from "./utils/theme.js";
-import { BrowserRouter } from "react-router";
+import { antdConfig } from "./theme/antdConfig";
+import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
