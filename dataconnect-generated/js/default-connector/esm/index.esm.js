@@ -36,6 +36,36 @@ export function removeFriend(dcOrVars, vars) {
   return executeMutation(removeFriendRef(dcOrVars, vars));
 }
 
+export function acceptFriendRequestRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AcceptFriendRequest', inputVars);
+}
+
+export function acceptFriendRequest(dcOrVars, vars) {
+  return executeMutation(acceptFriendRequestRef(dcOrVars, vars));
+}
+
+export function declineFriendRequestRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeclineFriendRequest', inputVars);
+}
+
+export function declineFriendRequest(dcOrVars, vars) {
+  return executeMutation(declineFriendRequestRef(dcOrVars, vars));
+}
+
+export function addReverseFriendRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AddReverseFriend', inputVars);
+}
+
+export function addReverseFriend(dcOrVars, vars) {
+  return executeMutation(addReverseFriendRef(dcOrVars, vars));
+}
+
 export function createHabitRef(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -124,5 +154,15 @@ export function getHabitByIdRef(dcOrVars, vars) {
 
 export function getHabitById(dcOrVars, vars) {
   return executeQuery(getHabitByIdRef(dcOrVars, vars));
+}
+
+export function listIncomingRequestsRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListIncomingRequests');
+}
+
+export function listIncomingRequests(dc) {
+  return executeQuery(listIncomingRequestsRef(dc));
 }
 

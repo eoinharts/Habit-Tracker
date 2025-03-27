@@ -8,11 +8,28 @@ export type Int64String = string;
 export type DateString = string;
 
 
+export interface AcceptFriendRequestData {
+  friendship_update?: Friendship_Key | null;
+}
+
+export interface AcceptFriendRequestVariables {
+  user1Id: string;
+}
+
 export interface AddFriendData {
   friendship_insert: Friendship_Key;
 }
 
 export interface AddFriendVariables {
+  currentUserId: string;
+  friendId: string;
+}
+
+export interface AddReverseFriendData {
+  friendship_insert: Friendship_Key;
+}
+
+export interface AddReverseFriendVariables {
   friendId: string;
 }
 
@@ -35,6 +52,14 @@ export interface CreateUserVariables {
   id?: string;
   name?: string;
   email?: string;
+}
+
+export interface DeclineFriendRequestData {
+  friendship_delete?: Friendship_Key | null;
+}
+
+export interface DeclineFriendRequestVariables {
+  user1Id: string;
 }
 
 export interface DeleteHabitData {
@@ -116,6 +141,18 @@ export interface ListFriendsData {
     friendDetails: {
       id: string;
       name: string;
+      email: string;
+    } & User_Key;
+  })[];
+}
+
+export interface ListIncomingRequestsData {
+  friendships: ({
+    user1Id: string;
+    friendDetails: {
+      id: string;
+      name: string;
+      email: string;
     } & User_Key;
   })[];
 }
@@ -185,6 +222,30 @@ export function removeFriendRef(dc: DataConnect, vars: RemoveFriendVariables): M
 
 export function removeFriend(vars: RemoveFriendVariables): MutationPromise<RemoveFriendData, RemoveFriendVariables>;
 export function removeFriend(dc: DataConnect, vars: RemoveFriendVariables): MutationPromise<RemoveFriendData, RemoveFriendVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function acceptFriendRequestRef(vars: AcceptFriendRequestVariables): MutationRef<AcceptFriendRequestData, AcceptFriendRequestVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function acceptFriendRequestRef(dc: DataConnect, vars: AcceptFriendRequestVariables): MutationRef<AcceptFriendRequestData, AcceptFriendRequestVariables>;
+
+export function acceptFriendRequest(vars: AcceptFriendRequestVariables): MutationPromise<AcceptFriendRequestData, AcceptFriendRequestVariables>;
+export function acceptFriendRequest(dc: DataConnect, vars: AcceptFriendRequestVariables): MutationPromise<AcceptFriendRequestData, AcceptFriendRequestVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function declineFriendRequestRef(vars: DeclineFriendRequestVariables): MutationRef<DeclineFriendRequestData, DeclineFriendRequestVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function declineFriendRequestRef(dc: DataConnect, vars: DeclineFriendRequestVariables): MutationRef<DeclineFriendRequestData, DeclineFriendRequestVariables>;
+
+export function declineFriendRequest(vars: DeclineFriendRequestVariables): MutationPromise<DeclineFriendRequestData, DeclineFriendRequestVariables>;
+export function declineFriendRequest(dc: DataConnect, vars: DeclineFriendRequestVariables): MutationPromise<DeclineFriendRequestData, DeclineFriendRequestVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function addReverseFriendRef(vars: AddReverseFriendVariables): MutationRef<AddReverseFriendData, AddReverseFriendVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function addReverseFriendRef(dc: DataConnect, vars: AddReverseFriendVariables): MutationRef<AddReverseFriendData, AddReverseFriendVariables>;
+
+export function addReverseFriend(vars: AddReverseFriendVariables): MutationPromise<AddReverseFriendData, AddReverseFriendVariables>;
+export function addReverseFriend(dc: DataConnect, vars: AddReverseFriendVariables): MutationPromise<AddReverseFriendData, AddReverseFriendVariables>;
 
 /* Allow users to create refs without passing in DataConnect */
 export function createHabitRef(vars: CreateHabitVariables): MutationRef<CreateHabitData, CreateHabitVariables>;
@@ -257,4 +318,12 @@ export function getHabitByIdRef(dc: DataConnect, vars: GetHabitByIdVariables): Q
 
 export function getHabitById(vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
 export function getHabitById(dc: DataConnect, vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function listIncomingRequestsRef(): QueryRef<ListIncomingRequestsData, undefined>;
+/* Allow users to pass in custom DataConnect instances */
+export function listIncomingRequestsRef(dc: DataConnect): QueryRef<ListIncomingRequestsData, undefined>;
+
+export function listIncomingRequests(): QueryPromise<ListIncomingRequestsData, undefined>;
+export function listIncomingRequests(dc: DataConnect): QueryPromise<ListIncomingRequestsData, undefined>;
 

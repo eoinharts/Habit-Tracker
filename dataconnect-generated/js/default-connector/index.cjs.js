@@ -31,6 +31,30 @@ exports.removeFriendRef = function removeFriendRef(dcOrVars, vars) {
 exports.removeFriend = function removeFriend(dcOrVars, vars) {
   return executeMutation(removeFriendRef(dcOrVars, vars));
 };
+exports.acceptFriendRequestRef = function acceptFriendRequestRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AcceptFriendRequest', inputVars);
+}
+exports.acceptFriendRequest = function acceptFriendRequest(dcOrVars, vars) {
+  return executeMutation(acceptFriendRequestRef(dcOrVars, vars));
+};
+exports.declineFriendRequestRef = function declineFriendRequestRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeclineFriendRequest', inputVars);
+}
+exports.declineFriendRequest = function declineFriendRequest(dcOrVars, vars) {
+  return executeMutation(declineFriendRequestRef(dcOrVars, vars));
+};
+exports.addReverseFriendRef = function addReverseFriendRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AddReverseFriend', inputVars);
+}
+exports.addReverseFriend = function addReverseFriend(dcOrVars, vars) {
+  return executeMutation(addReverseFriendRef(dcOrVars, vars));
+};
 exports.createHabitRef = function createHabitRef(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -102,4 +126,12 @@ exports.getHabitByIdRef = function getHabitByIdRef(dcOrVars, vars) {
 }
 exports.getHabitById = function getHabitById(dcOrVars, vars) {
   return executeQuery(getHabitByIdRef(dcOrVars, vars));
+};
+exports.listIncomingRequestsRef = function listIncomingRequestsRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListIncomingRequests');
+}
+exports.listIncomingRequests = function listIncomingRequests(dc) {
+  return executeQuery(listIncomingRequestsRef(dc));
 };

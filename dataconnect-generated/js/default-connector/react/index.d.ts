@@ -1,4 +1,4 @@
-import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, RemoveFriendData, RemoveFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, GetUserHabitsData, GetHabitByIdData, GetHabitByIdVariables } from '../';
+import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, RemoveFriendData, RemoveFriendVariables, AcceptFriendRequestData, AcceptFriendRequestVariables, DeclineFriendRequestData, DeclineFriendRequestVariables, AddReverseFriendData, AddReverseFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, GetUserHabitsData, GetHabitByIdData, GetHabitByIdVariables, ListIncomingRequestsData } from '../';
 import { FlattenedQueryResult, useDataConnectQueryOptions, FlattenedMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
 import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
@@ -13,6 +13,15 @@ export function useAddFriend(dc: DataConnect, options?: useDataConnectMutationOp
 
 export function useRemoveFriend(options?: useDataConnectMutationOptions<RemoveFriendData, FirebaseError, RemoveFriendVariables>): UseMutationResult<FlattenedMutationResult<RemoveFriendData, RemoveFriendVariables>, FirebaseError, RemoveFriendVariables>;
 export function useRemoveFriend(dc: DataConnect, options?: useDataConnectMutationOptions<RemoveFriendData, FirebaseError, RemoveFriendVariables>): UseMutationResult<FlattenedMutationResult<RemoveFriendData, RemoveFriendVariables>, FirebaseError, RemoveFriendVariables>;
+
+export function useAcceptFriendRequest(options?: useDataConnectMutationOptions<AcceptFriendRequestData, FirebaseError, AcceptFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<AcceptFriendRequestData, AcceptFriendRequestVariables>, FirebaseError, AcceptFriendRequestVariables>;
+export function useAcceptFriendRequest(dc: DataConnect, options?: useDataConnectMutationOptions<AcceptFriendRequestData, FirebaseError, AcceptFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<AcceptFriendRequestData, AcceptFriendRequestVariables>, FirebaseError, AcceptFriendRequestVariables>;
+
+export function useDeclineFriendRequest(options?: useDataConnectMutationOptions<DeclineFriendRequestData, FirebaseError, DeclineFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<DeclineFriendRequestData, DeclineFriendRequestVariables>, FirebaseError, DeclineFriendRequestVariables>;
+export function useDeclineFriendRequest(dc: DataConnect, options?: useDataConnectMutationOptions<DeclineFriendRequestData, FirebaseError, DeclineFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<DeclineFriendRequestData, DeclineFriendRequestVariables>, FirebaseError, DeclineFriendRequestVariables>;
+
+export function useAddReverseFriend(options?: useDataConnectMutationOptions<AddReverseFriendData, FirebaseError, AddReverseFriendVariables>): UseMutationResult<FlattenedMutationResult<AddReverseFriendData, AddReverseFriendVariables>, FirebaseError, AddReverseFriendVariables>;
+export function useAddReverseFriend(dc: DataConnect, options?: useDataConnectMutationOptions<AddReverseFriendData, FirebaseError, AddReverseFriendVariables>): UseMutationResult<FlattenedMutationResult<AddReverseFriendData, AddReverseFriendVariables>, FirebaseError, AddReverseFriendVariables>;
 
 export function useCreateHabit(options?: useDataConnectMutationOptions<CreateHabitData, FirebaseError, CreateHabitVariables>): UseMutationResult<FlattenedMutationResult<CreateHabitData, CreateHabitVariables>, FirebaseError, CreateHabitVariables>;
 export function useCreateHabit(dc: DataConnect, options?: useDataConnectMutationOptions<CreateHabitData, FirebaseError, CreateHabitVariables>): UseMutationResult<FlattenedMutationResult<CreateHabitData, CreateHabitVariables>, FirebaseError, CreateHabitVariables>;
@@ -40,3 +49,6 @@ export function useGetUserHabits(dc: DataConnect, options?: useDataConnectQueryO
 
 export function useGetHabitById(vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseQueryResult<FlattenedQueryResult<GetHabitByIdData, GetHabitByIdVariables>, FirebaseError>;
 export function useGetHabitById(dc: DataConnect, vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseQueryResult<FlattenedQueryResult<GetHabitByIdData, GetHabitByIdVariables>, FirebaseError>;
+
+export function useListIncomingRequests(options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseQueryResult<FlattenedQueryResult<ListIncomingRequestsData, undefined>, FirebaseError>;
+export function useListIncomingRequests(dc: DataConnect, options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseQueryResult<FlattenedQueryResult<ListIncomingRequestsData, undefined>, FirebaseError>;

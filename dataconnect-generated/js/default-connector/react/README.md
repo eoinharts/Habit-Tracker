@@ -11,10 +11,14 @@
   - [*ListFriends*](#listfriends)
   - [*GetUserHabits*](#getuserhabits)
   - [*GetHabitById*](#gethabitbyid)
+  - [*ListIncomingRequests*](#listincomingrequests)
 - [**Mutations**](#mutations)
   - [*CreateUser*](#createuser)
   - [*AddFriend*](#addfriend)
   - [*RemoveFriend*](#removefriend)
+  - [*AcceptFriendRequest*](#acceptfriendrequest)
+  - [*DeclineFriendRequest*](#declinefriendrequest)
+  - [*AddReverseFriend*](#addreversefriend)
   - [*CreateHabit*](#createhabit)
   - [*UpdateHabit*](#updatehabit)
   - [*DeleteHabit*](#deletehabit)
@@ -287,6 +291,7 @@ export interface ListFriendsData {
     friendDetails: {
       id: string;
       name: string;
+      email: string;
     } & User_Key;
   })[];
 }
@@ -477,6 +482,73 @@ export default function GetHabitByIdComponent() {
 }
 ```
 
+## ListIncomingRequests
+You can execute the `ListIncomingRequests` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+```javascript
+useListIncomingRequests(options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseQueryResult<FlattenedQueryResult<ListIncomingRequestsData, undefined>, FirebaseError>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useListIncomingRequests(dc: DataConnect, options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseQueryResult<FlattenedQueryResult<ListIncomingRequestsData, undefined>, FirebaseError>;
+```
+
+### Variables
+The `ListIncomingRequests` Query has no variables.
+### Return Type
+Recall that calling the `ListIncomingRequests` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `ListIncomingRequests` Query is of type `ListIncomingRequestsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ListIncomingRequestsData {
+  friendships: ({
+    user1Id: string;
+    friendDetails: {
+      id: string;
+      name: string;
+      email: string;
+    } & User_Key;
+  })[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `ListIncomingRequests`'s Query hook function
+
+```javascript
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectorConfig } from '@firebasegen/default-connector';
+import { useListIncomingRequests } from '@firebasegen/default-connector/react'
+
+export default function ListIncomingRequestsComponent() {
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useListIncomingRequests();
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useListIncomingRequests(dataConnect);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.friendships);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
 # Mutations
 
 The React generated SDK provides Mutations hook functions that call and return [`useDataConnectMutation`](https://react-query-firebase.invertase.dev/react/data-connect/mutations) hooks from TanStack Query Firebase.
@@ -596,6 +668,7 @@ The `AddFriend` Mutation requires an argument of type `AddFriendVariables`, whic
 
 ```javascript
 export interface AddFriendVariables {
+  currentUserId: string;
   friendId: string;
 }
 ```
@@ -632,11 +705,12 @@ export default function AddFriendComponent() {
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useAddFriend` Mutation requires an argument of type `AddFriendVariables`:
   const addFriendVars: AddFriendVariables = {
+    currentUserId: ..., 
     friendId: ..., 
   };
   mutation.mutate(addFriendVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ friendId: ..., });
+  mutation.mutate({ currentUserId: ..., friendId: ..., });
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -724,6 +798,228 @@ export default function RemoveFriendComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.friendship_delete);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## AcceptFriendRequest
+You can execute the `AcceptFriendRequest` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
+```javascript
+useAcceptFriendRequest(options?: useDataConnectMutationOptions<AcceptFriendRequestData, FirebaseError, AcceptFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<AcceptFriendRequestData, AcceptFriendRequestVariables>, FirebaseError, AcceptFriendRequestVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useAcceptFriendRequest(dc: DataConnect, options?: useDataConnectMutationOptions<AcceptFriendRequestData, FirebaseError, AcceptFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<AcceptFriendRequestData, AcceptFriendRequestVariables>, FirebaseError, AcceptFriendRequestVariables>;
+```
+
+### Variables
+The `AcceptFriendRequest` Mutation requires an argument of type `AcceptFriendRequestVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface AcceptFriendRequestVariables {
+  user1Id: string;
+}
+```
+### Return Type
+Recall that calling the `AcceptFriendRequest` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `AcceptFriendRequest` Mutation is of type `AcceptFriendRequestData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface AcceptFriendRequestData {
+  friendship_update?: Friendship_Key | null;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `AcceptFriendRequest`'s Mutation hook function
+
+```javascript
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectorConfig, AcceptFriendRequestVariables } from '@firebasegen/default-connector';
+import { useAcceptFriendRequest } from '@firebasegen/default-connector/react'
+
+export default function AcceptFriendRequestComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useAcceptFriendRequest();
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useAcceptFriendRequest(dataConnect);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useAcceptFriendRequest` Mutation requires an argument of type `AcceptFriendRequestVariables`:
+  const acceptFriendRequestVars: AcceptFriendRequestVariables = {
+    user1Id: ..., 
+  };
+  mutation.mutate(acceptFriendRequestVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ user1Id: ..., });
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.friendship_update);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## DeclineFriendRequest
+You can execute the `DeclineFriendRequest` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
+```javascript
+useDeclineFriendRequest(options?: useDataConnectMutationOptions<DeclineFriendRequestData, FirebaseError, DeclineFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<DeclineFriendRequestData, DeclineFriendRequestVariables>, FirebaseError, DeclineFriendRequestVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useDeclineFriendRequest(dc: DataConnect, options?: useDataConnectMutationOptions<DeclineFriendRequestData, FirebaseError, DeclineFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<DeclineFriendRequestData, DeclineFriendRequestVariables>, FirebaseError, DeclineFriendRequestVariables>;
+```
+
+### Variables
+The `DeclineFriendRequest` Mutation requires an argument of type `DeclineFriendRequestVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface DeclineFriendRequestVariables {
+  user1Id: string;
+}
+```
+### Return Type
+Recall that calling the `DeclineFriendRequest` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `DeclineFriendRequest` Mutation is of type `DeclineFriendRequestData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface DeclineFriendRequestData {
+  friendship_delete?: Friendship_Key | null;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `DeclineFriendRequest`'s Mutation hook function
+
+```javascript
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectorConfig, DeclineFriendRequestVariables } from '@firebasegen/default-connector';
+import { useDeclineFriendRequest } from '@firebasegen/default-connector/react'
+
+export default function DeclineFriendRequestComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useDeclineFriendRequest();
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useDeclineFriendRequest(dataConnect);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useDeclineFriendRequest` Mutation requires an argument of type `DeclineFriendRequestVariables`:
+  const declineFriendRequestVars: DeclineFriendRequestVariables = {
+    user1Id: ..., 
+  };
+  mutation.mutate(declineFriendRequestVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ user1Id: ..., });
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.friendship_delete);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## AddReverseFriend
+You can execute the `AddReverseFriend` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
+```javascript
+useAddReverseFriend(options?: useDataConnectMutationOptions<AddReverseFriendData, FirebaseError, AddReverseFriendVariables>): UseMutationResult<FlattenedMutationResult<AddReverseFriendData, AddReverseFriendVariables>, FirebaseError, AddReverseFriendVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useAddReverseFriend(dc: DataConnect, options?: useDataConnectMutationOptions<AddReverseFriendData, FirebaseError, AddReverseFriendVariables>): UseMutationResult<FlattenedMutationResult<AddReverseFriendData, AddReverseFriendVariables>, FirebaseError, AddReverseFriendVariables>;
+```
+
+### Variables
+The `AddReverseFriend` Mutation requires an argument of type `AddReverseFriendVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface AddReverseFriendVariables {
+  friendId: string;
+}
+```
+### Return Type
+Recall that calling the `AddReverseFriend` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `AddReverseFriend` Mutation is of type `AddReverseFriendData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface AddReverseFriendData {
+  friendship_insert: Friendship_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `AddReverseFriend`'s Mutation hook function
+
+```javascript
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectorConfig, AddReverseFriendVariables } from '@firebasegen/default-connector';
+import { useAddReverseFriend } from '@firebasegen/default-connector/react'
+
+export default function AddReverseFriendComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useAddReverseFriend();
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useAddReverseFriend(dataConnect);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useAddReverseFriend` Mutation requires an argument of type `AddReverseFriendVariables`:
+  const addReverseFriendVars: AddReverseFriendVariables = {
+    friendId: ..., 
+  };
+  mutation.mutate(addReverseFriendVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ friendId: ..., });
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.friendship_insert);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }
