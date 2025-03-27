@@ -596,6 +596,7 @@ The `AddFriend` Mutation requires an argument of type `AddFriendVariables`, whic
 
 ```javascript
 export interface AddFriendVariables {
+  currentUserId: string;
   friendId: string;
 }
 ```
@@ -632,11 +633,12 @@ export default function AddFriendComponent() {
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useAddFriend` Mutation requires an argument of type `AddFriendVariables`:
   const addFriendVars: AddFriendVariables = {
+    currentUserId: ..., 
     friendId: ..., 
   };
   mutation.mutate(addFriendVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ friendId: ..., });
+  mutation.mutate({ currentUserId: ..., friendId: ..., });
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {

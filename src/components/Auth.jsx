@@ -10,7 +10,7 @@ import {
 } from "firebase/auth";
 import { getUserDetails } from "@firebasegen/default-connector";
 import { createUser } from "@firebasegen/default-connector";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Button, Space, Input, Typography, Card } from 'antd';
 import { MailOutlined, LockOutlined, UserOutlined, GoogleOutlined } from '@ant-design/icons';
 

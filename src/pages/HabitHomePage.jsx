@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { StopOutlined, CoffeeOutlined, ThunderboltOutlined, ReadOutlined, AppleOutlined, CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;

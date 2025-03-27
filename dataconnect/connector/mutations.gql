@@ -40,9 +40,9 @@ mutation CreateUser($id: String! = "auth.uid", $name: String! = "Testing Name", 
 }
 
 # Add a friend
-mutation AddFriend($friendId: String!) @auth(level: USER) {
+mutation AddFriend($currentUserId: String!, $friendId: String!) @auth(level: USER) {
   friendship_insert(
-    data: { user1Id : "auth.uid", user2Id: $friendId, status: "pending" }
+    data: { user1Id : $currentUserId, user2Id: $friendId, status: "pending" }
   )
 }
 

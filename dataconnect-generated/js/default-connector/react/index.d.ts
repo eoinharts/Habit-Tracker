@@ -1,9 +1,24 @@
-import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, RemoveFriendData, RemoveFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, GetUserHabitsData, GetHabitByIdData, GetHabitByIdVariables } from '../';
+import { GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, GetUserHabitsData, GetHabitByIdData, GetHabitByIdVariables, CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, RemoveFriendData, RemoveFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables } from '../';
 import { FlattenedQueryResult, useDataConnectQueryOptions, FlattenedMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
 import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
 import { FirebaseError } from 'firebase/app';
 
+
+export function useGetUserDetails(vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
+export function useGetUserDetails(dc: DataConnect, vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
+
+export function useGetAllUsers(options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
+export function useGetAllUsers(dc: DataConnect, options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
+
+export function useListFriends(options?: useDataConnectQueryOptions<ListFriendsData>): UseQueryResult<FlattenedQueryResult<ListFriendsData, undefined>, FirebaseError>;
+export function useListFriends(dc: DataConnect, options?: useDataConnectQueryOptions<ListFriendsData>): UseQueryResult<FlattenedQueryResult<ListFriendsData, undefined>, FirebaseError>;
+
+export function useGetUserHabits(options?: useDataConnectQueryOptions<GetUserHabitsData>): UseQueryResult<FlattenedQueryResult<GetUserHabitsData, undefined>, FirebaseError>;
+export function useGetUserHabits(dc: DataConnect, options?: useDataConnectQueryOptions<GetUserHabitsData>): UseQueryResult<FlattenedQueryResult<GetUserHabitsData, undefined>, FirebaseError>;
+
+export function useGetHabitById(vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseQueryResult<FlattenedQueryResult<GetHabitByIdData, GetHabitByIdVariables>, FirebaseError>;
+export function useGetHabitById(dc: DataConnect, vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseQueryResult<FlattenedQueryResult<GetHabitByIdData, GetHabitByIdVariables>, FirebaseError>;
 
 export function useCreateUser(options?: useDataConnectMutationOptions<CreateUserData, FirebaseError, CreateUserVariables | void>): UseMutationResult<FlattenedMutationResult<CreateUserData, CreateUserVariables>, FirebaseError, CreateUserVariables | void>;
 export function useCreateUser(dc: DataConnect, options?: useDataConnectMutationOptions<CreateUserData, FirebaseError, CreateUserVariables | void>): UseMutationResult<FlattenedMutationResult<CreateUserData, CreateUserVariables>, FirebaseError, CreateUserVariables | void>;
@@ -25,18 +40,3 @@ export function useDeleteHabit(dc: DataConnect, options?: useDataConnectMutation
 
 export function useUpdateHabitStreak(options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseMutationResult<FlattenedMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>, FirebaseError, UpdateHabitStreakVariables>;
 export function useUpdateHabitStreak(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseMutationResult<FlattenedMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>, FirebaseError, UpdateHabitStreakVariables>;
-
-export function useGetUserDetails(vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
-export function useGetUserDetails(dc: DataConnect, vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
-
-export function useGetAllUsers(options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
-export function useGetAllUsers(dc: DataConnect, options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
-
-export function useListFriends(options?: useDataConnectQueryOptions<ListFriendsData>): UseQueryResult<FlattenedQueryResult<ListFriendsData, undefined>, FirebaseError>;
-export function useListFriends(dc: DataConnect, options?: useDataConnectQueryOptions<ListFriendsData>): UseQueryResult<FlattenedQueryResult<ListFriendsData, undefined>, FirebaseError>;
-
-export function useGetUserHabits(options?: useDataConnectQueryOptions<GetUserHabitsData>): UseQueryResult<FlattenedQueryResult<GetUserHabitsData, undefined>, FirebaseError>;
-export function useGetUserHabits(dc: DataConnect, options?: useDataConnectQueryOptions<GetUserHabitsData>): UseQueryResult<FlattenedQueryResult<GetUserHabitsData, undefined>, FirebaseError>;
-
-export function useGetHabitById(vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseQueryResult<FlattenedQueryResult<GetHabitByIdData, GetHabitByIdVariables>, FirebaseError>;
-export function useGetHabitById(dc: DataConnect, vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseQueryResult<FlattenedQueryResult<GetHabitByIdData, GetHabitByIdVariables>, FirebaseError>;

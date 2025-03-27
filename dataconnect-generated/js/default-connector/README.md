@@ -659,6 +659,7 @@ The `AddFriend` mutation requires an argument of type `AddFriendVariables`, whic
 
 ```javascript
 export interface AddFriendVariables {
+  currentUserId: string;
   friendId: string;
 }
 ```
@@ -679,6 +680,7 @@ import { connectorConfig, addFriend, AddFriendVariables } from '@firebasegen/def
 
 // The `AddFriend` mutation requires an argument of type `AddFriendVariables`:
 const addFriendVars: AddFriendVariables = {
+  currentUserId: ..., 
   friendId: ..., 
 };
 
@@ -686,7 +688,7 @@ const addFriendVars: AddFriendVariables = {
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await addFriend(addFriendVars);
 // Variables can be defined inline as well.
-const { data } = await addFriend({ friendId: ..., });
+const { data } = await addFriend({ currentUserId: ..., friendId: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -709,13 +711,14 @@ import { connectorConfig, addFriendRef, AddFriendVariables } from '@firebasegen/
 
 // The `AddFriend` mutation requires an argument of type `AddFriendVariables`:
 const addFriendVars: AddFriendVariables = {
+  currentUserId: ..., 
   friendId: ..., 
 };
 
 // Call the `addFriendRef()` function to get a reference to the mutation.
 const ref = addFriendRef(addFriendVars);
 // Variables can be defined inline as well.
-const ref = addFriendRef({ friendId: ..., });
+const ref = addFriendRef({ currentUserId: ..., friendId: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);

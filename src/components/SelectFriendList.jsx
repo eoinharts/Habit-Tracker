@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { List, Avatar, Button, message } from 'antd';
 import { UserOutlined, PlusOutlined } from '@ant-design/icons';
 import { getAllUsers, addFriend, getUserFriends } from '../utils/fireStore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const SelectFriendList = ({ userId, onSuccess, onClose }) => {
     const [availableUsers, setAvailableUsers] = useState([]);

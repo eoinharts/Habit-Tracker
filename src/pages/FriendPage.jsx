@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { Card, List, Button, InputNumber, message, Space, Typography, Tooltip } from 'antd';
 import { TrophyOutlined, PlusOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { getFriendDetails, updateFriendPoints, getFriendAchievements } from '../utils/fireStore';

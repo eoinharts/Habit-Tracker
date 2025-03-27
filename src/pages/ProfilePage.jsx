@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Tabs, Avatar, List, Card, Badge, Button, message, Popconfirm, Modal, Space, Tooltip } from 'antd';
 import { auth } from '../utils/firebaseConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import { TrophyOutlined, UserOutlined, ArrowLeftOutlined, DeleteOutlined, UpOutlined, EyeOutlined } from '@ant-design/icons';
 import { getUserFriends, getUserAchievements, removeFriend, removeAchievement, upgradeAchievement, getUserPoints } from '../utils/fireStore';
