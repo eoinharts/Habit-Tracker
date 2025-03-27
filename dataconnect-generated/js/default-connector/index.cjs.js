@@ -7,6 +7,86 @@ const connectorConfig = {
 };
 exports.connectorConfig = connectorConfig;
 
+exports.createUserRef = function createUserRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateUser', inputVars);
+}
+exports.createUser = function createUser(dcOrVars, vars) {
+  return executeMutation(createUserRef(dcOrVars, vars));
+};
+exports.addFriendRef = function addFriendRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AddFriend', inputVars);
+}
+exports.addFriend = function addFriend(dcOrVars, vars) {
+  return executeMutation(addFriendRef(dcOrVars, vars));
+};
+exports.removeFriendRef = function removeFriendRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'RemoveFriend', inputVars);
+}
+exports.removeFriend = function removeFriend(dcOrVars, vars) {
+  return executeMutation(removeFriendRef(dcOrVars, vars));
+};
+exports.acceptFriendRequestRef = function acceptFriendRequestRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AcceptFriendRequest', inputVars);
+}
+exports.acceptFriendRequest = function acceptFriendRequest(dcOrVars, vars) {
+  return executeMutation(acceptFriendRequestRef(dcOrVars, vars));
+};
+exports.declineFriendRequestRef = function declineFriendRequestRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeclineFriendRequest', inputVars);
+}
+exports.declineFriendRequest = function declineFriendRequest(dcOrVars, vars) {
+  return executeMutation(declineFriendRequestRef(dcOrVars, vars));
+};
+exports.addReverseFriendRef = function addReverseFriendRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AddReverseFriend', inputVars);
+}
+exports.addReverseFriend = function addReverseFriend(dcOrVars, vars) {
+  return executeMutation(addReverseFriendRef(dcOrVars, vars));
+};
+exports.createHabitRef = function createHabitRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateHabit', inputVars);
+}
+exports.createHabit = function createHabit(dcOrVars, vars) {
+  return executeMutation(createHabitRef(dcOrVars, vars));
+};
+exports.updateHabitRef = function updateHabitRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateHabit', inputVars);
+}
+exports.updateHabit = function updateHabit(dcOrVars, vars) {
+  return executeMutation(updateHabitRef(dcOrVars, vars));
+};
+exports.deleteHabitRef = function deleteHabitRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteHabit', inputVars);
+}
+exports.deleteHabit = function deleteHabit(dcOrVars, vars) {
+  return executeMutation(deleteHabitRef(dcOrVars, vars));
+};
+exports.updateHabitStreakRef = function updateHabitStreakRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateHabitStreak', inputVars);
+}
+exports.updateHabitStreak = function updateHabitStreak(dcOrVars, vars) {
+  return executeMutation(updateHabitStreakRef(dcOrVars, vars));
+};
 exports.getUserDetailsRef = function getUserDetailsRef(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -47,59 +127,11 @@ exports.getHabitByIdRef = function getHabitByIdRef(dcOrVars, vars) {
 exports.getHabitById = function getHabitById(dcOrVars, vars) {
   return executeQuery(getHabitByIdRef(dcOrVars, vars));
 };
-exports.createUserRef = function createUserRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+exports.listIncomingRequestsRef = function listIncomingRequestsRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'CreateUser', inputVars);
+  return queryRef(dcInstance, 'ListIncomingRequests');
 }
-exports.createUser = function createUser(dcOrVars, vars) {
-  return executeMutation(createUserRef(dcOrVars, vars));
-};
-exports.addFriendRef = function addFriendRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'AddFriend', inputVars);
-}
-exports.addFriend = function addFriend(dcOrVars, vars) {
-  return executeMutation(addFriendRef(dcOrVars, vars));
-};
-exports.removeFriendRef = function removeFriendRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'RemoveFriend', inputVars);
-}
-exports.removeFriend = function removeFriend(dcOrVars, vars) {
-  return executeMutation(removeFriendRef(dcOrVars, vars));
-};
-exports.createHabitRef = function createHabitRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'CreateHabit', inputVars);
-}
-exports.createHabit = function createHabit(dcOrVars, vars) {
-  return executeMutation(createHabitRef(dcOrVars, vars));
-};
-exports.updateHabitRef = function updateHabitRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'UpdateHabit', inputVars);
-}
-exports.updateHabit = function updateHabit(dcOrVars, vars) {
-  return executeMutation(updateHabitRef(dcOrVars, vars));
-};
-exports.deleteHabitRef = function deleteHabitRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'DeleteHabit', inputVars);
-}
-exports.deleteHabit = function deleteHabit(dcOrVars, vars) {
-  return executeMutation(deleteHabitRef(dcOrVars, vars));
-};
-exports.updateHabitStreakRef = function updateHabitStreakRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'UpdateHabitStreak', inputVars);
-}
-exports.updateHabitStreak = function updateHabitStreak(dcOrVars, vars) {
-  return executeMutation(updateHabitStreakRef(dcOrVars, vars));
+exports.listIncomingRequests = function listIncomingRequests(dc) {
+  return executeQuery(listIncomingRequestsRef(dc));
 };

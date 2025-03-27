@@ -1,37 +1,7 @@
-const { getUserDetailsRef, getAllUsersRef, listFriendsRef, getUserHabitsRef, getHabitByIdRef, createUserRef, addFriendRef, removeFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, connectorConfig } = require('../index.cjs.js');
+const { createUserRef, addFriendRef, removeFriendRef, acceptFriendRequestRef, declineFriendRequestRef, addReverseFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, getUserDetailsRef, getAllUsersRef, listFriendsRef, getUserHabitsRef, getHabitByIdRef, listIncomingRequestsRef, connectorConfig } = require('../index.cjs.js');
 const { validateArgs, CallerSdkTypeEnum } = require('firebase/data-connect');
 const { useDataConnectQuery, useDataConnectMutation } = require('@tanstack-query-firebase/react/data-connect');
 
-
-exports.useGetUserDetails = function useGetUserDetails(dcOrVars, vars, options) {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, false);
-  const ref = getUserDetailsRef(dcInstance, inputVars);
-  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
-}
-
-exports.useGetAllUsers = function useGetAllUsers(dc, options) {
-  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined, false);
-  const ref = getAllUsersRef(dcInstance);
-  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
-}
-
-exports.useListFriends = function useListFriends(dc, options) {
-  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined, false);
-  const ref = listFriendsRef(dcInstance);
-  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
-}
-
-exports.useGetUserHabits = function useGetUserHabits(dc, options) {
-  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined, false);
-  const ref = getUserHabitsRef(dcInstance);
-  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
-}
-
-exports.useGetHabitById = function useGetHabitById(dcOrVars, vars, options) {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, false);
-  const ref = getHabitByIdRef(dcInstance, inputVars);
-  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
-}
 exports.useCreateUser = function useCreateUser(dcOrOptions, options) {
   const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options, false);
   function refFactory(vars) {
@@ -52,6 +22,30 @@ exports.useRemoveFriend = function useRemoveFriend(dcOrOptions, options) {
   const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options, false);
   function refFactory(vars) {
     return removeFriendRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useAcceptFriendRequest = function useAcceptFriendRequest(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options, false);
+  function refFactory(vars) {
+    return acceptFriendRequestRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useDeclineFriendRequest = function useDeclineFriendRequest(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options, false);
+  function refFactory(vars) {
+    return declineFriendRequestRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useAddReverseFriend = function useAddReverseFriend(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options, false);
+  function refFactory(vars) {
+    return addReverseFriendRef(dcInstance, vars);
   }
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
@@ -86,4 +80,41 @@ exports.useUpdateHabitStreak = function useUpdateHabitStreak(dcOrOptions, option
     return updateHabitStreakRef(dcInstance, vars);
   }
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+
+exports.useGetUserDetails = function useGetUserDetails(dcOrVars, vars, options) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, false);
+  const ref = getUserDetailsRef(dcInstance, inputVars);
+  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useGetAllUsers = function useGetAllUsers(dc, options) {
+  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined, false);
+  const ref = getAllUsersRef(dcInstance);
+  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useListFriends = function useListFriends(dc, options) {
+  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined, false);
+  const ref = listFriendsRef(dcInstance);
+  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useGetUserHabits = function useGetUserHabits(dc, options) {
+  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined, false);
+  const ref = getUserHabitsRef(dcInstance);
+  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useGetHabitById = function useGetHabitById(dcOrVars, vars, options) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, false);
+  const ref = getHabitByIdRef(dcInstance, inputVars);
+  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useListIncomingRequests = function useListIncomingRequests(dc, options) {
+  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined, false);
+  const ref = listIncomingRequestsRef(dcInstance);
+  return useDataConnectQuery(ref, options, CallerSdkTypeEnum.GeneratedReact);
 }

@@ -53,6 +53,29 @@ mutation RemoveFriend($friendId: String!) @auth(level: USER) {
   )
 }
 
+# Accept a pending friend request
+mutation AcceptFriendRequest($user1Id: String!) @auth(level: USER) {
+  friendship_update(
+    key: { user1Id: $user1Id, user2Id: "auth.uid" }
+    data: { status: "accepted" }
+  )
+}
+
+# Decline or reject a pending friend request
+mutation DeclineFriendRequest($user1Id: String!) @auth(level: USER) {
+  friendship_delete(
+    key: { user1Id: $user1Id, user2Id: "auth.uid" }
+  )
+}
+
+# (Optional) Add reverse accepted record to complete mutual friendship
+mutation AddReverseFriend($friendId: String!) @auth(level: USER) {
+  friendship_insert(
+    data: { user1Id: "auth.uid", user2Id: $friendId, status: "accepted" }
+  )
+}
+
+
 # Create a habit
 mutation CreateHabit($title: String!, $description: String!, $category: String!, $streakGoal: Int!) @auth(level: USER) {
   habit_insert(
