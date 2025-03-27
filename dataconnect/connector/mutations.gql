@@ -39,12 +39,14 @@ mutation CreateUser($id: String! = "auth.uid", $name: String! = "Testing Name", 
   user_insert(data: { id: $id,name: $name, email: $email})
 }
 
-# Add a friend
 mutation AddFriend($friendId: String!) @auth(level: USER) {
-  friendship_insert(
-    data: { user1Id : "auth.uid", user2Id: $friendId, status: "pending" }
-  )
+  friendship_insert(data: {
+    user1Id_expr: "auth.uid",
+    user2Id: $friendId,
+    status: "pending"
+  })
 }
+
 
 # Remove a friend
 mutation RemoveFriend($friendId: String!) @auth(level: USER) {

@@ -83,25 +83,69 @@ const Auth = () => {
 
     const signIn = async () => {
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            setUser(userCredential.user);
-            setError("");
-            console.log("✅ User signed in!");
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          const signedInUser = userCredential.user;
+          setUser(signedInUser);
+          setError("");
+      
+          try {
+            // Try get user from Data Connect
+            const result = await getUserDetails({ userId: signedInUser.uid });
+            if (!result?.data?.users?.length) {
+              // If user not found, create them
+              await createUser({
+                id: signedInUser.uid,
+                name: signedInUser.displayName || "Anonymous",
+                email: signedInUser.email,
+              });
+              console.log("✨ User created in Data Connect after sign in");
+            }
+          } catch (fetchErr) {
+            console.warn("⚠️ User not found in Data Connect. Creating...");
+            await createUser({
+              id: signedInUser.uid,
+              name: signedInUser.displayName || "Anonymous",
+              email: signedInUser.email,
+            });
+          }
+      
+          console.log("✅ User signed in!");
         } catch (err) {
-            setError(err.message);
+          console.error("❌ Sign in error:", err);
+          setError(err.message);
         }
-    };
-
-    const signInWithGoogle = async () => {
+      };
+    
+      const signInWithGoogle = async () => {
         try {
-            const userCredential = await signInWithPopup(auth, provider);
-            setUser(userCredential.user);
-            setError("");
+          const userCredential = await signInWithPopup(auth, provider);
+          const googleUser = userCredential.user;
+          setUser(googleUser);
+          setError("");
+      
+          // ✅ Check if user exists in Data Connect
+          const result = await getUserDetails({ userId: googleUser.uid });
+      
+          if (!result?.data?.users?.length) {
+            await createUser({
+              id: googleUser.uid,
+              name: googleUser.displayName || "No Name",
+              email: googleUser.email,
+            });
+            console.log("✨ Google user created in Data Connect");
+          } else {
+            console.log("✅ Google user already exists in Data Connect");
+          }
+      
+          console.log("✅ Google Sign-In successful");
         } catch (err) {
-            setError(err.message);
+          console.error("❌ Google Sign In Error:", err);
+          setError(err.message);
         }
-    };
+      };
+      
 
+    
     const logOut = async () => {
         try {
             await signOut(auth);
