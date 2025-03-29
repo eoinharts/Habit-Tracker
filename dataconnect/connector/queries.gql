@@ -101,22 +101,47 @@ query GetAllUsers @auth(level: USER) {
   }
 }
 
-# Get current user's sent and accepted friends
+# ListFriends to show *both sides* of accepted friendships
 query ListFriends @auth(level: USER) {
-  friendships(where: {
-    user1Id: { eq: "auth.uid" },
-    status: { eq: "accepted" }
-  }) {
-    user2Id
-    status
-    friendDetails: user2 {
+  friendships(
+    where: {
+      _or: [
+        { user1: { id: { eq: "auth.uid" } }, status: { eq: "accepted" } },
+        { user2: { id: { eq: "auth.uid" } }, status: { eq: "accepted" } }
+      ]
+    }
+  ) {
+    user1 {
       id
       name
       email
     }
+    user2 {
+      id
+      name
+      email
+    }
+    status
   }
 }
-
+query ListIncomingRequests @auth(level: USER) {
+  friendships(
+    where: {
+      user2Id: { eq: "auth.uid" }
+      status: { eq: "pending" }
+    }
+  ) {
+    user1 {
+      id
+      name
+      email
+    }
+    user2 {
+      id
+    }
+    status
+  }
+}
 
 # Get user habits
 query GetUserHabits @auth(level: USER) {
@@ -190,17 +215,12 @@ query GetHabitById($habitId: UUID!) @auth(level: USER) {
 
 
 # See friend requests received by the current user
-query ListIncomingRequests @auth(level: USER) {
-  friendships(where: {
-    user2Id: { eq: "auth.uid" },
-    status: { eq: "pending" }
-  }) {
+
+query DebugFriendships @auth(level: USER) {
+  friendships {
     user1Id
-    friendDetails: user1 {
-      id
-      name
-      email
-    }
+    user2Id
+    status
   }
 }
 

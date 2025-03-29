@@ -70,8 +70,11 @@ type User @table {
 type Friendship @table(key: ["user1", "user2"]) {
   user1: User!
   user2: User!
+  user1Id: String!
+  user2Id: String!
   status: String!  # "pending", "accepted", "blocked"
 }
+
 
 # Habits Table
 type Habit @table {

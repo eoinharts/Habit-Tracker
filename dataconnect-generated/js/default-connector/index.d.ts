@@ -14,6 +14,7 @@ export interface AcceptFriendRequestData {
 
 export interface AcceptFriendRequestVariables {
   user1Id: string;
+  user2Id: string;
 }
 
 export interface AddFriendData {
@@ -21,7 +22,6 @@ export interface AddFriendData {
 }
 
 export interface AddFriendVariables {
-  currentUserId: string;
   friendId: string;
 }
 
@@ -54,12 +54,21 @@ export interface CreateUserVariables {
   email?: string;
 }
 
+export interface DebugFriendshipsData {
+  friendships: ({
+    user1Id: string;
+    user2Id: string;
+    status: string;
+  } & Friendship_Key)[];
+}
+
 export interface DeclineFriendRequestData {
   friendship_delete?: Friendship_Key | null;
 }
 
 export interface DeclineFriendRequestVariables {
   user1Id: string;
+  user2Id: string;
 }
 
 export interface DeleteHabitData {
@@ -136,24 +145,31 @@ export interface Habit_Key {
 
 export interface ListFriendsData {
   friendships: ({
-    user2Id: string;
-    status: string;
-    friendDetails: {
+    user1: {
       id: string;
       name: string;
       email: string;
     } & User_Key;
+      user2: {
+        id: string;
+        name: string;
+        email: string;
+      } & User_Key;
+        status: string;
   })[];
 }
 
 export interface ListIncomingRequestsData {
   friendships: ({
-    user1Id: string;
-    friendDetails: {
+    user1: {
       id: string;
       name: string;
       email: string;
     } & User_Key;
+      user2: {
+        id: string;
+      } & User_Key;
+        status: string;
   })[];
 }
 
@@ -304,6 +320,14 @@ export function listFriends(): QueryPromise<ListFriendsData, undefined>;
 export function listFriends(dc: DataConnect): QueryPromise<ListFriendsData, undefined>;
 
 /* Allow users to create refs without passing in DataConnect */
+export function listIncomingRequestsRef(): QueryRef<ListIncomingRequestsData, undefined>;
+/* Allow users to pass in custom DataConnect instances */
+export function listIncomingRequestsRef(dc: DataConnect): QueryRef<ListIncomingRequestsData, undefined>;
+
+export function listIncomingRequests(): QueryPromise<ListIncomingRequestsData, undefined>;
+export function listIncomingRequests(dc: DataConnect): QueryPromise<ListIncomingRequestsData, undefined>;
+
+/* Allow users to create refs without passing in DataConnect */
 export function getUserHabitsRef(): QueryRef<GetUserHabitsData, undefined>;
 /* Allow users to pass in custom DataConnect instances */
 export function getUserHabitsRef(dc: DataConnect): QueryRef<GetUserHabitsData, undefined>;
@@ -320,10 +344,10 @@ export function getHabitById(vars: GetHabitByIdVariables): QueryPromise<GetHabit
 export function getHabitById(dc: DataConnect, vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
 
 /* Allow users to create refs without passing in DataConnect */
-export function listIncomingRequestsRef(): QueryRef<ListIncomingRequestsData, undefined>;
+export function debugFriendshipsRef(): QueryRef<DebugFriendshipsData, undefined>;
 /* Allow users to pass in custom DataConnect instances */
-export function listIncomingRequestsRef(dc: DataConnect): QueryRef<ListIncomingRequestsData, undefined>;
+export function debugFriendshipsRef(dc: DataConnect): QueryRef<DebugFriendshipsData, undefined>;
 
-export function listIncomingRequests(): QueryPromise<ListIncomingRequestsData, undefined>;
-export function listIncomingRequests(dc: DataConnect): QueryPromise<ListIncomingRequestsData, undefined>;
+export function debugFriendships(): QueryPromise<DebugFriendshipsData, undefined>;
+export function debugFriendships(dc: DataConnect): QueryPromise<DebugFriendshipsData, undefined>;
 

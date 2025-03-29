@@ -39,14 +39,18 @@ mutation CreateUser($id: String! = "auth.uid", $name: String! = "Testing Name", 
   user_insert(data: { id: $id,name: $name, email: $email})
 }
 
-# Add a friend
-mutation AddFriend($currentUserId: String!, $friendId: String!) @auth(level: USER) {
+# ✅ Send a friend request
+mutation AddFriend($friendId: String!) @auth(level: USER) {
   friendship_insert(
-    data: { user1Id : $currentUserId, user2Id: $friendId, status: "pending" }
+    data: {
+      user1: { id: "auth.uid" }
+      user2: { id: $friendId }
+      status: "pending"
+    }
   )
 }
 
-# Remove a friend
+#  Remove a friend or cancel a request
 mutation RemoveFriend($friendId: String!) @auth(level: USER) {
   friendship_delete(
     key: { user1Id: "auth.uid", user2Id: $friendId }
@@ -54,26 +58,34 @@ mutation RemoveFriend($friendId: String!) @auth(level: USER) {
 }
 
 # Accept a pending friend request
-mutation AcceptFriendRequest($user1Id: String!) @auth(level: USER) {
+# ✅ Accept a pending friend requestmutation AcceptFriendRequest($user1Id: String!) @auth(level: USER) {
+mutation AcceptFriendRequest($user1Id: String!, $user2Id: String!) @auth(level: USER) {
   friendship_update(
-    key: { user1Id: $user1Id, user2Id: "auth.uid" }
+    key: { user1Id: $user1Id, user2Id: $user2Id }
     data: { status: "accepted" }
   )
 }
 
-# Decline or reject a pending friend request
-mutation DeclineFriendRequest($user1Id: String!) @auth(level: USER) {
+
+# ✅ Decline or reject a pending friend request
+mutation DeclineFriendRequest($user1Id: String!, $user2Id: String!) @auth(level: USER) {
   friendship_delete(
-    key: { user1Id: $user1Id, user2Id: "auth.uid" }
+    key: { user1Id: $user1Id, user2Id: $user2Id }
   )
 }
 
-# (Optional) Add reverse accepted record to complete mutual friendship
+
+#  Optional: Make friendship mutual (insert reverse)
 mutation AddReverseFriend($friendId: String!) @auth(level: USER) {
   friendship_insert(
-    data: { user1Id: "auth.uid", user2Id: $friendId, status: "accepted" }
+    data: {
+      user1: { id: "auth.uid" }
+      user2: { id: $friendId }
+      status: "accepted"
+    }
   )
 }
+
 
 
 # Create a habit

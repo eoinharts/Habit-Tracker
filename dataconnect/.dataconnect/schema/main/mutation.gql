@@ -1,6 +1,6 @@
 extend type Mutation {
   """
-  ✨ Insert a single `Friendship` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert a single `Friendship` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   friendship_insert(
     """
@@ -9,7 +9,7 @@ extend type Mutation {
     data: Friendship_Data!
   ): Friendship_KeyOutput! @fdc_generated(from: "Friendship", purpose: INSERT_SINGLE)
   """
-  ✨ Insert a single `Habit` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert a single `Habit` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   habit_insert(
     """
@@ -18,7 +18,7 @@ extend type Mutation {
     data: Habit_Data!
   ): Habit_KeyOutput! @fdc_generated(from: "Habit", purpose: INSERT_SINGLE)
   """
-  ✨ Insert a single `User` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert a single `User` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   user_insert(
     """
@@ -27,7 +27,7 @@ extend type Mutation {
     data: User_Data!
   ): User_KeyOutput! @fdc_generated(from: "User", purpose: INSERT_SINGLE)
   """
-  ✨ Insert a single `UserHabit` into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert a single `UserHabit` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   userHabit_insert(
     """
@@ -36,7 +36,7 @@ extend type Mutation {
     data: UserHabit_Data!
   ): UserHabit_KeyOutput! @fdc_generated(from: "UserHabit", purpose: INSERT_SINGLE)
   """
-  ✨ Insert `Friendship` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert `Friendship` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   friendship_insertMany(
     """
@@ -45,7 +45,7 @@ extend type Mutation {
     data: [Friendship_Data!]!
   ): [Friendship_KeyOutput!]! @fdc_generated(from: "Friendship", purpose: INSERT_MULTIPLE)
   """
-  ✨ Insert `Habit` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert `Habit` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   habit_insertMany(
     """
@@ -54,7 +54,7 @@ extend type Mutation {
     data: [Habit_Data!]!
   ): [Habit_KeyOutput!]! @fdc_generated(from: "Habit", purpose: INSERT_MULTIPLE)
   """
-  ✨ Insert `User` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert `User` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   user_insertMany(
     """
@@ -63,7 +63,7 @@ extend type Mutation {
     data: [User_Data!]!
   ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: INSERT_MULTIPLE)
   """
-  ✨ Insert `UserHabit` objects into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  ✨ Insert `UserHabit` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   userHabit_insertMany(
     """
@@ -72,7 +72,7 @@ extend type Mutation {
     data: [UserHabit_Data!]!
   ): [UserHabit_KeyOutput!]! @fdc_generated(from: "UserHabit", purpose: INSERT_MULTIPLE)
   """
-  ✨ Insert or update a single `Friendship` into the table, based on the primary key. Returns the key of the newly inserted `Friendship`.
+  ✨ Insert or update a single `Friendship` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Friendship`.
   """
   friendship_upsert(
     """
@@ -81,7 +81,7 @@ extend type Mutation {
     data: Friendship_Data!
   ): Friendship_KeyOutput! @fdc_generated(from: "Friendship", purpose: UPSERT_SINGLE)
   """
-  ✨ Insert or update a single `Habit` into the table, based on the primary key. Returns the key of the newly inserted `Habit`.
+  ✨ Insert or update a single `Habit` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Habit`.
   """
   habit_upsert(
     """
@@ -90,7 +90,7 @@ extend type Mutation {
     data: Habit_Data!
   ): Habit_KeyOutput! @fdc_generated(from: "Habit", purpose: UPSERT_SINGLE)
   """
-  ✨ Insert or update a single `User` into the table, based on the primary key. Returns the key of the newly inserted `User`.
+  ✨ Insert or update a single `User` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
   """
   user_upsert(
     """
@@ -99,7 +99,7 @@ extend type Mutation {
     data: User_Data!
   ): User_KeyOutput! @fdc_generated(from: "User", purpose: UPSERT_SINGLE)
   """
-  ✨ Insert or update a single `UserHabit` into the table, based on the primary key. Returns the key of the newly inserted `UserHabit`.
+  ✨ Insert or update a single `UserHabit` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `UserHabit`.
   """
   userHabit_upsert(
     """
@@ -108,7 +108,7 @@ extend type Mutation {
     data: UserHabit_Data!
   ): UserHabit_KeyOutput! @fdc_generated(from: "UserHabit", purpose: UPSERT_SINGLE)
   """
-  ✨ Insert or update `Friendship` objects into the table, based on the primary key. Returns the key of the newly inserted `Friendship`.
+  ✨ Insert or update `Friendship` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Friendship`.
   """
   friendship_upsertMany(
     """
@@ -117,7 +117,7 @@ extend type Mutation {
     data: [Friendship_Data!]!
   ): [Friendship_KeyOutput!]! @fdc_generated(from: "Friendship", purpose: UPSERT_MULTIPLE)
   """
-  ✨ Insert or update `Habit` objects into the table, based on the primary key. Returns the key of the newly inserted `Habit`.
+  ✨ Insert or update `Habit` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Habit`.
   """
   habit_upsertMany(
     """
@@ -126,7 +126,7 @@ extend type Mutation {
     data: [Habit_Data!]!
   ): [Habit_KeyOutput!]! @fdc_generated(from: "Habit", purpose: UPSERT_MULTIPLE)
   """
-  ✨ Insert or update `User` objects into the table, based on the primary key. Returns the key of the newly inserted `User`.
+  ✨ Insert or update `User` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
   """
   user_upsertMany(
     """
@@ -135,7 +135,7 @@ extend type Mutation {
     data: [User_Data!]!
   ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: UPSERT_MULTIPLE)
   """
-  ✨ Insert or update `UserHabit` objects into the table, based on the primary key. Returns the key of the newly inserted `UserHabit`.
+  ✨ Insert or update `UserHabit` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `UserHabit`.
   """
   userHabit_upsertMany(
     """
@@ -144,7 +144,7 @@ extend type Mutation {
     data: [UserHabit_Data!]!
   ): [UserHabit_KeyOutput!]! @fdc_generated(from: "UserHabit", purpose: UPSERT_MULTIPLE)
   """
-  ✨ Update a single `Friendship` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  ✨ Update a single `Friendship` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Friendship` or `null` if not found.
   """
   friendship_update(
     """
@@ -163,7 +163,7 @@ extend type Mutation {
     data: Friendship_Data!
   ): Friendship_KeyOutput @fdc_generated(from: "Friendship", purpose: UPDATE_SINGLE)
   """
-  ✨ Update a single `Habit` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  ✨ Update a single `Habit` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Habit` or `null` if not found.
   """
   habit_update(
     """
@@ -187,7 +187,7 @@ extend type Mutation {
     data: Habit_Data!
   ): Habit_KeyOutput @fdc_generated(from: "Habit", purpose: UPDATE_SINGLE)
   """
-  ✨ Update a single `User` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  ✨ Update a single `User` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `User` or `null` if not found.
   """
   user_update(
     """
@@ -216,7 +216,7 @@ extend type Mutation {
     data: User_Data!
   ): User_KeyOutput @fdc_generated(from: "User", purpose: UPDATE_SINGLE)
   """
-  ✨ Update a single `UserHabit` based on `id`, `key` or `first`, setting columns specified in `data`. Returns `null` if not found.
+  ✨ Update a single `UserHabit` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `UserHabit` or `null` if not found.
   """
   userHabit_update(
     """

@@ -9,9 +9,10 @@
   - [*GetUserDetails*](#getuserdetails)
   - [*GetAllUsers*](#getallusers)
   - [*ListFriends*](#listfriends)
+  - [*ListIncomingRequests*](#listincomingrequests)
   - [*GetUserHabits*](#getuserhabits)
   - [*GetHabitById*](#gethabitbyid)
-  - [*ListIncomingRequests*](#listincomingrequests)
+  - [*DebugFriendships*](#debugfriendships)
 - [**Mutations**](#mutations)
   - [*CreateUser*](#createuser)
   - [*AddFriend*](#addfriend)
@@ -76,7 +77,7 @@ A connector is a collection of Queries and Mutations. One SDK is generated for e
 You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
 
 const dataConnect = getDataConnect(connectorConfig);
@@ -89,7 +90,7 @@ To connect to the emulator, you can use the following code.
 You can also follow the emulator instructions from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#emulator-react).
 
 ```javascript
-import { connectDataConnectEmulator, getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectDataConnectEmulator, getDataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
 
 const dataConnect = getDataConnect(connectorConfig);
@@ -106,29 +107,32 @@ Calling these hook functions will return a `UseQueryResult` object. This object 
 
 TanStack React Query caches the results of your Queries, so using the same Query hook function in multiple places in your application allows the entire application to automatically see updates to that Query's data.
 
-Query hooks execute their Queries automatically when called, and periodically refresh, unless you change the `queryOptions` for the Query. To learn how to stop a Query from automatically executing, see the [TanStack React Query documentation](https://tanstack.com/query/latest/docs/framework/react/guides/disabling-queries). To learn how to make "lazy loading" Queries, you can also read [this post](https://stackoverflow.com/a/70516680/21417394) by [TkDodo](https://tkdodo.eu/blog/) (Dominik Dorfmeister), a maintainer of TanStack React Query.
+Query hooks execute their Queries automatically when called, and periodically refresh, unless you change the `queryOptions` for the Query. To learn how to stop a Query from automatically executing, including how to make a query "lazy", see the [TanStack React Query documentation](https://tanstack.com/query/latest/docs/framework/react/guides/disabling-queries).
 
 To learn more about TanStack React Query's Queries, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/guides/queries).
 
 ## Using Query Hooks
 Here's a general overview of how to use the generated Query hooks in your code:
 
-- If the Query has no arguments, the Query hook function does not require arguments.
-- If the Query accepts any arguments (including optional arguments), the Query hook function will require at least one argument: an object that contains all the required variables (and the optional variables) for the Query.
-  - If all of the Query's arguments are optional, the Query hook function does not require any arguments.
+- If the Query has no variables, the Query hook function does not require arguments.
+- If the Query has any required variables, the Query hook function will require at least one argument: an object that contains all the required variables for the Query.
+- If the Query has some required and some optional variables, only required variables are necessary in the variables argument object, and optional variables may be provided as well.
+- If all of the Query's variables are optional, the Query hook function does not require any arguments.
 - Query hook functions can be called with or without passing in a `DataConnect` instance as an argument. If no `DataConnect` argument is passed in, then the generated SDK will call `getDataConnect(connectorConfig)` behind the scenes for you.
-- Query hooks also accept an `options` argument of type `useDataConnectQueryOptions`. To learn more about the `options` argument, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/guides/query-options).
+- Query hooks functions can be called with or without passing in an `options` argument of type `useDataConnectQueryOptions`. To learn more about the `options` argument, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/guides/query-options).
+  - ***Special case:***  If the Query has all optional variables and you would like to provide an `options` argument to the Query hook function without providing any variables, you must pass `undefined` where you would normally pass the Query's variables, and then may provide the `options` argument.
 
 Below are examples of how to use the `default` connector's generated Query hook functions to execute each Query. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#use_queries_and_mutations_in_your_react_client).
 
 ## GetUserDetails
 You can execute the `GetUserDetails` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
 ```javascript
-useGetUserDetails(vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
+useGetUserDetails(dc: DataConnect, vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseDataConnectQueryResult<GetUserDetailsData, GetUserDetailsVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Query hook function.
 ```javascript
-useGetUserDetails(dc: DataConnect, vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseQueryResult<FlattenedQueryResult<GetUserDetailsData, GetUserDetailsVariables>, FirebaseError>;
+useGetUserDetails(vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseDataConnectQueryResult<GetUserDetailsData, GetUserDetailsVariables>;
 ```
 
 ### Variables
@@ -162,11 +166,12 @@ To learn more about the `UseQueryResult` object, see the [TanStack React Query d
 ### Using `GetUserDetails`'s Query hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, GetUserDetailsVariables } from '@firebasegen/default-connector';
 import { useGetUserDetails } from '@firebasegen/default-connector/react'
 
 export default function GetUserDetailsComponent() {
+
   // The `useGetUserDetails` Query hook requires an argument of type `GetUserDetailsVariables`:
   const getUserDetailsVars: GetUserDetailsVariables = {
     userId: ..., 
@@ -181,6 +186,15 @@ export default function GetUserDetailsComponent() {
   // You can also pass in a `DataConnect` instance to the Query hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const query = useGetUserDetails(dataConnect, getUserDetailsVars);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetUserDetails(getUserDetailsVars, options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetUserDetails(dataConnect, getUserDetailsVars, options);
 
   // Then, you can render your component dynamically based on the status of the Query.
   if (query.isPending) {
@@ -201,12 +215,13 @@ export default function GetUserDetailsComponent() {
 
 ## GetAllUsers
 You can execute the `GetAllUsers` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
 ```javascript
-useGetAllUsers(options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
+useGetAllUsers(dc: DataConnect, options?: useDataConnectQueryOptions<GetAllUsersData>): UseDataConnectQueryResult<GetAllUsersData, undefined>;
 ```
 You can also pass in a `DataConnect` instance to the Query hook function.
 ```javascript
-useGetAllUsers(dc: DataConnect, options?: useDataConnectQueryOptions<GetAllUsersData>): UseQueryResult<FlattenedQueryResult<GetAllUsersData, undefined>, FirebaseError>;
+useGetAllUsers(options?: useDataConnectQueryOptions<GetAllUsersData>): UseDataConnectQueryResult<GetAllUsersData, undefined>;
 ```
 
 ### Variables
@@ -234,11 +249,12 @@ To learn more about the `UseQueryResult` object, see the [TanStack React Query d
 ### Using `GetAllUsers`'s Query hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
 import { useGetAllUsers } from '@firebasegen/default-connector/react'
 
 export default function GetAllUsersComponent() {
+
 
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
@@ -247,6 +263,15 @@ export default function GetAllUsersComponent() {
   // You can also pass in a `DataConnect` instance to the Query hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const query = useGetAllUsers(dataConnect);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetAllUsers(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetAllUsers(dataConnect, options);
 
   // Then, you can render your component dynamically based on the status of the Query.
   if (query.isPending) {
@@ -267,12 +292,13 @@ export default function GetAllUsersComponent() {
 
 ## ListFriends
 You can execute the `ListFriends` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
 ```javascript
-useListFriends(options?: useDataConnectQueryOptions<ListFriendsData>): UseQueryResult<FlattenedQueryResult<ListFriendsData, undefined>, FirebaseError>;
+useListFriends(dc: DataConnect, options?: useDataConnectQueryOptions<ListFriendsData>): UseDataConnectQueryResult<ListFriendsData, undefined>;
 ```
 You can also pass in a `DataConnect` instance to the Query hook function.
 ```javascript
-useListFriends(dc: DataConnect, options?: useDataConnectQueryOptions<ListFriendsData>): UseQueryResult<FlattenedQueryResult<ListFriendsData, undefined>, FirebaseError>;
+useListFriends(options?: useDataConnectQueryOptions<ListFriendsData>): UseDataConnectQueryResult<ListFriendsData, undefined>;
 ```
 
 ### Variables
@@ -286,13 +312,17 @@ To access the data returned by a Query, use the `UseQueryResult.data` field. The
 ```javascript
 export interface ListFriendsData {
   friendships: ({
-    user2Id: string;
-    status: string;
-    friendDetails: {
+    user1: {
       id: string;
       name: string;
       email: string;
     } & User_Key;
+      user2: {
+        id: string;
+        name: string;
+        email: string;
+      } & User_Key;
+        status: string;
   })[];
 }
 ```
@@ -302,11 +332,12 @@ To learn more about the `UseQueryResult` object, see the [TanStack React Query d
 ### Using `ListFriends`'s Query hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
 import { useListFriends } from '@firebasegen/default-connector/react'
 
 export default function ListFriendsComponent() {
+
 
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
@@ -315,6 +346,96 @@ export default function ListFriendsComponent() {
   // You can also pass in a `DataConnect` instance to the Query hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const query = useListFriends(dataConnect);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useListFriends(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useListFriends(dataConnect, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.friendships);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## ListIncomingRequests
+You can execute the `ListIncomingRequests` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
+```javascript
+useListIncomingRequests(dc: DataConnect, options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseDataConnectQueryResult<ListIncomingRequestsData, undefined>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useListIncomingRequests(options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseDataConnectQueryResult<ListIncomingRequestsData, undefined>;
+```
+
+### Variables
+The `ListIncomingRequests` Query has no variables.
+### Return Type
+Recall that calling the `ListIncomingRequests` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `ListIncomingRequests` Query is of type `ListIncomingRequestsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ListIncomingRequestsData {
+  friendships: ({
+    user1: {
+      id: string;
+      name: string;
+      email: string;
+    } & User_Key;
+      user2: {
+        id: string;
+      } & User_Key;
+        status: string;
+  })[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `ListIncomingRequests`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig } from '@firebasegen/default-connector';
+import { useListIncomingRequests } from '@firebasegen/default-connector/react'
+
+export default function ListIncomingRequestsComponent() {
+
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useListIncomingRequests();
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useListIncomingRequests(dataConnect);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useListIncomingRequests(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useListIncomingRequests(dataConnect, options);
 
   // Then, you can render your component dynamically based on the status of the Query.
   if (query.isPending) {
@@ -335,12 +456,13 @@ export default function ListFriendsComponent() {
 
 ## GetUserHabits
 You can execute the `GetUserHabits` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
 ```javascript
-useGetUserHabits(options?: useDataConnectQueryOptions<GetUserHabitsData>): UseQueryResult<FlattenedQueryResult<GetUserHabitsData, undefined>, FirebaseError>;
+useGetUserHabits(dc: DataConnect, options?: useDataConnectQueryOptions<GetUserHabitsData>): UseDataConnectQueryResult<GetUserHabitsData, undefined>;
 ```
 You can also pass in a `DataConnect` instance to the Query hook function.
 ```javascript
-useGetUserHabits(dc: DataConnect, options?: useDataConnectQueryOptions<GetUserHabitsData>): UseQueryResult<FlattenedQueryResult<GetUserHabitsData, undefined>, FirebaseError>;
+useGetUserHabits(options?: useDataConnectQueryOptions<GetUserHabitsData>): UseDataConnectQueryResult<GetUserHabitsData, undefined>;
 ```
 
 ### Variables
@@ -368,11 +490,12 @@ To learn more about the `UseQueryResult` object, see the [TanStack React Query d
 ### Using `GetUserHabits`'s Query hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
 import { useGetUserHabits } from '@firebasegen/default-connector/react'
 
 export default function GetUserHabitsComponent() {
+
 
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
@@ -381,6 +504,15 @@ export default function GetUserHabitsComponent() {
   // You can also pass in a `DataConnect` instance to the Query hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const query = useGetUserHabits(dataConnect);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetUserHabits(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetUserHabits(dataConnect, options);
 
   // Then, you can render your component dynamically based on the status of the Query.
   if (query.isPending) {
@@ -401,12 +533,13 @@ export default function GetUserHabitsComponent() {
 
 ## GetHabitById
 You can execute the `GetHabitById` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
 ```javascript
-useGetHabitById(vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseQueryResult<FlattenedQueryResult<GetHabitByIdData, GetHabitByIdVariables>, FirebaseError>;
+useGetHabitById(dc: DataConnect, vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseDataConnectQueryResult<GetHabitByIdData, GetHabitByIdVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Query hook function.
 ```javascript
-useGetHabitById(dc: DataConnect, vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseQueryResult<FlattenedQueryResult<GetHabitByIdData, GetHabitByIdVariables>, FirebaseError>;
+useGetHabitById(vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseDataConnectQueryResult<GetHabitByIdData, GetHabitByIdVariables>;
 ```
 
 ### Variables
@@ -445,11 +578,12 @@ To learn more about the `UseQueryResult` object, see the [TanStack React Query d
 ### Using `GetHabitById`'s Query hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, GetHabitByIdVariables } from '@firebasegen/default-connector';
 import { useGetHabitById } from '@firebasegen/default-connector/react'
 
 export default function GetHabitByIdComponent() {
+
   // The `useGetHabitById` Query hook requires an argument of type `GetHabitByIdVariables`:
   const getHabitByIdVars: GetHabitByIdVariables = {
     habitId: ..., 
@@ -464,6 +598,15 @@ export default function GetHabitByIdComponent() {
   // You can also pass in a `DataConnect` instance to the Query hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const query = useGetHabitById(dataConnect, getHabitByIdVars);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetHabitById(getHabitByIdVars, options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetHabitById(dataConnect, getHabitByIdVars, options);
 
   // Then, you can render your component dynamically based on the status of the Query.
   if (query.isPending) {
@@ -482,55 +625,63 @@ export default function GetHabitByIdComponent() {
 }
 ```
 
-## ListIncomingRequests
-You can execute the `ListIncomingRequests` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+## DebugFriendships
+You can execute the `DebugFriendships` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
 ```javascript
-useListIncomingRequests(options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseQueryResult<FlattenedQueryResult<ListIncomingRequestsData, undefined>, FirebaseError>;
+useDebugFriendships(dc: DataConnect, options?: useDataConnectQueryOptions<DebugFriendshipsData>): UseDataConnectQueryResult<DebugFriendshipsData, undefined>;
 ```
 You can also pass in a `DataConnect` instance to the Query hook function.
 ```javascript
-useListIncomingRequests(dc: DataConnect, options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseQueryResult<FlattenedQueryResult<ListIncomingRequestsData, undefined>, FirebaseError>;
+useDebugFriendships(options?: useDataConnectQueryOptions<DebugFriendshipsData>): UseDataConnectQueryResult<DebugFriendshipsData, undefined>;
 ```
 
 ### Variables
-The `ListIncomingRequests` Query has no variables.
+The `DebugFriendships` Query has no variables.
 ### Return Type
-Recall that calling the `ListIncomingRequests` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+Recall that calling the `DebugFriendships` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
 
 To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
 
-To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `ListIncomingRequests` Query is of type `ListIncomingRequestsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `DebugFriendships` Query is of type `DebugFriendshipsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
 ```javascript
-export interface ListIncomingRequestsData {
+export interface DebugFriendshipsData {
   friendships: ({
     user1Id: string;
-    friendDetails: {
-      id: string;
-      name: string;
-      email: string;
-    } & User_Key;
-  })[];
+    user2Id: string;
+    status: string;
+  } & Friendship_Key)[];
 }
 ```
 
 To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
 
-### Using `ListIncomingRequests`'s Query hook function
+### Using `DebugFriendships`'s Query hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
-import { useListIncomingRequests } from '@firebasegen/default-connector/react'
+import { useDebugFriendships } from '@firebasegen/default-connector/react'
 
-export default function ListIncomingRequestsComponent() {
+export default function DebugFriendshipsComponent() {
+
 
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
-  const query = useListIncomingRequests();
+  const query = useDebugFriendships();
 
   // You can also pass in a `DataConnect` instance to the Query hook function.
   const dataConnect = getDataConnect(connectorConfig);
-  const query = useListIncomingRequests(dataConnect);
+  const query = useDebugFriendships(dataConnect);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useDebugFriendships(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useDebugFriendships(dataConnect, options);
 
   // Then, you can render your component dynamically based on the status of the Query.
   if (query.isPending) {
@@ -562,29 +713,30 @@ To learn more about TanStack React Query's Mutations, see the [TanStack React Qu
 ## Using Mutation Hooks
 Here's a general overview of how to use the generated Mutation hooks in your code:
 
-- Mutation hook functions are not called with the arguments to the mutation. Instead, arguments are passed to `UseMutationResult.mutate()`.
-- If the Mutation has no arguments, the `mutate()` function does not require arguments.
-- If the Mutation accepts any arguments (including optional arguments), the `mutate()` function will require at least one argument: an object that contains all the required variables (and the optional variables) for the Mutation.
-  - If all of the Mutation's arguments are optional, the `mutate()` function does not require any arguments.
+- Mutation hook functions are not called with the arguments to the Mutation. Instead, arguments are passed to `UseMutationResult.mutate()`.
+- If the Mutation has no variables, the `mutate()` function does not require arguments.
+- If the Mutation has any required variables, the `mutate()` function will require at least one argument: an object that contains all the required variables for the Mutation.
+- If the Mutation has some required and some optional variables, only required variables are necessary in the variables argument object, and optional variables may be provided as well.
+- If all of the Mutation's variables are optional, the Mutation hook function does not require any arguments.
 - Mutation hook functions can be called with or without passing in a `DataConnect` instance as an argument. If no `DataConnect` argument is passed in, then the generated SDK will call `getDataConnect(connectorConfig)` behind the scenes for you.
 - Mutation hooks also accept an `options` argument of type `useDataConnectMutationOptions`. To learn more about the `options` argument, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/guides/mutations#mutation-side-effects).
   - `UseMutationResult.mutate()` also accepts an `options` argument of type `useDataConnectMutationOptions`.
-  - ***Special case:*** If the Mutation has no arguments, and you want to pass options to `UseMutationResult.mutate()`, you must pass `undefined` as the first argument (where you would normally pass the Mutation's arguments) to `UseMutationResult.mutate()`, and then the options as the second argument.
+  - ***Special case:*** If the Mutation has no arguments (or all optional arguments and you wish to provide none), and you want to pass `options` to `UseMutationResult.mutate()`, you must pass `undefined` where you would normally pass the Mutation's arguments, and then may provide the options argument.
 
-Below are examples of how to use the `default` connector's generated Query hook functions to execute each Query. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#use_queries_and_mutations_in_your_react_client).
+Below are examples of how to use the `default` connector's generated Mutation hook functions to execute each Mutation. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#use_queries_and_mutations_in_your_react_client).
 
 ## CreateUser
 You can execute the `CreateUser` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useCreateUser(options?: useDataConnectMutationOptions<CreateUserData, FirebaseError, CreateUserVariables | void>): UseMutationResult<FlattenedMutationResult<CreateUserData, CreateUserVariables>, FirebaseError, CreateUserVariables | void>;
+useCreateUser(options?: useDataConnectMutationOptions<CreateUserData, FirebaseError, CreateUserVariables | void>): UseDataConnectMutationResult<CreateUserData, CreateUserVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useCreateUser(dc: DataConnect, options?: useDataConnectMutationOptions<CreateUserData, FirebaseError, CreateUserVariables | void>): UseMutationResult<FlattenedMutationResult<CreateUserData, CreateUserVariables>, FirebaseError, CreateUserVariables | void>;
+useCreateUser(dc: DataConnect, options?: useDataConnectMutationOptions<CreateUserData, FirebaseError, CreateUserVariables | void>): UseDataConnectMutationResult<CreateUserData, CreateUserVariables>;
 ```
 
 ### Variables
-The `CreateUser` Mutation requires an argument of type `CreateUserVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+The `CreateUser` Mutation has an optional argument of type `CreateUserVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
 
 ```javascript
 export interface CreateUserVariables {
@@ -612,19 +764,33 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `CreateUser`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, CreateUserVariables } from '@firebasegen/default-connector';
 import { useCreateUser } from '@firebasegen/default-connector/react'
 
 export default function CreateUserComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useCreateUser();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useCreateUser(dataConnect);
 
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateUser(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateUser(dataConnect, options);
+
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
-  // The `useCreateUser` Mutation requires an argument of type `CreateUserVariables`:
+  // The `useCreateUser` Mutation has an optional argument of type `CreateUserVariables`:
   const createUserVars: CreateUserVariables = {
     id: ..., // optional
     name: ..., // optional
@@ -635,6 +801,14 @@ export default function CreateUserComponent() {
   mutation.mutate({ id: ..., name: ..., email: ..., });
   // Since all variables are optional for this Mutation, you can omit the `CreateUserVariables` argument.
   mutation.mutate();
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  // Since all variables are optional for this Mutation, you can provide options without providing any variables.
+  // To do so, you must pass `undefined` where you would normally pass the variables.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(createUserVars /** or undefined */, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -656,11 +830,11 @@ export default function CreateUserComponent() {
 ## AddFriend
 You can execute the `AddFriend` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useAddFriend(options?: useDataConnectMutationOptions<AddFriendData, FirebaseError, AddFriendVariables>): UseMutationResult<FlattenedMutationResult<AddFriendData, AddFriendVariables>, FirebaseError, AddFriendVariables>;
+useAddFriend(options?: useDataConnectMutationOptions<AddFriendData, FirebaseError, AddFriendVariables>): UseDataConnectMutationResult<AddFriendData, AddFriendVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useAddFriend(dc: DataConnect, options?: useDataConnectMutationOptions<AddFriendData, FirebaseError, AddFriendVariables>): UseMutationResult<FlattenedMutationResult<AddFriendData, AddFriendVariables>, FirebaseError, AddFriendVariables>;
+useAddFriend(dc: DataConnect, options?: useDataConnectMutationOptions<AddFriendData, FirebaseError, AddFriendVariables>): UseDataConnectMutationResult<AddFriendData, AddFriendVariables>;
 ```
 
 ### Variables
@@ -668,7 +842,6 @@ The `AddFriend` Mutation requires an argument of type `AddFriendVariables`, whic
 
 ```javascript
 export interface AddFriendVariables {
-  currentUserId: string;
   friendId: string;
 }
 ```
@@ -691,26 +864,45 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `AddFriend`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, AddFriendVariables } from '@firebasegen/default-connector';
 import { useAddFriend } from '@firebasegen/default-connector/react'
 
 export default function AddFriendComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useAddFriend();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useAddFriend(dataConnect);
 
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAddFriend(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAddFriend(dataConnect, options);
+
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useAddFriend` Mutation requires an argument of type `AddFriendVariables`:
   const addFriendVars: AddFriendVariables = {
-    currentUserId: ..., 
     friendId: ..., 
   };
   mutation.mutate(addFriendVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ currentUserId: ..., friendId: ..., });
+  mutation.mutate({ friendId: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(addFriendVars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -732,11 +924,11 @@ export default function AddFriendComponent() {
 ## RemoveFriend
 You can execute the `RemoveFriend` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useRemoveFriend(options?: useDataConnectMutationOptions<RemoveFriendData, FirebaseError, RemoveFriendVariables>): UseMutationResult<FlattenedMutationResult<RemoveFriendData, RemoveFriendVariables>, FirebaseError, RemoveFriendVariables>;
+useRemoveFriend(options?: useDataConnectMutationOptions<RemoveFriendData, FirebaseError, RemoveFriendVariables>): UseDataConnectMutationResult<RemoveFriendData, RemoveFriendVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useRemoveFriend(dc: DataConnect, options?: useDataConnectMutationOptions<RemoveFriendData, FirebaseError, RemoveFriendVariables>): UseMutationResult<FlattenedMutationResult<RemoveFriendData, RemoveFriendVariables>, FirebaseError, RemoveFriendVariables>;
+useRemoveFriend(dc: DataConnect, options?: useDataConnectMutationOptions<RemoveFriendData, FirebaseError, RemoveFriendVariables>): UseDataConnectMutationResult<RemoveFriendData, RemoveFriendVariables>;
 ```
 
 ### Variables
@@ -766,16 +958,30 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `RemoveFriend`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, RemoveFriendVariables } from '@firebasegen/default-connector';
 import { useRemoveFriend } from '@firebasegen/default-connector/react'
 
 export default function RemoveFriendComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useRemoveFriend();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useRemoveFriend(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useRemoveFriend(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useRemoveFriend(dataConnect, options);
 
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useRemoveFriend` Mutation requires an argument of type `RemoveFriendVariables`:
@@ -785,6 +991,12 @@ export default function RemoveFriendComponent() {
   mutation.mutate(removeFriendVars);
   // Variables can be defined inline as well.
   mutation.mutate({ friendId: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(removeFriendVars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -806,11 +1018,11 @@ export default function RemoveFriendComponent() {
 ## AcceptFriendRequest
 You can execute the `AcceptFriendRequest` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useAcceptFriendRequest(options?: useDataConnectMutationOptions<AcceptFriendRequestData, FirebaseError, AcceptFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<AcceptFriendRequestData, AcceptFriendRequestVariables>, FirebaseError, AcceptFriendRequestVariables>;
+useAcceptFriendRequest(options?: useDataConnectMutationOptions<AcceptFriendRequestData, FirebaseError, AcceptFriendRequestVariables>): UseDataConnectMutationResult<AcceptFriendRequestData, AcceptFriendRequestVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useAcceptFriendRequest(dc: DataConnect, options?: useDataConnectMutationOptions<AcceptFriendRequestData, FirebaseError, AcceptFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<AcceptFriendRequestData, AcceptFriendRequestVariables>, FirebaseError, AcceptFriendRequestVariables>;
+useAcceptFriendRequest(dc: DataConnect, options?: useDataConnectMutationOptions<AcceptFriendRequestData, FirebaseError, AcceptFriendRequestVariables>): UseDataConnectMutationResult<AcceptFriendRequestData, AcceptFriendRequestVariables>;
 ```
 
 ### Variables
@@ -819,6 +1031,7 @@ The `AcceptFriendRequest` Mutation requires an argument of type `AcceptFriendReq
 ```javascript
 export interface AcceptFriendRequestVariables {
   user1Id: string;
+  user2Id: string;
 }
 ```
 ### Return Type
@@ -840,25 +1053,46 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `AcceptFriendRequest`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, AcceptFriendRequestVariables } from '@firebasegen/default-connector';
 import { useAcceptFriendRequest } from '@firebasegen/default-connector/react'
 
 export default function AcceptFriendRequestComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useAcceptFriendRequest();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useAcceptFriendRequest(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAcceptFriendRequest(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAcceptFriendRequest(dataConnect, options);
 
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useAcceptFriendRequest` Mutation requires an argument of type `AcceptFriendRequestVariables`:
   const acceptFriendRequestVars: AcceptFriendRequestVariables = {
     user1Id: ..., 
+    user2Id: ..., 
   };
   mutation.mutate(acceptFriendRequestVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ user1Id: ..., });
+  mutation.mutate({ user1Id: ..., user2Id: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(acceptFriendRequestVars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -880,11 +1114,11 @@ export default function AcceptFriendRequestComponent() {
 ## DeclineFriendRequest
 You can execute the `DeclineFriendRequest` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useDeclineFriendRequest(options?: useDataConnectMutationOptions<DeclineFriendRequestData, FirebaseError, DeclineFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<DeclineFriendRequestData, DeclineFriendRequestVariables>, FirebaseError, DeclineFriendRequestVariables>;
+useDeclineFriendRequest(options?: useDataConnectMutationOptions<DeclineFriendRequestData, FirebaseError, DeclineFriendRequestVariables>): UseDataConnectMutationResult<DeclineFriendRequestData, DeclineFriendRequestVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useDeclineFriendRequest(dc: DataConnect, options?: useDataConnectMutationOptions<DeclineFriendRequestData, FirebaseError, DeclineFriendRequestVariables>): UseMutationResult<FlattenedMutationResult<DeclineFriendRequestData, DeclineFriendRequestVariables>, FirebaseError, DeclineFriendRequestVariables>;
+useDeclineFriendRequest(dc: DataConnect, options?: useDataConnectMutationOptions<DeclineFriendRequestData, FirebaseError, DeclineFriendRequestVariables>): UseDataConnectMutationResult<DeclineFriendRequestData, DeclineFriendRequestVariables>;
 ```
 
 ### Variables
@@ -893,6 +1127,7 @@ The `DeclineFriendRequest` Mutation requires an argument of type `DeclineFriendR
 ```javascript
 export interface DeclineFriendRequestVariables {
   user1Id: string;
+  user2Id: string;
 }
 ```
 ### Return Type
@@ -914,25 +1149,46 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `DeclineFriendRequest`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, DeclineFriendRequestVariables } from '@firebasegen/default-connector';
 import { useDeclineFriendRequest } from '@firebasegen/default-connector/react'
 
 export default function DeclineFriendRequestComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useDeclineFriendRequest();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useDeclineFriendRequest(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeclineFriendRequest(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeclineFriendRequest(dataConnect, options);
 
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useDeclineFriendRequest` Mutation requires an argument of type `DeclineFriendRequestVariables`:
   const declineFriendRequestVars: DeclineFriendRequestVariables = {
     user1Id: ..., 
+    user2Id: ..., 
   };
   mutation.mutate(declineFriendRequestVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ user1Id: ..., });
+  mutation.mutate({ user1Id: ..., user2Id: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(declineFriendRequestVars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -954,11 +1210,11 @@ export default function DeclineFriendRequestComponent() {
 ## AddReverseFriend
 You can execute the `AddReverseFriend` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useAddReverseFriend(options?: useDataConnectMutationOptions<AddReverseFriendData, FirebaseError, AddReverseFriendVariables>): UseMutationResult<FlattenedMutationResult<AddReverseFriendData, AddReverseFriendVariables>, FirebaseError, AddReverseFriendVariables>;
+useAddReverseFriend(options?: useDataConnectMutationOptions<AddReverseFriendData, FirebaseError, AddReverseFriendVariables>): UseDataConnectMutationResult<AddReverseFriendData, AddReverseFriendVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useAddReverseFriend(dc: DataConnect, options?: useDataConnectMutationOptions<AddReverseFriendData, FirebaseError, AddReverseFriendVariables>): UseMutationResult<FlattenedMutationResult<AddReverseFriendData, AddReverseFriendVariables>, FirebaseError, AddReverseFriendVariables>;
+useAddReverseFriend(dc: DataConnect, options?: useDataConnectMutationOptions<AddReverseFriendData, FirebaseError, AddReverseFriendVariables>): UseDataConnectMutationResult<AddReverseFriendData, AddReverseFriendVariables>;
 ```
 
 ### Variables
@@ -988,16 +1244,30 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `AddReverseFriend`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, AddReverseFriendVariables } from '@firebasegen/default-connector';
 import { useAddReverseFriend } from '@firebasegen/default-connector/react'
 
 export default function AddReverseFriendComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useAddReverseFriend();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useAddReverseFriend(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAddReverseFriend(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAddReverseFriend(dataConnect, options);
 
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useAddReverseFriend` Mutation requires an argument of type `AddReverseFriendVariables`:
@@ -1007,6 +1277,12 @@ export default function AddReverseFriendComponent() {
   mutation.mutate(addReverseFriendVars);
   // Variables can be defined inline as well.
   mutation.mutate({ friendId: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(addReverseFriendVars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -1028,11 +1304,11 @@ export default function AddReverseFriendComponent() {
 ## CreateHabit
 You can execute the `CreateHabit` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useCreateHabit(options?: useDataConnectMutationOptions<CreateHabitData, FirebaseError, CreateHabitVariables>): UseMutationResult<FlattenedMutationResult<CreateHabitData, CreateHabitVariables>, FirebaseError, CreateHabitVariables>;
+useCreateHabit(options?: useDataConnectMutationOptions<CreateHabitData, FirebaseError, CreateHabitVariables>): UseDataConnectMutationResult<CreateHabitData, CreateHabitVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useCreateHabit(dc: DataConnect, options?: useDataConnectMutationOptions<CreateHabitData, FirebaseError, CreateHabitVariables>): UseMutationResult<FlattenedMutationResult<CreateHabitData, CreateHabitVariables>, FirebaseError, CreateHabitVariables>;
+useCreateHabit(dc: DataConnect, options?: useDataConnectMutationOptions<CreateHabitData, FirebaseError, CreateHabitVariables>): UseDataConnectMutationResult<CreateHabitData, CreateHabitVariables>;
 ```
 
 ### Variables
@@ -1065,16 +1341,30 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `CreateHabit`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, CreateHabitVariables } from '@firebasegen/default-connector';
 import { useCreateHabit } from '@firebasegen/default-connector/react'
 
 export default function CreateHabitComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useCreateHabit();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useCreateHabit(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateHabit(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateHabit(dataConnect, options);
 
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useCreateHabit` Mutation requires an argument of type `CreateHabitVariables`:
@@ -1087,6 +1377,12 @@ export default function CreateHabitComponent() {
   mutation.mutate(createHabitVars);
   // Variables can be defined inline as well.
   mutation.mutate({ title: ..., description: ..., category: ..., streakGoal: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(createHabitVars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -1108,11 +1404,11 @@ export default function CreateHabitComponent() {
 ## UpdateHabit
 You can execute the `UpdateHabit` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useUpdateHabit(options?: useDataConnectMutationOptions<UpdateHabitData, FirebaseError, UpdateHabitVariables>): UseMutationResult<FlattenedMutationResult<UpdateHabitData, UpdateHabitVariables>, FirebaseError, UpdateHabitVariables>;
+useUpdateHabit(options?: useDataConnectMutationOptions<UpdateHabitData, FirebaseError, UpdateHabitVariables>): UseDataConnectMutationResult<UpdateHabitData, UpdateHabitVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useUpdateHabit(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateHabitData, FirebaseError, UpdateHabitVariables>): UseMutationResult<FlattenedMutationResult<UpdateHabitData, UpdateHabitVariables>, FirebaseError, UpdateHabitVariables>;
+useUpdateHabit(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateHabitData, FirebaseError, UpdateHabitVariables>): UseDataConnectMutationResult<UpdateHabitData, UpdateHabitVariables>;
 ```
 
 ### Variables
@@ -1146,16 +1442,30 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `UpdateHabit`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, UpdateHabitVariables } from '@firebasegen/default-connector';
 import { useUpdateHabit } from '@firebasegen/default-connector/react'
 
 export default function UpdateHabitComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useUpdateHabit();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useUpdateHabit(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUpdateHabit(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUpdateHabit(dataConnect, options);
 
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useUpdateHabit` Mutation requires an argument of type `UpdateHabitVariables`:
@@ -1169,6 +1479,12 @@ export default function UpdateHabitComponent() {
   mutation.mutate(updateHabitVars);
   // Variables can be defined inline as well.
   mutation.mutate({ habitId: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(updateHabitVars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -1190,11 +1506,11 @@ export default function UpdateHabitComponent() {
 ## DeleteHabit
 You can execute the `DeleteHabit` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useDeleteHabit(options?: useDataConnectMutationOptions<DeleteHabitData, FirebaseError, DeleteHabitVariables>): UseMutationResult<FlattenedMutationResult<DeleteHabitData, DeleteHabitVariables>, FirebaseError, DeleteHabitVariables>;
+useDeleteHabit(options?: useDataConnectMutationOptions<DeleteHabitData, FirebaseError, DeleteHabitVariables>): UseDataConnectMutationResult<DeleteHabitData, DeleteHabitVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useDeleteHabit(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteHabitData, FirebaseError, DeleteHabitVariables>): UseMutationResult<FlattenedMutationResult<DeleteHabitData, DeleteHabitVariables>, FirebaseError, DeleteHabitVariables>;
+useDeleteHabit(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteHabitData, FirebaseError, DeleteHabitVariables>): UseDataConnectMutationResult<DeleteHabitData, DeleteHabitVariables>;
 ```
 
 ### Variables
@@ -1224,16 +1540,30 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `DeleteHabit`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, DeleteHabitVariables } from '@firebasegen/default-connector';
 import { useDeleteHabit } from '@firebasegen/default-connector/react'
 
 export default function DeleteHabitComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useDeleteHabit();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useDeleteHabit(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteHabit(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteHabit(dataConnect, options);
 
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useDeleteHabit` Mutation requires an argument of type `DeleteHabitVariables`:
@@ -1243,6 +1573,12 @@ export default function DeleteHabitComponent() {
   mutation.mutate(deleteHabitVars);
   // Variables can be defined inline as well.
   mutation.mutate({ habitId: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(deleteHabitVars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {
@@ -1264,11 +1600,11 @@ export default function DeleteHabitComponent() {
 ## UpdateHabitStreak
 You can execute the `UpdateHabitStreak` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
 ```javascript
-useUpdateHabitStreak(options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseMutationResult<FlattenedMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>, FirebaseError, UpdateHabitStreakVariables>;
+useUpdateHabitStreak(options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseDataConnectMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Mutation hook function.
 ```javascript
-useUpdateHabitStreak(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseMutationResult<FlattenedMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>, FirebaseError, UpdateHabitStreakVariables>;
+useUpdateHabitStreak(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseDataConnectMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 ```
 
 ### Variables
@@ -1301,16 +1637,30 @@ To learn more about the `UseMutationResult` object, see the [TanStack React Quer
 ### Using `UpdateHabitStreak`'s Mutation hook function
 
 ```javascript
-import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, UpdateHabitStreakVariables } from '@firebasegen/default-connector';
 import { useUpdateHabitStreak } from '@firebasegen/default-connector/react'
 
 export default function UpdateHabitStreakComponent() {
   // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
   const mutation = useUpdateHabitStreak();
+
   // You can also pass in a `DataConnect` instance to the Mutation hook function.
   const dataConnect = getDataConnect(connectorConfig);
   const mutation = useUpdateHabitStreak(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUpdateHabitStreak(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUpdateHabitStreak(dataConnect, options);
 
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useUpdateHabitStreak` Mutation requires an argument of type `UpdateHabitStreakVariables`:
@@ -1323,6 +1673,12 @@ export default function UpdateHabitStreakComponent() {
   mutation.mutate(updateHabitStreakVars);
   // Variables can be defined inline as well.
   mutation.mutate({ habitId: ..., currentStreak: ..., longestStreak: ..., lastTrackedDate: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(updateHabitStreakVars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {

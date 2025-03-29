@@ -136,6 +136,16 @@ export function listFriends(dc) {
   return executeQuery(listFriendsRef(dc));
 }
 
+export function listIncomingRequestsRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListIncomingRequests');
+}
+
+export function listIncomingRequests(dc) {
+  return executeQuery(listIncomingRequestsRef(dc));
+}
+
 export function getUserHabitsRef(dc) {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
@@ -156,13 +166,13 @@ export function getHabitById(dcOrVars, vars) {
   return executeQuery(getHabitByIdRef(dcOrVars, vars));
 }
 
-export function listIncomingRequestsRef(dc) {
+export function debugFriendshipsRef(dc) {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListIncomingRequests');
+  return queryRef(dcInstance, 'DebugFriendships');
 }
 
-export function listIncomingRequests(dc) {
-  return executeQuery(listIncomingRequestsRef(dc));
+export function debugFriendships(dc) {
+  return executeQuery(debugFriendshipsRef(dc));
 }
 

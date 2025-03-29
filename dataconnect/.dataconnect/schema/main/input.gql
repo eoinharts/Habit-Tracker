@@ -110,6 +110,43 @@ input Friendship_FirstRow {
   where: Friendship_Filter
 }
 """
+✨ Generated having input type for table 'Friendship'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Friendship_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Friendship_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Friendship_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Friendship_Having!]
+  """
+  ✨ Generated from Field `Friendship`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Friendship`.`status_count` of type `Int!`
+  """
+  status_count: Int_Filter
+  """
+  ✨ Generated from Field `Friendship`.`user1Id_count` of type `Int!`
+  """
+  user1Id_count: Int_Filter
+  """
+  ✨ Generated from Field `Friendship`.`user2Id_count` of type `Int!`
+  """
+  user2Id_count: Int_Filter
+}
+"""
 ✨ Generated key input type for table 'Friendship'. It represents the primary key fields used to uniquely identify a row in the table.
 """
 input Friendship_Key {
@@ -308,6 +345,83 @@ input Habit_FirstRow {
   where: Habit_Filter
 }
 """
+✨ Generated having input type for table 'Habit'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Habit_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Habit_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Habit_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Habit_Having!]
+  """
+  ✨ Generated from Field `Habit`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`category_count` of type `Int!`
+  """
+  category_count: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`creatorId_count` of type `Int!`
+  """
+  creatorId_count: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`description_count` of type `Int!`
+  """
+  description_count: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`streakGoal_count` of type `Int!`
+  """
+  streakGoal_count: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`title_count` of type `Int!`
+  """
+  title_count: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`streakGoal_sum` of type `Int`
+  """
+  streakGoal_sum: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`streakGoal_avg` of type `Float`
+  """
+  streakGoal_avg: Float_Filter
+  """
+  ✨ Generated from Field `Habit`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Habit`.`streakGoal_min` of type `Int`
+  """
+  streakGoal_min: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Habit`.`streakGoal_max` of type `Int`
+  """
+  streakGoal_max: Int_Filter
+}
+"""
 ✨ Generated key input type for table 'Habit'. It represents the primary key fields used to uniquely identify a row in the table.
 """
 input Habit_Key {
@@ -494,6 +608,67 @@ input User_FirstRow {
   where: User_Filter
 }
 """
+✨ Generated having input type for table 'User'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input User_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [User_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: User_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [User_Having!]
+  """
+  ✨ Generated from Field `User`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`email_count` of type `Int!`
+  """
+  email_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`imageUrl_count` of type `Int!`
+  """
+  imageUrl_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`name_count` of type `Int!`
+  """
+  name_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`totalStreak_count` of type `Int!`
+  """
+  totalStreak_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`totalStreak_sum` of type `Int`
+  """
+  totalStreak_sum: Int_Filter
+  """
+  ✨ Generated from Field `User`.`totalStreak_avg` of type `Float`
+  """
+  totalStreak_avg: Float_Filter
+  """
+  ✨ Generated from Field `User`.`totalStreak_min` of type `Int`
+  """
+  totalStreak_min: Int_Filter
+  """
+  ✨ Generated from Field `User`.`totalStreak_max` of type `Int`
+  """
+  totalStreak_max: Int_Filter
+}
+"""
 ✨ Generated key input type for table 'User'. It represents the primary key fields used to uniquely identify a row in the table.
 """
 input User_Key {
@@ -674,6 +849,103 @@ input UserHabit_FirstRow {
   Filters rows based on the specified conditions.
   """
   where: UserHabit_Filter
+}
+"""
+✨ Generated having input type for table 'UserHabit'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input UserHabit_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [UserHabit_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: UserHabit_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [UserHabit_Having!]
+  """
+  ✨ Generated from Field `UserHabit`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`currentStreak_count` of type `Int!`
+  """
+  currentStreak_count: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`habitId_count` of type `Int!`
+  """
+  habitId_count: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`lastTrackedDate_count` of type `Int!`
+  """
+  lastTrackedDate_count: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`longestStreak_count` of type `Int!`
+  """
+  longestStreak_count: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`currentStreak_sum` of type `Int`
+  """
+  currentStreak_sum: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`longestStreak_sum` of type `Int`
+  """
+  longestStreak_sum: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`currentStreak_avg` of type `Float`
+  """
+  currentStreak_avg: Float_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`longestStreak_avg` of type `Float`
+  """
+  longestStreak_avg: Float_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`currentStreak_min` of type `Int`
+  """
+  currentStreak_min: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`lastTrackedDate_min` of type `Timestamp`
+  """
+  lastTrackedDate_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`longestStreak_min` of type `Int`
+  """
+  longestStreak_min: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`currentStreak_max` of type `Int`
+  """
+  currentStreak_max: Int_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`lastTrackedDate_max` of type `Timestamp`
+  """
+  lastTrackedDate_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `UserHabit`.`longestStreak_max` of type `Int`
+  """
+  longestStreak_max: Int_Filter
 }
 """
 ✨ Generated key input type for table 'UserHabit'. It represents the primary key fields used to uniquely identify a row in the table.

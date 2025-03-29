@@ -3,6 +3,37 @@ extend type Friendship {
   Implicit metadata field that cannot be written. It provides extra information about query results.
   """
   _metadata: _Metadata @fdc_generated(from: "Friendship", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Friendship` table.
+  """
+  _count: Int! @fdc_generated(from: "Friendship", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Friendship` table where the `status` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  status_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Friendship.status", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Friendship` table where the `user1Id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  user1Id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Friendship.user1Id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Friendship` table where the `user2Id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  user2Id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Friendship.user2Id", purpose: QUERY_COUNT)
 }
 extend type Habit {
   """
@@ -28,6 +59,16 @@ extend type Habit {
     Maximum number of rows to return (defaults to 100 rows).
     """
     limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: UserHabit_Having
   ): [UserHabit!]! @fdc_generated(from: "UserHabit.habit", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
   """
   ✨ List `User` objects using `UserHabit` as the join table (a `UserHabit` object exists where its `habit` is this and its `user` is that).
@@ -52,11 +93,122 @@ extend type Habit {
     Maximum number of rows to return (defaults to 100 rows).
     """
     limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: UserHabit_Having
   ): [User!]! @fdc_generated(from: "UserHabit", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
   """
   Implicit metadata field that cannot be written. It provides extra information about query results.
   """
   _metadata: _Metadata @fdc_generated(from: "Habit", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Habit` table.
+  """
+  _count: Int! @fdc_generated(from: "Habit", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Habit` table where the `category` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  category_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Habit.category", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Habit` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Habit.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Habit` table where the `creatorId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  creatorId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Habit.creatorId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Habit` table where the `description` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  description_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Habit.description", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Habit` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Habit.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Habit` table where the `streakGoal` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  streakGoal_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Habit.streakGoal", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Habit` table where the `title` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  title_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Habit.title", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `streakGoal` field in the `Habit` table.
+  """
+  streakGoal_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "Habit.streakGoal", purpose: QUERY_SUM)
+  """
+  ✨ Average the `streakGoal` field in the `Habit` table.
+  """
+  streakGoal_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Habit.streakGoal", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `createdAt` field in the `Habit` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "Habit.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `streakGoal` field in the `Habit` table.
+  """
+  streakGoal_min: Int @fdc_generated(from: "Habit.streakGoal", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `Habit` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "Habit.createdAt", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `streakGoal` field in the `Habit` table.
+  """
+  streakGoal_max: Int @fdc_generated(from: "Habit.streakGoal", purpose: QUERY_MAX)
 }
 extend type User {
   """
@@ -82,6 +234,16 @@ extend type User {
     Maximum number of rows to return (defaults to 100 rows).
     """
     limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Friendship_Having
   ): [Friendship!]! @fdc_generated(from: "Friendship.user1", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
   """
   ✨ List `Friendship` objects in a one-to-many relationship (where `Friendship`.`user2` is this object).
@@ -106,6 +268,16 @@ extend type User {
     Maximum number of rows to return (defaults to 100 rows).
     """
     limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Friendship_Having
   ): [Friendship!]! @fdc_generated(from: "Friendship.user2", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
   """
   ✨ List `Habit` objects in a one-to-many relationship (where `Habit`.`creator` is this object).
@@ -130,6 +302,16 @@ extend type User {
     Maximum number of rows to return (defaults to 100 rows).
     """
     limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Habit_Having
   ): [Habit!]! @fdc_generated(from: "Habit.creator", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
   """
   ✨ List `UserHabit` objects in a one-to-many relationship (where `UserHabit`.`user` is this object).
@@ -154,6 +336,16 @@ extend type User {
     Maximum number of rows to return (defaults to 100 rows).
     """
     limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: UserHabit_Having
   ): [UserHabit!]! @fdc_generated(from: "UserHabit.user", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
   """
   ✨ List `Habit` objects using `UserHabit` as the join table (a `UserHabit` object exists where its `user` is this and its `habit` is that).
@@ -178,6 +370,16 @@ extend type User {
     Maximum number of rows to return (defaults to 100 rows).
     """
     limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: UserHabit_Having
   ): [Habit!]! @fdc_generated(from: "UserHabit", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
   """
   ✨ List `User` objects using `Friendship` as the join table (a `Friendship` object exists where its `user2` is this and its `user1` is that).
@@ -202,6 +404,16 @@ extend type User {
     Maximum number of rows to return (defaults to 100 rows).
     """
     limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Friendship_Having
   ): [User!]! @fdc_generated(from: "Friendship", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
   """
   ✨ List `User` objects using `Friendship` as the join table (a `Friendship` object exists where its `user1` is this and its `user2` is that).
@@ -226,15 +438,226 @@ extend type User {
     Maximum number of rows to return (defaults to 100 rows).
     """
     limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Friendship_Having
   ): [User!]! @fdc_generated(from: "Friendship", purpose: QUERY_MULTIPLE_MANY_TO_MANY)
   """
   Implicit metadata field that cannot be written. It provides extra information about query results.
   """
   _metadata: _Metadata @fdc_generated(from: "User", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `User` table.
+  """
+  _count: Int! @fdc_generated(from: "User", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `email` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  email_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.email", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `imageUrl` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  imageUrl_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.imageUrl", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  name_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.name", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `totalStreak` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  totalStreak_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.totalStreak", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `totalStreak` field in the `User` table.
+  """
+  totalStreak_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "User.totalStreak", purpose: QUERY_SUM)
+  """
+  ✨ Average the `totalStreak` field in the `User` table.
+  """
+  totalStreak_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "User.totalStreak", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `totalStreak` field in the `User` table.
+  """
+  totalStreak_min: Int @fdc_generated(from: "User.totalStreak", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `totalStreak` field in the `User` table.
+  """
+  totalStreak_max: Int @fdc_generated(from: "User.totalStreak", purpose: QUERY_MAX)
 }
 extend type UserHabit {
   """
   Implicit metadata field that cannot be written. It provides extra information about query results.
   """
   _metadata: _Metadata @fdc_generated(from: "UserHabit", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `UserHabit` table.
+  """
+  _count: Int! @fdc_generated(from: "UserHabit", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `UserHabit` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "UserHabit.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `UserHabit` table where the `currentStreak` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  currentStreak_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "UserHabit.currentStreak", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `UserHabit` table where the `habitId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  habitId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "UserHabit.habitId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `UserHabit` table where the `lastTrackedDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  lastTrackedDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "UserHabit.lastTrackedDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `UserHabit` table where the `longestStreak` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  longestStreak_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "UserHabit.longestStreak", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `UserHabit` table where the `userId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  userId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "UserHabit.userId", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `currentStreak` field in the `UserHabit` table.
+  """
+  currentStreak_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "UserHabit.currentStreak", purpose: QUERY_SUM)
+  """
+  ✨ Sum the `longestStreak` field in the `UserHabit` table.
+  """
+  longestStreak_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "UserHabit.longestStreak", purpose: QUERY_SUM)
+  """
+  ✨ Average the `currentStreak` field in the `UserHabit` table.
+  """
+  currentStreak_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "UserHabit.currentStreak", purpose: QUERY_AVG)
+  """
+  ✨ Average the `longestStreak` field in the `UserHabit` table.
+  """
+  longestStreak_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "UserHabit.longestStreak", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `createdAt` field in the `UserHabit` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "UserHabit.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `currentStreak` field in the `UserHabit` table.
+  """
+  currentStreak_min: Int @fdc_generated(from: "UserHabit.currentStreak", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `lastTrackedDate` field in the `UserHabit` table.
+  """
+  lastTrackedDate_min: Timestamp @fdc_generated(from: "UserHabit.lastTrackedDate", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `longestStreak` field in the `UserHabit` table.
+  """
+  longestStreak_min: Int @fdc_generated(from: "UserHabit.longestStreak", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `UserHabit` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "UserHabit.createdAt", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `currentStreak` field in the `UserHabit` table.
+  """
+  currentStreak_max: Int @fdc_generated(from: "UserHabit.currentStreak", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `lastTrackedDate` field in the `UserHabit` table.
+  """
+  lastTrackedDate_max: Timestamp @fdc_generated(from: "UserHabit.lastTrackedDate", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `longestStreak` field in the `UserHabit` table.
+  """
+  longestStreak_max: Int @fdc_generated(from: "UserHabit.longestStreak", purpose: QUERY_MAX)
 }

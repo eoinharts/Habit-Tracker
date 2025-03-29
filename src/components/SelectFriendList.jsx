@@ -75,11 +75,17 @@ const SelectFriendList = ({ onSuccess, onClose }) => {
 
         const allUsers = usersRes?.data?.users || [];
         const currentFriends = friendsRes?.data?.friendships || [];
-        const friendIds = new Set(currentFriends.map(f => f.user2Id));
 
-        const filteredUsers = allUsers.filter(u =>
-          u.id !== uid && !friendIds.has(u.id)
-        );
+const friendIds = new Set();
+currentFriends.forEach(f => {
+  friendIds.add(f.user1Id);
+  friendIds.add(f.user2Id);
+});
+
+const filteredUsers = allUsers.filter(u =>
+  u.id !== uid && !friendIds.has(u.id)
+);
+
 
         setAvailableUsers(filteredUsers);
       } catch (err) {
@@ -97,24 +103,28 @@ const SelectFriendList = ({ onSuccess, onClose }) => {
     try {
       const confirmed = await confirmUserInDB(currentUserId);
       if (!confirmed) throw new Error('Current user still not in DB');
-
+  
       console.log('➕ Attempting to add friend:', friendId);
-      await addFriend({ currentUserId, friendId });
-
-      message.success('Friend added successfully!');
-      onSuccess();
-      onClose();
-    } catch (err) {
-      if (err?.message?.includes('duplicate key value')) {
-        message.warning('You are already friends or have a pending request.');
+      const result = await addFriend({ currentUserId, friendId });
+  
+      console.log('✅ Friend mutation result:', result);
+      if (result?.data) {
+        message.success('Friend request sent (pending)!');
+        onSuccess();
+        onClose();
       } else {
-        console.error('Add friend error:', err);
-        message.error('Failed to add friend.');
+        message.warning('No response from friend request mutation');
+      }
+    } catch (err) {
+      console.error('Add friend error:', err);
+      if (err?.message?.includes('duplicate key value')) {
+        message.warning('You’ve already sent this request or are already friends.');
+      } else {
+        message.error('Friend request failed.');
       }
     }
   };
 
-  if (loading) return <div>Loading users...</div>;
 
   return (
     <List
