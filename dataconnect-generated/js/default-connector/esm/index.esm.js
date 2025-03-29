@@ -26,14 +26,24 @@ export function addFriend(dcOrVars, vars) {
   return executeMutation(addFriendRef(dcOrVars, vars));
 }
 
-export function removeFriendRef(dcOrVars, vars) {
+export function deleteFriendRef(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'RemoveFriend', inputVars);
+  return mutationRef(dcInstance, 'DeleteFriend', inputVars);
 }
 
-export function removeFriend(dcOrVars, vars) {
-  return executeMutation(removeFriendRef(dcOrVars, vars));
+export function deleteFriend(dcOrVars, vars) {
+  return executeMutation(deleteFriendRef(dcOrVars, vars));
+}
+
+export function removeReverseFriendRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'RemoveReverseFriend', inputVars);
+}
+
+export function removeReverseFriend(dcOrVars, vars) {
+  return executeMutation(removeReverseFriendRef(dcOrVars, vars));
 }
 
 export function acceptFriendRequestRef(dcOrVars, vars) {
@@ -126,14 +136,14 @@ export function getAllUsers(dc) {
   return executeQuery(getAllUsersRef(dc));
 }
 
-export function listFriendsRef(dc) {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+export function listFriendsRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListFriends');
+  return queryRef(dcInstance, 'ListFriends', inputVars);
 }
 
-export function listFriends(dc) {
-  return executeQuery(listFriendsRef(dc));
+export function listFriends(dcOrVars, vars) {
+  return executeQuery(listFriendsRef(dcOrVars, vars));
 }
 
 export function listIncomingRequestsRef(dc) {

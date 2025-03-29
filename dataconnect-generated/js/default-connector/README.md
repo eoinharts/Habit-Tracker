@@ -13,7 +13,8 @@
 - [**Mutations**](#mutations)
   - [*CreateUser*](#createuser)
   - [*AddFriend*](#addfriend)
-  - [*RemoveFriend*](#removefriend)
+  - [*DeleteFriend*](#deletefriend)
+  - [*RemoveReverseFriend*](#removereversefriend)
   - [*AcceptFriendRequest*](#acceptfriendrequest)
   - [*DeclineFriendRequest*](#declinefriendrequest)
   - [*AddReverseFriend*](#addreversefriend)
@@ -37,7 +38,7 @@ A connector is a collection of Queries and Mutations. One SDK is generated for e
 You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
 
 const dataConnect = getDataConnect(connectorConfig);
@@ -50,7 +51,7 @@ To connect to the emulator, you can use the following code.
 You can also follow the emulator instructions from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#instrument-clients).
 
 ```javascript
-import { connectDataConnectEmulator, getDataConnect } from 'firebase/data-connect';
+import { connectDataConnectEmulator, getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
 
 const dataConnect = getDataConnect(connectorConfig);
@@ -114,7 +115,7 @@ export interface GetUserDetailsData {
 ### Using `GetUserDetails`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, getUserDetails, GetUserDetailsVariables } from '@firebasegen/default-connector';
 
 // The `GetUserDetails` query requires an argument of type `GetUserDetailsVariables`:
@@ -144,7 +145,7 @@ getUserDetails(getUserDetailsVars).then((response) => {
 ### Using `GetUserDetails`'s `QueryRef` function
 
 ```javascript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, getUserDetailsRef, GetUserDetailsVariables } from '@firebasegen/default-connector';
 
 // The `GetUserDetails` query requires an argument of type `GetUserDetailsVariables`:
@@ -208,7 +209,7 @@ export interface GetAllUsersData {
 ### Using `GetAllUsers`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, getAllUsers } from '@firebasegen/default-connector';
 
 
@@ -232,7 +233,7 @@ getAllUsers().then((response) => {
 ### Using `GetAllUsers`'s `QueryRef` function
 
 ```javascript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, getAllUsersRef } from '@firebasegen/default-connector';
 
 
@@ -259,19 +260,25 @@ executeQuery(ref).then((response) => {
 ## ListFriends
 You can execute the `ListFriends` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
 ```javascript
-listFriends(): QueryPromise<ListFriendsData, undefined>;
+listFriends(vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
 
-listFriendsRef(): QueryRef<ListFriendsData, undefined>;
+listFriendsRef(vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```javascript
-listFriends(dc: DataConnect): QueryPromise<ListFriendsData, undefined>;
+listFriends(dc: DataConnect, vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
 
-listFriendsRef(dc: DataConnect): QueryRef<ListFriendsData, undefined>;
+listFriendsRef(dc: DataConnect, vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
 ```
 
 ### Variables
-The `ListFriends` query has no variables.
+The `ListFriends` query requires an argument of type `ListFriendsVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+
+```javascript
+export interface ListFriendsVariables {
+  uid: string;
+}
+```
 ### Return Type
 Recall that executing the `ListFriends` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
@@ -282,12 +289,10 @@ export interface ListFriendsData {
     user1: {
       id: string;
       name: string;
-      email: string;
     } & User_Key;
       user2: {
         id: string;
         name: string;
-        email: string;
       } & User_Key;
         status: string;
   })[];
@@ -296,22 +301,28 @@ export interface ListFriendsData {
 ### Using `ListFriends`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, listFriends } from '@firebasegen/default-connector';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectorConfig, listFriends, ListFriendsVariables } from '@firebasegen/default-connector';
 
+// The `ListFriends` query requires an argument of type `ListFriendsVariables`:
+const listFriendsVars: ListFriendsVariables = {
+  uid: ..., 
+};
 
 // Call the `listFriends()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await listFriends();
+const { data } = await listFriends(listFriendsVars);
+// Variables can be defined inline as well.
+const { data } = await listFriends({ uid: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await listFriends(dataConnect);
+const { data } = await listFriends(dataConnect, listFriendsVars);
 
 console.log(data.friendships);
 
 // Or, you can use the `Promise` API.
-listFriends().then((response) => {
+listFriends(listFriendsVars).then((response) => {
   const data = response.data;
   console.log(data.friendships);
 });
@@ -320,16 +331,22 @@ listFriends().then((response) => {
 ### Using `ListFriends`'s `QueryRef` function
 
 ```javascript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, listFriendsRef } from '@firebasegen/default-connector';
+import { getDataConnect, DataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, listFriendsRef, ListFriendsVariables } from '@firebasegen/default-connector';
 
+// The `ListFriends` query requires an argument of type `ListFriendsVariables`:
+const listFriendsVars: ListFriendsVariables = {
+  uid: ..., 
+};
 
 // Call the `listFriendsRef()` function to get a reference to the query.
-const ref = listFriendsRef();
+const ref = listFriendsRef(listFriendsVars);
+// Variables can be defined inline as well.
+const ref = listFriendsRef({ uid: ..., });
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = listFriendsRef(dataConnect);
+const ref = listFriendsRef(dataConnect, listFriendsVars);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
@@ -382,7 +399,7 @@ export interface ListIncomingRequestsData {
 ### Using `ListIncomingRequests`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, listIncomingRequests } from '@firebasegen/default-connector';
 
 
@@ -406,7 +423,7 @@ listIncomingRequests().then((response) => {
 ### Using `ListIncomingRequests`'s `QueryRef` function
 
 ```javascript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, listIncomingRequestsRef } from '@firebasegen/default-connector';
 
 
@@ -464,7 +481,7 @@ export interface GetUserHabitsData {
 ### Using `GetUserHabits`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, getUserHabits } from '@firebasegen/default-connector';
 
 
@@ -488,7 +505,7 @@ getUserHabits().then((response) => {
 ### Using `GetUserHabits`'s `QueryRef` function
 
 ```javascript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, getUserHabitsRef } from '@firebasegen/default-connector';
 
 
@@ -557,7 +574,7 @@ export interface GetHabitByIdData {
 ### Using `GetHabitById`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, getHabitById, GetHabitByIdVariables } from '@firebasegen/default-connector';
 
 // The `GetHabitById` query requires an argument of type `GetHabitByIdVariables`:
@@ -587,7 +604,7 @@ getHabitById(getHabitByIdVars).then((response) => {
 ### Using `GetHabitById`'s `QueryRef` function
 
 ```javascript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, getHabitByIdRef, GetHabitByIdVariables } from '@firebasegen/default-connector';
 
 // The `GetHabitById` query requires an argument of type `GetHabitByIdVariables`:
@@ -649,7 +666,7 @@ export interface DebugFriendshipsData {
 ### Using `DebugFriendships`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, debugFriendships } from '@firebasegen/default-connector';
 
 
@@ -673,7 +690,7 @@ debugFriendships().then((response) => {
 ### Using `DebugFriendships`'s `QueryRef` function
 
 ```javascript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, debugFriendshipsRef } from '@firebasegen/default-connector';
 
 
@@ -748,7 +765,7 @@ export interface CreateUserData {
 ### Using `CreateUser`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, createUser, CreateUserVariables } from '@firebasegen/default-connector';
 
 // The `CreateUser` mutation has an optional argument of type `CreateUserVariables`:
@@ -782,7 +799,7 @@ createUser(createUserVars).then((response) => {
 ### Using `CreateUser`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, createUserRef, CreateUserVariables } from '@firebasegen/default-connector';
 
 // The `CreateUser` mutation has an optional argument of type `CreateUserVariables`:
@@ -836,6 +853,7 @@ The `AddFriend` mutation requires an argument of type `AddFriendVariables`, whic
 ```javascript
 export interface AddFriendVariables {
   friendId: string;
+  currentUserId: string;
 }
 ```
 ### Return Type
@@ -850,19 +868,20 @@ export interface AddFriendData {
 ### Using `AddFriend`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, addFriend, AddFriendVariables } from '@firebasegen/default-connector';
 
 // The `AddFriend` mutation requires an argument of type `AddFriendVariables`:
 const addFriendVars: AddFriendVariables = {
   friendId: ..., 
+  currentUserId: ..., 
 };
 
 // Call the `addFriend()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await addFriend(addFriendVars);
 // Variables can be defined inline as well.
-const { data } = await addFriend({ friendId: ..., });
+const { data } = await addFriend({ friendId: ..., currentUserId: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -880,18 +899,19 @@ addFriend(addFriendVars).then((response) => {
 ### Using `AddFriend`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, addFriendRef, AddFriendVariables } from '@firebasegen/default-connector';
 
 // The `AddFriend` mutation requires an argument of type `AddFriendVariables`:
 const addFriendVars: AddFriendVariables = {
   friendId: ..., 
+  currentUserId: ..., 
 };
 
 // Call the `addFriendRef()` function to get a reference to the mutation.
 const ref = addFriendRef(addFriendVars);
 // Variables can be defined inline as well.
-const ref = addFriendRef({ friendId: ..., });
+const ref = addFriendRef({ friendId: ..., currentUserId: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -910,86 +930,188 @@ executeMutation(ref).then((response) => {
 });
 ```
 
-## RemoveFriend
-You can execute the `RemoveFriend` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+## DeleteFriend
+You can execute the `DeleteFriend` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
 ```javascript
-removeFriend(vars: RemoveFriendVariables): MutationPromise<RemoveFriendData, RemoveFriendVariables>;
+deleteFriend(vars: DeleteFriendVariables): MutationPromise<DeleteFriendData, DeleteFriendVariables>;
 
-removeFriendRef(vars: RemoveFriendVariables): MutationRef<RemoveFriendData, RemoveFriendVariables>;
+deleteFriendRef(vars: DeleteFriendVariables): MutationRef<DeleteFriendData, DeleteFriendVariables>;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
 ```javascript
-removeFriend(dc: DataConnect, vars: RemoveFriendVariables): MutationPromise<RemoveFriendData, RemoveFriendVariables>;
+deleteFriend(dc: DataConnect, vars: DeleteFriendVariables): MutationPromise<DeleteFriendData, DeleteFriendVariables>;
 
-removeFriendRef(dc: DataConnect, vars: RemoveFriendVariables): MutationRef<RemoveFriendData, RemoveFriendVariables>;
+deleteFriendRef(dc: DataConnect, vars: DeleteFriendVariables): MutationRef<DeleteFriendData, DeleteFriendVariables>;
 ```
 
 ### Variables
-The `RemoveFriend` mutation requires an argument of type `RemoveFriendVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+The `DeleteFriend` mutation requires an argument of type `DeleteFriendVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
 ```javascript
-export interface RemoveFriendVariables {
+export interface DeleteFriendVariables {
+  currentUserId: string;
   friendId: string;
 }
 ```
 ### Return Type
-Recall that executing the `RemoveFriend` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+Recall that executing the `DeleteFriend` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `RemoveFriendData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `DeleteFriendData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 ```javascript
-export interface RemoveFriendData {
-  friendship_delete?: Friendship_Key | null;
+export interface DeleteFriendData {
+  first?: Friendship_Key | null;
+  second?: Friendship_Key | null;
 }
 ```
-### Using `RemoveFriend`'s action shortcut function
+### Using `DeleteFriend`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, removeFriend, RemoveFriendVariables } from '@firebasegen/default-connector';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteFriend, DeleteFriendVariables } from '@firebasegen/default-connector';
 
-// The `RemoveFriend` mutation requires an argument of type `RemoveFriendVariables`:
-const removeFriendVars: RemoveFriendVariables = {
+// The `DeleteFriend` mutation requires an argument of type `DeleteFriendVariables`:
+const deleteFriendVars: DeleteFriendVariables = {
+  currentUserId: ..., 
   friendId: ..., 
 };
 
-// Call the `removeFriend()` function to execute the mutation.
+// Call the `deleteFriend()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await removeFriend(removeFriendVars);
+const { data } = await deleteFriend(deleteFriendVars);
 // Variables can be defined inline as well.
-const { data } = await removeFriend({ friendId: ..., });
+const { data } = await deleteFriend({ currentUserId: ..., friendId: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await removeFriend(dataConnect, removeFriendVars);
+const { data } = await deleteFriend(dataConnect, deleteFriendVars);
+
+console.log(data.first);
+console.log(data.second);
+
+// Or, you can use the `Promise` API.
+deleteFriend(deleteFriendVars).then((response) => {
+  const data = response.data;
+  console.log(data.first);
+  console.log(data.second);
+});
+```
+
+### Using `DeleteFriend`'s `MutationRef` function
+
+```javascript
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteFriendRef, DeleteFriendVariables } from '@firebasegen/default-connector';
+
+// The `DeleteFriend` mutation requires an argument of type `DeleteFriendVariables`:
+const deleteFriendVars: DeleteFriendVariables = {
+  currentUserId: ..., 
+  friendId: ..., 
+};
+
+// Call the `deleteFriendRef()` function to get a reference to the mutation.
+const ref = deleteFriendRef(deleteFriendVars);
+// Variables can be defined inline as well.
+const ref = deleteFriendRef({ currentUserId: ..., friendId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteFriendRef(dataConnect, deleteFriendVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.first);
+console.log(data.second);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.first);
+  console.log(data.second);
+});
+```
+
+## RemoveReverseFriend
+You can execute the `RemoveReverseFriend` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+removeReverseFriend(vars: RemoveReverseFriendVariables): MutationPromise<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+
+removeReverseFriendRef(vars: RemoveReverseFriendVariables): MutationRef<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```javascript
+removeReverseFriend(dc: DataConnect, vars: RemoveReverseFriendVariables): MutationPromise<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+
+removeReverseFriendRef(dc: DataConnect, vars: RemoveReverseFriendVariables): MutationRef<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+```
+
+### Variables
+The `RemoveReverseFriend` mutation requires an argument of type `RemoveReverseFriendVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+
+```javascript
+export interface RemoveReverseFriendVariables {
+  friendId: string;
+}
+```
+### Return Type
+Recall that executing the `RemoveReverseFriend` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `RemoveReverseFriendData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface RemoveReverseFriendData {
+  friendship_delete?: Friendship_Key | null;
+}
+```
+### Using `RemoveReverseFriend`'s action shortcut function
+
+```javascript
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
+import { connectorConfig, removeReverseFriend, RemoveReverseFriendVariables } from '@firebasegen/default-connector';
+
+// The `RemoveReverseFriend` mutation requires an argument of type `RemoveReverseFriendVariables`:
+const removeReverseFriendVars: RemoveReverseFriendVariables = {
+  friendId: ..., 
+};
+
+// Call the `removeReverseFriend()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await removeReverseFriend(removeReverseFriendVars);
+// Variables can be defined inline as well.
+const { data } = await removeReverseFriend({ friendId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await removeReverseFriend(dataConnect, removeReverseFriendVars);
 
 console.log(data.friendship_delete);
 
 // Or, you can use the `Promise` API.
-removeFriend(removeFriendVars).then((response) => {
+removeReverseFriend(removeReverseFriendVars).then((response) => {
   const data = response.data;
   console.log(data.friendship_delete);
 });
 ```
 
-### Using `RemoveFriend`'s `MutationRef` function
+### Using `RemoveReverseFriend`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, removeFriendRef, RemoveFriendVariables } from '@firebasegen/default-connector';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, removeReverseFriendRef, RemoveReverseFriendVariables } from '@firebasegen/default-connector';
 
-// The `RemoveFriend` mutation requires an argument of type `RemoveFriendVariables`:
-const removeFriendVars: RemoveFriendVariables = {
+// The `RemoveReverseFriend` mutation requires an argument of type `RemoveReverseFriendVariables`:
+const removeReverseFriendVars: RemoveReverseFriendVariables = {
   friendId: ..., 
 };
 
-// Call the `removeFriendRef()` function to get a reference to the mutation.
-const ref = removeFriendRef(removeFriendVars);
+// Call the `removeReverseFriendRef()` function to get a reference to the mutation.
+const ref = removeReverseFriendRef(removeReverseFriendVars);
 // Variables can be defined inline as well.
-const ref = removeFriendRef({ friendId: ..., });
+const ref = removeReverseFriendRef({ friendId: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = removeFriendRef(dataConnect, removeFriendVars);
+const ref = removeReverseFriendRef(dataConnect, removeReverseFriendVars);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
@@ -1034,12 +1156,13 @@ The `data` property is an object of type `AcceptFriendRequestData`, which is def
 ```javascript
 export interface AcceptFriendRequestData {
   friendship_update?: Friendship_Key | null;
+  friendship_insert: Friendship_Key;
 }
 ```
 ### Using `AcceptFriendRequest`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, acceptFriendRequest, AcceptFriendRequestVariables } from '@firebasegen/default-connector';
 
 // The `AcceptFriendRequest` mutation requires an argument of type `AcceptFriendRequestVariables`:
@@ -1059,18 +1182,20 @@ const dataConnect = getDataConnect(connectorConfig);
 const { data } = await acceptFriendRequest(dataConnect, acceptFriendRequestVars);
 
 console.log(data.friendship_update);
+console.log(data.friendship_insert);
 
 // Or, you can use the `Promise` API.
 acceptFriendRequest(acceptFriendRequestVars).then((response) => {
   const data = response.data;
   console.log(data.friendship_update);
+  console.log(data.friendship_insert);
 });
 ```
 
 ### Using `AcceptFriendRequest`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, acceptFriendRequestRef, AcceptFriendRequestVariables } from '@firebasegen/default-connector';
 
 // The `AcceptFriendRequest` mutation requires an argument of type `AcceptFriendRequestVariables`:
@@ -1093,11 +1218,13 @@ const ref = acceptFriendRequestRef(dataConnect, acceptFriendRequestVars);
 const { data } = await executeMutation(ref);
 
 console.log(data.friendship_update);
+console.log(data.friendship_insert);
 
 // Or, you can use the `Promise` API.
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.friendship_update);
+  console.log(data.friendship_insert);
 });
 ```
 
@@ -1136,7 +1263,7 @@ export interface DeclineFriendRequestData {
 ### Using `DeclineFriendRequest`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, declineFriendRequest, DeclineFriendRequestVariables } from '@firebasegen/default-connector';
 
 // The `DeclineFriendRequest` mutation requires an argument of type `DeclineFriendRequestVariables`:
@@ -1167,7 +1294,7 @@ declineFriendRequest(declineFriendRequestVars).then((response) => {
 ### Using `DeclineFriendRequest`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, declineFriendRequestRef, DeclineFriendRequestVariables } from '@firebasegen/default-connector';
 
 // The `DeclineFriendRequest` mutation requires an argument of type `DeclineFriendRequestVariables`:
@@ -1232,7 +1359,7 @@ export interface AddReverseFriendData {
 ### Using `AddReverseFriend`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, addReverseFriend, AddReverseFriendVariables } from '@firebasegen/default-connector';
 
 // The `AddReverseFriend` mutation requires an argument of type `AddReverseFriendVariables`:
@@ -1262,7 +1389,7 @@ addReverseFriend(addReverseFriendVars).then((response) => {
 ### Using `AddReverseFriend`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, addReverseFriendRef, AddReverseFriendVariables } from '@firebasegen/default-connector';
 
 // The `AddReverseFriend` mutation requires an argument of type `AddReverseFriendVariables`:
@@ -1329,7 +1456,7 @@ export interface CreateHabitData {
 ### Using `CreateHabit`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, createHabit, CreateHabitVariables } from '@firebasegen/default-connector';
 
 // The `CreateHabit` mutation requires an argument of type `CreateHabitVariables`:
@@ -1362,7 +1489,7 @@ createHabit(createHabitVars).then((response) => {
 ### Using `CreateHabit`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, createHabitRef, CreateHabitVariables } from '@firebasegen/default-connector';
 
 // The `CreateHabit` mutation requires an argument of type `CreateHabitVariables`:
@@ -1433,7 +1560,7 @@ export interface UpdateHabitData {
 ### Using `UpdateHabit`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, updateHabit, UpdateHabitVariables } from '@firebasegen/default-connector';
 
 // The `UpdateHabit` mutation requires an argument of type `UpdateHabitVariables`:
@@ -1467,7 +1594,7 @@ updateHabit(updateHabitVars).then((response) => {
 ### Using `UpdateHabit`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, updateHabitRef, UpdateHabitVariables } from '@firebasegen/default-connector';
 
 // The `UpdateHabit` mutation requires an argument of type `UpdateHabitVariables`:
@@ -1535,7 +1662,7 @@ export interface DeleteHabitData {
 ### Using `DeleteHabit`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, deleteHabit, DeleteHabitVariables } from '@firebasegen/default-connector';
 
 // The `DeleteHabit` mutation requires an argument of type `DeleteHabitVariables`:
@@ -1565,7 +1692,7 @@ deleteHabit(deleteHabitVars).then((response) => {
 ### Using `DeleteHabit`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, deleteHabitRef, DeleteHabitVariables } from '@firebasegen/default-connector';
 
 // The `DeleteHabit` mutation requires an argument of type `DeleteHabitVariables`:
@@ -1632,7 +1759,7 @@ export interface UpdateHabitStreakData {
 ### Using `UpdateHabitStreak`'s action shortcut function
 
 ```javascript
-import { getDataConnect } from 'firebase/data-connect';
+import { getDataConnect, DataConnect } from 'firebase/data-connect';
 import { connectorConfig, updateHabitStreak, UpdateHabitStreakVariables } from '@firebasegen/default-connector';
 
 // The `UpdateHabitStreak` mutation requires an argument of type `UpdateHabitStreakVariables`:
@@ -1665,7 +1792,7 @@ updateHabitStreak(updateHabitStreakVars).then((response) => {
 ### Using `UpdateHabitStreak`'s `MutationRef` function
 
 ```javascript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { getDataConnect, DataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, updateHabitStreakRef, UpdateHabitStreakVariables } from '@firebasegen/default-connector';
 
 // The `UpdateHabitStreak` mutation requires an argument of type `UpdateHabitStreakVariables`:

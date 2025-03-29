@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { List, Avatar, Button, message } from 'antd';
-import { UserOutlined, PlusOutlined } from '@ant-design/icons';
+import { UserOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import {
   getAllUsers,
-  listFriends,
+  deleteFriend, // Updated import: using deleteFriend instead of removeFriend
+  removeReverseFriend,
   addFriend,
   createUser,
-  getUserDetails
+  getUserDetails,
+  debugFriendships
 } from '../../dataconnect-generated/js/default-connector/esm/index.esm.js';
 import { auth } from '../utils/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -15,6 +17,7 @@ const SelectFriendList = ({ onSuccess, onClose }) => {
   const [availableUsers, setAvailableUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [allFriendships, setAllFriendships] = useState([]);
 
   const confirmUserInDB = async (uid) => {
     console.log('[⏳] Confirming user in DB:', uid);
@@ -22,7 +25,7 @@ const SelectFriendList = ({ onSuccess, onClose }) => {
     while (retries-- > 0) {
       const check = await getUserDetails({ userId: uid });
       const found = check?.data?.users?.length > 0;
-      console.log(`[🔎] Retry ${9 - retries}/10 - Found user in DB:`, found);
+      console.log(`[🔎] Retry ${10 - retries}/10 - Found user in DB:`, found);
       if (found) return true;
       await new Promise(res => setTimeout(res, 500));
     }
@@ -68,26 +71,16 @@ const SelectFriendList = ({ onSuccess, onClose }) => {
 
         console.log('✅ User ready in DB');
 
-        const [usersRes, friendsRes] = await Promise.all([
+        const [usersRes, friendshipsRes] = await Promise.all([
           getAllUsers(),
-          listFriends()
+          debugFriendships()
         ]);
 
         const allUsers = usersRes?.data?.users || [];
-        const currentFriends = friendsRes?.data?.friendships || [];
+        const friendships = friendshipsRes?.data?.friendships || [];
+        setAllFriendships(friendships);
 
-const friendIds = new Set();
-currentFriends.forEach(f => {
-  friendIds.add(f.user1Id);
-  friendIds.add(f.user2Id);
-});
-
-const filteredUsers = allUsers.filter(u =>
-  u.id !== uid && !friendIds.has(u.id)
-);
-
-
-        setAvailableUsers(filteredUsers);
+        setAvailableUsers(allUsers.filter(u => u.id !== uid));
       } catch (err) {
         console.error('❌ Setup failed:', err);
         message.error('Something went wrong setting up your friends list.');
@@ -103,10 +96,9 @@ const filteredUsers = allUsers.filter(u =>
     try {
       const confirmed = await confirmUserInDB(currentUserId);
       if (!confirmed) throw new Error('Current user still not in DB');
-  
+
       console.log('➕ Attempting to add friend:', friendId);
       const result = await addFriend({ currentUserId, friendId });
-  
       console.log('✅ Friend mutation result:', result);
       if (result?.data) {
         message.success('Friend request sent (pending)!');
@@ -125,30 +117,88 @@ const filteredUsers = allUsers.filter(u =>
     }
   };
 
+  const refreshFriendList = async () => {
+    try {
+      const [usersRes, friendshipsRes] = await Promise.all([
+        getAllUsers(),
+        debugFriendships()
+      ]);
+      const allUsers = usersRes?.data?.users || [];
+      const friendships = friendshipsRes?.data?.friendships || [];
+      setAllFriendships(friendships);
+      setAvailableUsers(allUsers.filter(u => u.id !== currentUserId));
+    } catch (e) {
+      console.error('🔁 Failed to refresh friend list:', e);
+    }
+  };
+
+  const handleRemoveFriend = async (friendId) => {
+    console.log('🗑️ Attempting to remove friend:', friendId);
+    try {
+      // Use deleteFriend mutation with both currentUserId and friendId
+      const result1 = await deleteFriend({ currentUserId, friendId });
+      console.log('✅ Removed (attempt #1):', result1);
+      message.success('Friend removed');
+      await refreshFriendList();
+      onSuccess();
+    } catch (err1) {
+      console.warn('↩️ Failed on attempt #1, trying reverse:', err1);
+      try {
+        const result2 = await removeReverseFriend({ friendId });
+        console.log('✅ Removed (attempt #2):', result2);
+        message.success('Friend removed');
+        await refreshFriendList();
+        onSuccess();
+      } catch (err2) {
+        console.error('❌ Remove failed both directions:', err2);
+        message.error('Could not remove friend');
+      }
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <List
       dataSource={availableUsers}
-      renderItem={(user) => (
-        <List.Item
-          actions={[
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => handleAddFriend(user.id)}
-            >
-              Add Friend
-            </Button>
-          ]}
-        >
-          <List.Item.Meta
-            avatar={<Avatar icon={<UserOutlined />} />}
-            title={user.name}
-            description={user.email}
-          />
-        </List.Item>
-      )}
-      locale={{ emptyText: 'No available users to add' }}
+      renderItem={(user) => {
+        const isFriend = allFriendships.some(f =>
+          f.status === 'accepted' &&
+          ((f.user1Id === currentUserId && f.user2Id === user.id) ||
+           (f.user2Id === currentUserId && f.user1Id === user.id))
+        );
+
+        return (
+          <List.Item
+            actions={[
+              isFriend ? (
+                <Button
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => handleRemoveFriend(user.id)}
+                >
+                  Remove
+                </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => handleAddFriend(user.id)}
+                >
+                  Add Friend
+                </Button>
+              )
+            ]}
+          >
+            <List.Item.Meta
+              avatar={<Avatar icon={<UserOutlined />} />}
+              title={user.name}
+              description={user.email}
+            />
+          </List.Item>
+        );
+      }}
+      locale={{ emptyText: 'No users available' }}
     />
   );
 };

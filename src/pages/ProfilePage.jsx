@@ -6,12 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import {
   getUserDetails,
   listFriends,
-  removeFriend,
+  deleteFriend, // Updated import
+  removeReverseFriend,
   acceptFriendRequest,
   declineFriendRequest,
   debugFriendships
 } from '../../dataconnect-generated/js/default-connector/esm/index.esm.js';
-
 import { ArrowLeftOutlined, DeleteOutlined, EyeOutlined, UserOutlined } from '@ant-design/icons';
 import SelectFriendList from '../components/SelectFriendList';
 import SelectAchievementList from '../components/SelectAchievementList';
@@ -31,7 +31,7 @@ const ProfilePage = () => {
   const fetchUserData = async (userId) => {
     try {
       const [debugRes, userDetailsRes] = await Promise.all([
-        debugFriendships(),
+        debugFriendships({}, { cache: 'no-store' }),
         getUserDetails({ userId })
       ]);
 
@@ -46,7 +46,6 @@ const ProfilePage = () => {
             const friendId = isUser1 ? f.user2Id : f.user1Id;
             const detailsRes = await getUserDetails({ userId: friendId });
             const friendUser = detailsRes?.data?.users?.[0];
-
             return {
               ...f,
               id: friendId,
@@ -63,7 +62,6 @@ const ProfilePage = () => {
             const friendId = isReceived ? f.user1Id : f.user2Id;
             const detailsRes = await getUserDetails({ userId: friendId });
             const friendUser = detailsRes?.data?.users?.[0];
-
             return {
               ...f,
               isIncoming: isReceived,
@@ -97,13 +95,33 @@ const ProfilePage = () => {
   }, [navigate]);
 
   const handleRemoveFriend = async (friendId) => {
+    console.log('🗑️ Attempting to remove friend:', friendId);
+    let removed = false;
+  
     try {
-      await removeFriend({ friendId });
-      await fetchUserData(user.uid);
+      const result1 = await deleteFriend({ currentUserId: user?.uid, friendId });
+      console.log('✅ Removed (attempt #1):', result1);
+      removed = true;
+    } catch (err1) {
+      console.warn('↩️ Failed (attempt #1), trying reverse:', err1);
+      try {
+        const result2 = await removeReverseFriend({ friendId });
+        console.log('✅ Removed (attempt #2):', result2);
+        removed = true;
+      } catch (err2) {
+        console.error('❌ Remove failed both directions:', err2);
+        message.error('Could not remove friend');
+        return;
+      }
+    }
+  
+    if (removed) {
       message.success('Friend removed');
-    } catch (err) {
-      console.error(err);
-      message.error('Could not remove friend');
+      setFriends(prev => ({
+        ...prev,
+        accepted: prev.accepted.filter(f => f.id !== friendId)
+      }));
+      await fetchUserData(user?.uid);
     }
   };
 
@@ -112,6 +130,7 @@ const ProfilePage = () => {
     const user2Id = user?.uid;
     try {
       await acceptFriendRequest({ user1Id, user2Id });
+      await addReverseFriend({ friendId: user1Id });
       await fetchUserData(user.uid);
       message.success('Friend request accepted');
     } catch (err) {
@@ -141,13 +160,17 @@ const ProfilePage = () => {
       label: 'Friends',
       children: (
         <>
-          <Button onClick={() => setShowFriendsModal(true)} type="primary" style={{ marginBottom: 16 }}>Add Friends</Button>
+          <Button onClick={() => setShowFriendsModal(true)} type="primary" style={{ marginBottom: 16 }}>
+            Add Friends
+          </Button>
           <List
             dataSource={friends.accepted}
-            renderItem={friend => (
+            renderItem={(friend) => (
               <List.Item
                 actions={[
-                  <Button icon={<EyeOutlined />} onClick={() => navigate(`/friend/${friend.id}`)}>View</Button>,
+                  <Button icon={<EyeOutlined />} onClick={() => navigate(`/friend/${friend.id}`)}>
+                    View
+                  </Button>,
                   <Popconfirm title="Remove this friend?" onConfirm={() => handleRemoveFriend(friend.id)}>
                     <Button icon={<DeleteOutlined />} danger />
                   </Popconfirm>
@@ -170,14 +193,18 @@ const ProfilePage = () => {
       children: (
         <List
           dataSource={friends.pending}
-          renderItem={friend => (
+          renderItem={(friend) => (
             <List.Item
               actions={
                 friend.isIncoming
                   ? [
-                    <Button type="primary" onClick={() => handleAcceptFriend(friend.id)}>Accept</Button>,
-                    <Button danger onClick={() => handleDeclineFriend(friend.id)}>Decline</Button>
-                  ]
+                      <Button type="primary" onClick={() => handleAcceptFriend(friend.id)}>
+                        Accept
+                      </Button>,
+                      <Button danger onClick={() => handleDeclineFriend(friend.id)}>
+                        Decline
+                      </Button>
+                    ]
                   : null
               }
             >
@@ -236,11 +263,25 @@ const ProfilePage = () => {
 
       {/* Modals */}
       <Modal title="Add Friends" open={showFriendsModal} onCancel={() => setShowFriendsModal(false)} footer={null} width={600}>
-        <SelectFriendList userId={user?.uid} onSuccess={() => { fetchUserData(user.uid); setShowFriendsModal(false); }} onClose={() => setShowFriendsModal(false)} />
+        <SelectFriendList
+          userId={user?.uid}
+          onSuccess={() => {
+            fetchUserData(user.uid);
+            setShowFriendsModal(false);
+          }}
+          onClose={() => setShowFriendsModal(false)}
+        />
       </Modal>
 
       <Modal title="Add Achievements" open={showAchievementsModal} onCancel={() => setShowAchievementsModal(false)} footer={null} width={600}>
-        <SelectAchievementList userId={user?.uid} onSuccess={() => { fetchUserData(user.uid); setShowAchievementsModal(false); }} onClose={() => setShowAchievementsModal(false)} />
+        <SelectAchievementList
+          userId={user?.uid}
+          onSuccess={() => {
+            fetchUserData(user.uid);
+            setShowAchievementsModal(false);
+          }}
+          onClose={() => setShowAchievementsModal(false)}
+        />
       </Modal>
     </div>
   );

@@ -10,6 +10,7 @@ export type DateString = string;
 
 export interface AcceptFriendRequestData {
   friendship_update?: Friendship_Key | null;
+  friendship_insert: Friendship_Key;
 }
 
 export interface AcceptFriendRequestVariables {
@@ -23,6 +24,7 @@ export interface AddFriendData {
 
 export interface AddFriendVariables {
   friendId: string;
+  currentUserId: string;
 }
 
 export interface AddReverseFriendData {
@@ -69,6 +71,16 @@ export interface DeclineFriendRequestData {
 export interface DeclineFriendRequestVariables {
   user1Id: string;
   user2Id: string;
+}
+
+export interface DeleteFriendData {
+  first?: Friendship_Key | null;
+  second?: Friendship_Key | null;
+}
+
+export interface DeleteFriendVariables {
+  currentUserId: string;
+  friendId: string;
 }
 
 export interface DeleteHabitData {
@@ -148,15 +160,17 @@ export interface ListFriendsData {
     user1: {
       id: string;
       name: string;
-      email: string;
     } & User_Key;
       user2: {
         id: string;
         name: string;
-        email: string;
       } & User_Key;
         status: string;
   })[];
+}
+
+export interface ListFriendsVariables {
+  uid: string;
 }
 
 export interface ListIncomingRequestsData {
@@ -173,11 +187,11 @@ export interface ListIncomingRequestsData {
   })[];
 }
 
-export interface RemoveFriendData {
+export interface RemoveReverseFriendData {
   friendship_delete?: Friendship_Key | null;
 }
 
-export interface RemoveFriendVariables {
+export interface RemoveReverseFriendVariables {
   friendId: string;
 }
 
@@ -232,12 +246,20 @@ export function addFriend(vars: AddFriendVariables): MutationPromise<AddFriendDa
 export function addFriend(dc: DataConnect, vars: AddFriendVariables): MutationPromise<AddFriendData, AddFriendVariables>;
 
 /* Allow users to create refs without passing in DataConnect */
-export function removeFriendRef(vars: RemoveFriendVariables): MutationRef<RemoveFriendData, RemoveFriendVariables>;
+export function deleteFriendRef(vars: DeleteFriendVariables): MutationRef<DeleteFriendData, DeleteFriendVariables>;
 /* Allow users to pass in custom DataConnect instances */
-export function removeFriendRef(dc: DataConnect, vars: RemoveFriendVariables): MutationRef<RemoveFriendData, RemoveFriendVariables>;
+export function deleteFriendRef(dc: DataConnect, vars: DeleteFriendVariables): MutationRef<DeleteFriendData, DeleteFriendVariables>;
 
-export function removeFriend(vars: RemoveFriendVariables): MutationPromise<RemoveFriendData, RemoveFriendVariables>;
-export function removeFriend(dc: DataConnect, vars: RemoveFriendVariables): MutationPromise<RemoveFriendData, RemoveFriendVariables>;
+export function deleteFriend(vars: DeleteFriendVariables): MutationPromise<DeleteFriendData, DeleteFriendVariables>;
+export function deleteFriend(dc: DataConnect, vars: DeleteFriendVariables): MutationPromise<DeleteFriendData, DeleteFriendVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function removeReverseFriendRef(vars: RemoveReverseFriendVariables): MutationRef<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function removeReverseFriendRef(dc: DataConnect, vars: RemoveReverseFriendVariables): MutationRef<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+
+export function removeReverseFriend(vars: RemoveReverseFriendVariables): MutationPromise<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+export function removeReverseFriend(dc: DataConnect, vars: RemoveReverseFriendVariables): MutationPromise<RemoveReverseFriendData, RemoveReverseFriendVariables>;
 
 /* Allow users to create refs without passing in DataConnect */
 export function acceptFriendRequestRef(vars: AcceptFriendRequestVariables): MutationRef<AcceptFriendRequestData, AcceptFriendRequestVariables>;
@@ -312,12 +334,12 @@ export function getAllUsers(): QueryPromise<GetAllUsersData, undefined>;
 export function getAllUsers(dc: DataConnect): QueryPromise<GetAllUsersData, undefined>;
 
 /* Allow users to create refs without passing in DataConnect */
-export function listFriendsRef(): QueryRef<ListFriendsData, undefined>;
+export function listFriendsRef(vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
 /* Allow users to pass in custom DataConnect instances */
-export function listFriendsRef(dc: DataConnect): QueryRef<ListFriendsData, undefined>;
+export function listFriendsRef(dc: DataConnect, vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
 
-export function listFriends(): QueryPromise<ListFriendsData, undefined>;
-export function listFriends(dc: DataConnect): QueryPromise<ListFriendsData, undefined>;
+export function listFriends(vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
+export function listFriends(dc: DataConnect, vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
 
 /* Allow users to create refs without passing in DataConnect */
 export function listIncomingRequestsRef(): QueryRef<ListIncomingRequestsData, undefined>;

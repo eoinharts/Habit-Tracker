@@ -102,28 +102,33 @@ query GetAllUsers @auth(level: USER) {
 }
 
 # ListFriends to show *both sides* of accepted friendships
-query ListFriends @auth(level: USER) {
+query ListFriends($uid: String!) @auth(level: USER) {
   friendships(
     where: {
-      _or: [
-        { user1: { id: { eq: "auth.uid" } }, status: { eq: "accepted" } },
-        { user2: { id: { eq: "auth.uid" } }, status: { eq: "accepted" } }
+      _and: [
+        { status: { eq: "accepted" } },
+        {
+          _or: [
+            { user1: { id: { eq: $uid } } },
+            { user2: { id: { eq: $uid } } }
+          ]
+        }
       ]
     }
   ) {
     user1 {
       id
       name
-      email
     }
     user2 {
       id
       name
-      email
     }
     status
   }
 }
+
+
 query ListIncomingRequests @auth(level: USER) {
   friendships(
     where: {

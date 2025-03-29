@@ -30,6 +30,8 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/friend/:friendId" element={<FriendPage />} />
           <Route path="/habit-home" element={<HabitHomePage />} />
+          
+
         </Routes>
       </ConfigProvider>
     </PhoneContainer>
