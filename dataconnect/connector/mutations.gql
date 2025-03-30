@@ -79,12 +79,8 @@ mutation AcceptFriendRequest($user1Id: String!, $user2Id: String!) @auth(level: 
     key: { user1Id: $user1Id, user2Id: $user2Id }
     data: { status: "accepted" }
   )
-   friendship_insert(data: {
-    user1: { id: $user2Id },
-    user2: { id: $user1Id },
-    status: "accepted"
-  })
 }
+
 
 
 

@@ -1156,7 +1156,6 @@ The `data` property is an object of type `AcceptFriendRequestData`, which is def
 ```javascript
 export interface AcceptFriendRequestData {
   friendship_update?: Friendship_Key | null;
-  friendship_insert: Friendship_Key;
 }
 ```
 ### Using `AcceptFriendRequest`'s action shortcut function
@@ -1182,13 +1181,11 @@ const dataConnect = getDataConnect(connectorConfig);
 const { data } = await acceptFriendRequest(dataConnect, acceptFriendRequestVars);
 
 console.log(data.friendship_update);
-console.log(data.friendship_insert);
 
 // Or, you can use the `Promise` API.
 acceptFriendRequest(acceptFriendRequestVars).then((response) => {
   const data = response.data;
   console.log(data.friendship_update);
-  console.log(data.friendship_insert);
 });
 ```
 
@@ -1218,13 +1215,11 @@ const ref = acceptFriendRequestRef(dataConnect, acceptFriendRequestVars);
 const { data } = await executeMutation(ref);
 
 console.log(data.friendship_update);
-console.log(data.friendship_insert);
 
 // Or, you can use the `Promise` API.
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.friendship_update);
-  console.log(data.friendship_insert);
 });
 ```
 

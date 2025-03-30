@@ -10,7 +10,6 @@ export type DateString = string;
 
 export interface AcceptFriendRequestData {
   friendship_update?: Friendship_Key | null;
-  friendship_insert: Friendship_Key;
 }
 
 export interface AcceptFriendRequestVariables {

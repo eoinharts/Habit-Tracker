@@ -1156,7 +1156,6 @@ To access the data returned by a Mutation, use the `UseMutationResult.data` fiel
 ```javascript
 export interface AcceptFriendRequestData {
   friendship_update?: Friendship_Key | null;
-  friendship_insert: Friendship_Key;
 }
 ```
 
@@ -1218,7 +1217,6 @@ export default function AcceptFriendRequestComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.friendship_update);
-    console.log(mutation.data.friendship_insert);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }
