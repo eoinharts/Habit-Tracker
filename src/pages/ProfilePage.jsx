@@ -126,31 +126,44 @@ const ProfilePage = () => {
   };
 
   const handleAcceptFriend = async (friendId) => {
-    const user1Id = friendId;
-    const user2Id = user?.uid;
+    // 1) Optimistically move the friend in local state:
+    setFriends(prev => {
+      const movedFriend = prev.pending.find(p => p.id === friendId);
+      return {
+        ...prev,
+        pending: prev.pending.filter(p => p.id !== friendId),
+        accepted: [...prev.accepted, movedFriend],
+      };
+    });
+  
+    // 2) Then call the backend
     try {
-      await acceptFriendRequest({ user1Id, user2Id });
-      await addReverseFriend({ friendId: user1Id });
-      await fetchUserData(user.uid);
+      await acceptFriendRequest({ user1Id: friendId, user2Id: user.uid });
+    
+      await fetchUserData(user.uid); 
       message.success('Friend request accepted');
     } catch (err) {
-      console.error('🔥 acceptFriendRequest failed:', err);
+      // If error, revert local state or show error
+      console.error('Error accepting friend:', err);
       message.error('Failed to accept request');
     }
   };
+  
 
-  const handleDeclineFriend = async (friendId) => {
-    const user1Id = friendId;
-    const user2Id = user?.uid;
-    try {
-      await declineFriendRequest(undefined, { user1Id, user2Id });
-      await fetchUserData(user.uid);
-      message.success('Friend request declined');
-    } catch (err) {
-      console.error('🔥 declineFriendRequest failed:', err);
-      message.error('Failed to decline request');
-    }
-  };
+// Decline a pending friend request
+const handleDeclineFriend = async (friendId) => {
+  const user1Id = friendId;  // the requester’s ID
+  const user2Id = user?.uid; // the current user
+  try {
+    await declineFriendRequest({ user1Id, user2Id });
+    await fetchUserData(user.uid);
+    message.success('Friend request declined');
+  } catch (err) {
+    console.error('Error declining friend request:', err);
+    message.error('Failed to decline request');
+  }
+};
+
 
   if (loading) return <div>Loading...</div>;
 

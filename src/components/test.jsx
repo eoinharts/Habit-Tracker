@@ -1,41 +1,48 @@
-import React, { useEffect } from 'react';
-import { debugFriendships, addReverseFriend } from '../../dataconnect-generated/js/default-connector/esm/index.esm.js';
-import { auth } from '../utils/firebaseConfig';
-import { onAuthStateChanged } from 'firebase/auth';
+// cleanup.js
+import { debugFriendships, deleteFriend } from './dataconnect-generated/js/default-connector/esm/index.esm.js';
 
-const FixFriendships = () => {
-  useEffect(() => {
-    const fix = async () => {
-      onAuthStateChanged(auth, async (user) => {
-        if (!user) return;
+async function cleanupDuplicates() {
+  try {
+    // Fetch all friendship records
+    const debugRes = await debugFriendships({}, { cache: 'no-store' });
+    const friendships = debugRes?.data?.friendships || [];
+    console.log(`Fetched ${friendships.length} friendship records.`);
 
-        const res = await debugFriendships();
-        const all = res?.data?.friendships || [];
+    // Create a map of accepted friendship pairs, sorted so that duplicates group together.
+    const friendshipMap = {};
+    for (const f of friendships) {
+      if (f.status !== 'accepted') continue; // Only consider accepted friendships.
+      // Create a unique key by sorting the two IDs.
+      const pairKey = [f.user1Id, f.user2Id].sort().join('_');
+      if (friendshipMap[pairKey]) {
+        friendshipMap[pairKey].push(f);
+      } else {
+        friendshipMap[pairKey] = [f];
+      }
+    }
 
-        const accepted = all.filter(f => f.status === 'accepted');
-
-        for (const f of accepted) {
-          // Skip if reverse already exists
-          const reverseExists = all.some(
-            r => r.user1Id === f.user2Id && r.user2Id === f.user1Id && r.status === 'accepted'
-          );
-          if (reverseExists) continue;
-
-          console.log(`🔁 Inserting reverse for ${f.user2Id} -> ${f.user1Id}`);
+    // Iterate over each friendship pair and delete duplicates.
+    for (const pairKey in friendshipMap) {
+      const rows = friendshipMap[pairKey];
+      if (rows.length > 1) {
+        console.log(`Duplicate detected for pair ${pairKey}: ${rows.length} records found.`);
+        // Keep the first record, delete the rest.
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
           try {
-            await addReverseFriend({ friendId: f.user1Id });
-            console.log(`✅ Inserted reverse for ${f.user2Id} -> ${f.user1Id}`);
+            // Try deleting using the key order in the row.
+            await deleteFriend({ currentUserId: row.user1Id, friendId: row.user2Id });
+            console.log(`Deleted duplicate row: ${row.user1Id} - ${row.user2Id}`);
           } catch (e) {
-            console.error(`❌ Failed reverse insert for ${f.user2Id} -> ${f.user1Id}:`, e);
+            console.error(`Failed to delete duplicate row: ${row.user1Id} - ${row.user2Id}`, e);
           }
         }
-      });
-    };
+      }
+    }
+    console.log('Duplicate cleanup completed.');
+  } catch (err) {
+    console.error('Error during cleanup:', err);
+  }
+}
 
-    fix();
-  }, []);
-
-  return <div>Fixing friendships… Check the console for results.</div>;
-};
-
-export default FixFriendships;
+cleanupDuplicates();
