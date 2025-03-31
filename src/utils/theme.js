@@ -31,7 +31,8 @@ export const theme = {
 			colorTextSecondary: "#848D9F",
 		},
 		Button :{
-			
+			colorPrimary: "#3843FF",
+			borderRadius: 16
 		}
 	},
 	token: {
