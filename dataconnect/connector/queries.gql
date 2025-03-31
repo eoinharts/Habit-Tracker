@@ -149,8 +149,8 @@ query ListIncomingRequests @auth(level: USER) {
 }
 
 # Get user habits
-query GetUserHabits @auth(level: USER) {
-  habits(where: { creatorId: { eq: "auth.uid" } }) {
+query GetUserHabit($uid: String!) @auth(level: USER) {
+  habits(where: { creatorId: { eq: $uid } }) {
     id
     title
     description

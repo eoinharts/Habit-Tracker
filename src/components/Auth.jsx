@@ -44,20 +44,6 @@ const Auth = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                setUser(user);
-                console.log("🔄 User session restored:", user.uid);
-                await getUserDetails({ userId: user.uid });
-            } else {
-                setUser(null);
-            }
-        });
-
-        return () => unsubscribe();
-    }, []);
-
-    useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % contentData.length);
         }, 5000);
@@ -75,6 +61,7 @@ const Auth = () => {
             });
             console.log("✅ User signed up:", userCredential.user);
             setError("");
+            navigate("/");
         } catch (err) {
             console.error("❌ Signup error:", err);
             setError(err.message);
@@ -87,6 +74,7 @@ const Auth = () => {
             setUser(userCredential.user);
             setError("");
             console.log("✅ User signed in!");
+            navigate("/");
         } catch (err) {
             setError(err.message);
         }
@@ -96,7 +84,17 @@ const Auth = () => {
         try {
             const userCredential = await signInWithPopup(auth, provider);
             setUser(userCredential.user);
-            setError("");
+            try {
+                await createUser({
+                  id: userCredential.user.uid,
+                  name: "test name",
+                  email: userCredential.user.email,
+                });
+                navigate("/");
+            } catch (err) {
+                setError("");
+                navigate("/");
+            }
         } catch (err) {
             setError(err.message);
         }
@@ -112,21 +110,22 @@ const Auth = () => {
     };
 
     return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+        <div 
+        
+        className="fade-in"
+        style={{
             height: '100vh',
             backgroundImage: 'url("background.jpg")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
         }}>
             <Card
-                style={{ width: 400, padding: '30px', borderRadius: '20px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+            className="shadow-none "
+                style={{ width: 400, padding: '30px', borderRadius: '20px', border: "none"}}
             >
                 <div style={{ textAlign: 'center', marginBottom: '20px' }}>
                     <img src={contentData[currentIndex].image} alt="Feature" style={{ width: '100%', borderRadius: '10px' }} />
-                    <Title level={4}>{contentData[currentIndex].heading}</Title>
+                    <Title level={4} className="mt-3">{contentData[currentIndex].heading}</Title>
                     <Text>{contentData[currentIndex].text}</Text>
                     <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
                         {contentData.map((_, index) => (
@@ -160,7 +159,7 @@ const Auth = () => {
                         </Button>
                     </Space>
                 ) : (
-                    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                    <Space direction="vertical" size="middle" style={{ width: '100%' }} className="">
                         <Input
                             size="large"
                             placeholder="Email"

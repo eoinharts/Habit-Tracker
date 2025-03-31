@@ -3,7 +3,7 @@ import { List, Avatar, Button, message } from 'antd';
 import { UserOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import {
   getAllUsers,
-  deleteFriend, // Updated import: using deleteFriend instead of removeFriend
+  deleteFriend, 
   removeReverseFriend,
   addFriend,
   createUser,
@@ -135,7 +135,6 @@ const SelectFriendList = ({ onSuccess, onClose }) => {
   const handleRemoveFriend = async (friendId) => {
     console.log('🗑️ Attempting to remove friend:', friendId);
     try {
-      // Use deleteFriend mutation with both currentUserId and friendId
       const result1 = await deleteFriend({ currentUserId, friendId });
       console.log('✅ Removed (attempt #1):', result1);
       message.success('Friend removed');

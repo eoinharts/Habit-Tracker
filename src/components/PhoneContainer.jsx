@@ -15,10 +15,11 @@ const PhoneContainer = ({ children }) => {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        backgroundImage: "url('/purple_background.png')",
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
+        backgroundColor: "#F6F9FF",
+        // backgroundImage: "url('/purple_background.png')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
       }}
     >
       {children}

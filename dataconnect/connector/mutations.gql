@@ -79,12 +79,8 @@ mutation AcceptFriendRequest($user1Id: String!, $user2Id: String!) @auth(level: 
     key: { user1Id: $user1Id, user2Id: $user2Id }
     data: { status: "accepted" }
   )
-   friendship_insert(data: {
-    user1: { id: $user2Id },
-    user2: { id: $user1Id },
-    status: "accepted"
-  })
 }
+
 
 
 
@@ -108,9 +104,9 @@ mutation AddReverseFriend($friendId: String!) @auth(level: USER) {
 }
 
 # Create a habit
-mutation CreateHabit($title: String!, $description: String!, $category: String!, $streakGoal: Int!) @auth(level: USER) {
+mutation CreateHabit($uid: String!, $title: String!, $description: String!, $category: String!, $streakGoal: Int!) @auth(level: USER) {
   habit_insert(
-    data: { creatorId: "auth.uid", title: $title, description: $description, category: $category, streakGoal: $streakGoal }
+    data: { creatorId: $uid, title: $title, description: $description, category: $category, streakGoal: $streakGoal }
   )
 }
 
