@@ -9,7 +9,7 @@ const HabitsCard = ({ title, goal, emoji, className = "" }) => {
       <div className="d-flex align-items-center py-2">
         <div className="position-relative">
           <Progress type="circle" percent={80} size={35} showInfo={false} />
-          <div className="position-absolute" style={{ top: 7, left: 10 }}>
+          <div className="position-absolute top-50 start-50 translate-middle">
             {emoji}
           </div>
         </div>

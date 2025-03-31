@@ -1,4 +1,4 @@
-import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, DeleteFriendData, DeleteFriendVariables, RemoveReverseFriendData, RemoveReverseFriendVariables, AcceptFriendRequestData, AcceptFriendRequestVariables, DeclineFriendRequestData, DeclineFriendRequestVariables, AddReverseFriendData, AddReverseFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, ListFriendsVariables, ListIncomingRequestsData, GetUserHabitsData, GetHabitByIdData, GetHabitByIdVariables, DebugFriendshipsData } from '../';
+import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, DeleteFriendData, DeleteFriendVariables, RemoveReverseFriendData, RemoveReverseFriendVariables, AcceptFriendRequestData, AcceptFriendRequestVariables, DeclineFriendRequestData, DeclineFriendRequestVariables, AddReverseFriendData, AddReverseFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, ListFriendsVariables, ListIncomingRequestsData, GetUserHabitData, GetUserHabitVariables, GetHabitByIdData, GetHabitByIdVariables, DebugFriendshipsData } from '../';
 import { UseDataConnectQueryResult, useDataConnectQueryOptions, UseDataConnectMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
 import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
@@ -50,8 +50,8 @@ export function useListFriends(dc: DataConnect, vars: ListFriendsVariables, opti
 export function useListIncomingRequests(options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseDataConnectQueryResult<ListIncomingRequestsData, undefined>;
 export function useListIncomingRequests(dc: DataConnect, options?: useDataConnectQueryOptions<ListIncomingRequestsData>): UseDataConnectQueryResult<ListIncomingRequestsData, undefined>;
 
-export function useGetUserHabits(options?: useDataConnectQueryOptions<GetUserHabitsData>): UseDataConnectQueryResult<GetUserHabitsData, undefined>;
-export function useGetUserHabits(dc: DataConnect, options?: useDataConnectQueryOptions<GetUserHabitsData>): UseDataConnectQueryResult<GetUserHabitsData, undefined>;
+export function useGetUserHabit(vars: GetUserHabitVariables, options?: useDataConnectQueryOptions<GetUserHabitData>): UseDataConnectQueryResult<GetUserHabitData, GetUserHabitVariables>;
+export function useGetUserHabit(dc: DataConnect, vars: GetUserHabitVariables, options?: useDataConnectQueryOptions<GetUserHabitData>): UseDataConnectQueryResult<GetUserHabitData, GetUserHabitVariables>;
 
 export function useGetHabitById(vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseDataConnectQueryResult<GetHabitByIdData, GetHabitByIdVariables>;
 export function useGetHabitById(dc: DataConnect, vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseDataConnectQueryResult<GetHabitByIdData, GetHabitByIdVariables>;

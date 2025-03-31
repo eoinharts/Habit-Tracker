@@ -39,6 +39,7 @@ export interface CreateHabitData {
 }
 
 export interface CreateHabitVariables {
+  uid: string;
   title: string;
   description: string;
   category: string;
@@ -139,7 +140,7 @@ export interface GetUserDetailsVariables {
   userId: string;
 }
 
-export interface GetUserHabitsData {
+export interface GetUserHabitData {
   habits: ({
     id: UUIDString;
     title: string;
@@ -147,6 +148,10 @@ export interface GetUserHabitsData {
     category?: string | null;
     streakGoal: number;
   } & Habit_Key)[];
+}
+
+export interface GetUserHabitVariables {
+  uid: string;
 }
 
 export interface Habit_Key {
@@ -349,12 +354,12 @@ export function listIncomingRequests(): QueryPromise<ListIncomingRequestsData, u
 export function listIncomingRequests(dc: DataConnect): QueryPromise<ListIncomingRequestsData, undefined>;
 
 /* Allow users to create refs without passing in DataConnect */
-export function getUserHabitsRef(): QueryRef<GetUserHabitsData, undefined>;
+export function getUserHabitRef(vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
 /* Allow users to pass in custom DataConnect instances */
-export function getUserHabitsRef(dc: DataConnect): QueryRef<GetUserHabitsData, undefined>;
+export function getUserHabitRef(dc: DataConnect, vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
 
-export function getUserHabits(): QueryPromise<GetUserHabitsData, undefined>;
-export function getUserHabits(dc: DataConnect): QueryPromise<GetUserHabitsData, undefined>;
+export function getUserHabit(vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
+export function getUserHabit(dc: DataConnect, vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
 
 /* Allow users to create refs without passing in DataConnect */
 export function getHabitByIdRef(vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;

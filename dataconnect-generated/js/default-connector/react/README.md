@@ -10,7 +10,7 @@
   - [*GetAllUsers*](#getallusers)
   - [*ListFriends*](#listfriends)
   - [*ListIncomingRequests*](#listincomingrequests)
-  - [*GetUserHabits*](#getuserhabits)
+  - [*GetUserHabit*](#getuserhabit)
   - [*GetHabitById*](#gethabitbyid)
   - [*DebugFriendships*](#debugfriendships)
 - [**Mutations**](#mutations)
@@ -465,27 +465,33 @@ export default function ListIncomingRequestsComponent() {
 }
 ```
 
-## GetUserHabits
-You can execute the `GetUserHabits` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+## GetUserHabit
+You can execute the `GetUserHabit` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
 
 ```javascript
-useGetUserHabits(dc: DataConnect, options?: useDataConnectQueryOptions<GetUserHabitsData>): UseDataConnectQueryResult<GetUserHabitsData, undefined>;
+useGetUserHabit(dc: DataConnect, vars: GetUserHabitVariables, options?: useDataConnectQueryOptions<GetUserHabitData>): UseDataConnectQueryResult<GetUserHabitData, GetUserHabitVariables>;
 ```
 You can also pass in a `DataConnect` instance to the Query hook function.
 ```javascript
-useGetUserHabits(options?: useDataConnectQueryOptions<GetUserHabitsData>): UseDataConnectQueryResult<GetUserHabitsData, undefined>;
+useGetUserHabit(vars: GetUserHabitVariables, options?: useDataConnectQueryOptions<GetUserHabitData>): UseDataConnectQueryResult<GetUserHabitData, GetUserHabitVariables>;
 ```
 
 ### Variables
-The `GetUserHabits` Query has no variables.
+The `GetUserHabit` Query requires an argument of type `GetUserHabitVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface GetUserHabitVariables {
+  uid: string;
+}
+```
 ### Return Type
-Recall that calling the `GetUserHabits` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+Recall that calling the `GetUserHabit` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
 
 To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
 
-To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `GetUserHabits` Query is of type `GetUserHabitsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `GetUserHabit` Query is of type `GetUserHabitData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
 ```javascript
-export interface GetUserHabitsData {
+export interface GetUserHabitData {
   habits: ({
     id: UUIDString;
     title: string;
@@ -498,32 +504,38 @@ export interface GetUserHabitsData {
 
 To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
 
-### Using `GetUserHabits`'s Query hook function
+### Using `GetUserHabit`'s Query hook function
 
 ```javascript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig } from '@firebasegen/default-connector';
-import { useGetUserHabits } from '@firebasegen/default-connector/react'
+import { connectorConfig, GetUserHabitVariables } from '@firebasegen/default-connector';
+import { useGetUserHabit } from '@firebasegen/default-connector/react'
 
-export default function GetUserHabitsComponent() {
+export default function GetUserHabitComponent() {
 
+  // The `useGetUserHabit` Query hook requires an argument of type `GetUserHabitVariables`:
+  const getUserHabitVars: GetUserHabitVariables = {
+    uid: ..., 
+  };
 
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
-  const query = useGetUserHabits();
+  const query = useGetUserHabit(getUserHabitVars);
+  // Variables can be defined inline as well.
+  const query = useGetUserHabit({ uid: ..., });
 
   // You can also pass in a `DataConnect` instance to the Query hook function.
   const dataConnect = getDataConnect(connectorConfig);
-  const query = useGetUserHabits(dataConnect);
+  const query = useGetUserHabit(dataConnect, getUserHabitVars);
 
   // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
   const options = { staleTime: 5 * 1000 };
-  const query = useGetUserHabits(options);
+  const query = useGetUserHabit(getUserHabitVars, options);
 
   // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
   const dataConnect = getDataConnect(connectorConfig);
   const options = { staleTime: 5 * 1000 };
-  const query = useGetUserHabits(dataConnect, options);
+  const query = useGetUserHabit(dataConnect, getUserHabitVars, options);
 
   // Then, you can render your component dynamically based on the status of the Query.
   if (query.isPending) {
@@ -1427,6 +1439,7 @@ The `CreateHabit` Mutation requires an argument of type `CreateHabitVariables`, 
 
 ```javascript
 export interface CreateHabitVariables {
+  uid: string;
   title: string;
   description: string;
   category: string;
@@ -1480,6 +1493,7 @@ export default function CreateHabitComponent() {
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useCreateHabit` Mutation requires an argument of type `CreateHabitVariables`:
   const createHabitVars: CreateHabitVariables = {
+    uid: ..., 
     title: ..., 
     description: ..., 
     category: ..., 
@@ -1487,7 +1501,7 @@ export default function CreateHabitComponent() {
   };
   mutation.mutate(createHabitVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ title: ..., description: ..., category: ..., streakGoal: ..., });
+  mutation.mutate({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {

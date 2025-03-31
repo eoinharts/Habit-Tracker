@@ -1,4 +1,4 @@
-import { createUserRef, addFriendRef, deleteFriendRef, removeReverseFriendRef, acceptFriendRequestRef, declineFriendRequestRef, addReverseFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, getUserDetailsRef, getAllUsersRef, listFriendsRef, listIncomingRequestsRef, getUserHabitsRef, getHabitByIdRef, debugFriendshipsRef, connectorConfig } from '../../esm/index.esm.js';
+import { createUserRef, addFriendRef, deleteFriendRef, removeReverseFriendRef, acceptFriendRequestRef, declineFriendRequestRef, addReverseFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, getUserDetailsRef, getAllUsersRef, listFriendsRef, listIncomingRequestsRef, getUserHabitRef, getHabitByIdRef, debugFriendshipsRef, connectorConfig } from '../../esm/index.esm.js';
 import { validateArgs, CallerSdkTypeEnum } from 'firebase/data-connect';
 import { useDataConnectQuery, useDataConnectMutation, validateReactArgs } from '@tanstack-query-firebase/react/data-connect';
 
@@ -115,9 +115,9 @@ export function useListIncomingRequests(dcOrOptions, options) {
   return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
 
-export function useGetUserHabits(dcOrOptions, options) {
-  const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);
-  const ref = getUserHabitsRef(dcInstance);
+export function useGetUserHabit(dcOrVars, varsOrOptions, options) {
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateReactArgs(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  const ref = getUserHabitRef(dcInstance, inputVars);
   return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
 

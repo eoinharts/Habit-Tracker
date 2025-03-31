@@ -157,14 +157,14 @@ exports.listIncomingRequests = function listIncomingRequests(dc) {
   return executeQuery(listIncomingRequestsRef(dc));
 };
 
-exports.getUserHabitsRef = function getUserHabitsRef(dc) {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+exports.getUserHabitRef = function getUserHabitRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetUserHabits');
+  return queryRef(dcInstance, 'GetUserHabit', inputVars);
 }
 
-exports.getUserHabits = function getUserHabits(dc) {
-  return executeQuery(getUserHabitsRef(dc));
+exports.getUserHabit = function getUserHabit(dcOrVars, vars) {
+  return executeQuery(getUserHabitRef(dcOrVars, vars));
 };
 
 exports.getHabitByIdRef = function getHabitByIdRef(dcOrVars, vars) {

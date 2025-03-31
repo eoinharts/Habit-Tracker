@@ -1,41 +1,71 @@
-import React, { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Routes, Route } from 'react-router';
-import { ConfigProvider } from 'antd';
-import { antdConfig } from './theme/antdConfig';
-import CreateAccount from './pages/CreateAccount'
-import WelcomePage from './pages/WelcomePage'
-import ProfilePage from './pages/ProfilePage';
-import FriendPage from './pages/FriendPage';
-import Auth from './components/Auth'
-import { useEffect } from 'react'
-import { Layout } from 'antd'
-import Home from './pages/Home';
-import Components from './pages/Components';
+import React, { useState } from "react";
+import "./App.css";
+import { Routes, Route, Navigate } from "react-router";
+import { ConfigProvider } from "antd";
+import { antdConfig } from "./theme/antdConfig";
+import CreateAccount from "./pages/CreateAccount";
+import WelcomePage from "./pages/WelcomePage";
+import Auth from "./components/Auth";
+import { useEffect } from "react";
 import PhoneContainer from "./components/PhoneContainer";
-import HabitHomePage from './pages/HabitHomePage';
+import { auth } from "./utils/firebaseConfig";
+import { GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
+import { getUserDetails } from "@firebasegen/default-connector";
+import { Spin } from "antd";
+import AuthenticatedRoutes from "./components/AuthenticatedRoutes";
+import { AuthProvider, useAuth } from "./contexts/AuthProvider";
 
+const provider = new GoogleAuthProvider();
 function App() {
+  const [signedIn, setSignedIn] = useState(null);
+  const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log("🔄 User session restored:", user.uid);
+        const response = await getUserDetails({
+          userId: user.uid,
+        });
+        setUserData(response.data.users[0]);
+        setSignedIn(true);
+      } else {
+        setUserData(false);
+        setSignedIn(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const clearUserData = () => {
+    setSignedIn(false);
+    setUserData(null);
+  };
   return (
     <PhoneContainer>
       <ConfigProvider {...antdConfig}>
-        <Routes>
-          <Route path="/" element={<WelcomePage />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/components" element={<Components />} />
-          <Route path="/signup" element={<CreateAccount />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/friend/:friendId" element={<FriendPage />} />
-          <Route path="/habit-home" element={<HabitHomePage />} />
-          
-
-        </Routes>
+        <AuthProvider
+          userDetails={userData}
+          isSignedIn={signedIn}
+          clearUserData={clearUserData}
+        >
+          {signedIn === null ? (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+              <Spin size="large" />
+            </div>
+          ) : signedIn === false ? (
+            <Routes>
+              <Route path="/*" element={<Navigate to="/" />} />
+              <Route path="/" element={<WelcomePage />} />
+              <Route path="/signup" element={<CreateAccount />} />
+              <Route path="/auth" element={<Auth />} />
+            </Routes>
+          ) : (
+            <AuthenticatedRoutes />
+          )}
+        </AuthProvider>
       </ConfigProvider>
     </PhoneContainer>
   );
 }
 
-export default App
+export default App;
