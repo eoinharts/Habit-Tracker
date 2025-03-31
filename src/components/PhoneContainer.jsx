@@ -9,7 +9,6 @@ const PhoneContainer = ({ children }) => {
         width: "100%",
         minHeight: "100vh",
         margin: "0 auto",
-        paddingBottom: "70px",
         borderRadius: "12px",
         boxShadow: "0 0 20px rgba(0,0,0,0.2)",
         overflow: "hidden",
