@@ -10,9 +10,28 @@ import ChallengesCard from "../components/Cards/ChallengesCard";
 import HabitsCard from "../components/Cards/HabitsCard";
 import MoodPng from "../assets/Mood-png.png";
 import { useAuth } from "../contexts/AuthProvider";
+import { useState } from "react";
+import { useEffect } from "react";
+import { getUserHabit } from "@firebasegen/default-connector";
 
 const Home = () => {
   const { logout } = useAuth();
+  const { userData } = useAuth();
+  const [userHabits, setUserHabits] = useState([]);
+
+  const fetchUserHabits = async () => {
+    try {
+      const data = await getUserHabit({ uid: userData.id });
+      setUserHabits(data.data.habits);
+    } catch (error) {
+      message.error("Failed to fetch applications");
+    }
+  };
+
+  useEffect(() => {
+    fetchUserHabits();
+  }, [])
+
   return (
     <div>
       <div className="bg-white shadow-btm p-3">
@@ -65,9 +84,17 @@ const Home = () => {
           </Text>
           <Button type="link">View All</Button>
         </div>
-        <HabitsCard title={"Drink Water"} goal="500/2000ml" emoji="🏃" />
-        <HabitsCard title={"Drink Water"} goal="500/2000ml" emoji="🏃" />
-        <HabitsCard title={"Drink Water"} goal="500/2000ml" emoji="🏃" />
+        <HabitsCard title={"Run 10km"} goal="5/10km" emoji="🏃" />
+        <HabitsCard title={"Stop Smoking"} goal="10/100 days" emoji="🚬" />
+        <HabitsCard title={"Read Daily"} goal="10 days" emoji="📖" />
+        {userHabits?.map((habit) => (
+          <HabitsCard
+            key={habit.id}
+            title={habit.title}
+            goal={habit.streakGoal}
+            emoji="💧"
+          />
+        ))}
       </div>
     </div>
   );

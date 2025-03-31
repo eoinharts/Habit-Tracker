@@ -1441,6 +1441,7 @@ The `CreateHabit` Mutation requires an argument of type `CreateHabitVariables`, 
 
 ```javascript
 export interface CreateHabitVariables {
+  uid: string;
   title: string;
   description: string;
   category: string;
@@ -1494,6 +1495,7 @@ export default function CreateHabitComponent() {
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useCreateHabit` Mutation requires an argument of type `CreateHabitVariables`:
   const createHabitVars: CreateHabitVariables = {
+    uid: ..., 
     title: ..., 
     description: ..., 
     category: ..., 
@@ -1501,7 +1503,7 @@ export default function CreateHabitComponent() {
   };
   mutation.mutate(createHabitVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ title: ..., description: ..., category: ..., streakGoal: ..., });
+  mutation.mutate({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {

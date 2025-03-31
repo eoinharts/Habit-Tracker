@@ -1456,6 +1456,7 @@ The `CreateHabit` mutation requires an argument of type `CreateHabitVariables`, 
 
 ```javascript
 export interface CreateHabitVariables {
+  uid: string;
   title: string;
   description: string;
   category: string;
@@ -1479,6 +1480,7 @@ import { connectorConfig, createHabit, CreateHabitVariables } from '@firebasegen
 
 // The `CreateHabit` mutation requires an argument of type `CreateHabitVariables`:
 const createHabitVars: CreateHabitVariables = {
+  uid: ..., 
   title: ..., 
   description: ..., 
   category: ..., 
@@ -1489,7 +1491,7 @@ const createHabitVars: CreateHabitVariables = {
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createHabit(createHabitVars);
 // Variables can be defined inline as well.
-const { data } = await createHabit({ title: ..., description: ..., category: ..., streakGoal: ..., });
+const { data } = await createHabit({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1512,6 +1514,7 @@ import { connectorConfig, createHabitRef, CreateHabitVariables } from '@firebase
 
 // The `CreateHabit` mutation requires an argument of type `CreateHabitVariables`:
 const createHabitVars: CreateHabitVariables = {
+  uid: ..., 
   title: ..., 
   description: ..., 
   category: ..., 
@@ -1521,7 +1524,7 @@ const createHabitVars: CreateHabitVariables = {
 // Call the `createHabitRef()` function to get a reference to the mutation.
 const ref = createHabitRef(createHabitVars);
 // Variables can be defined inline as well.
-const ref = createHabitRef({ title: ..., description: ..., category: ..., streakGoal: ..., });
+const ref = createHabitRef({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);

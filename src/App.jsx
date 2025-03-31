@@ -19,7 +19,6 @@ const provider = new GoogleAuthProvider();
 function App() {
   const [signedIn, setSignedIn] = useState(null);
   const [userData, setUserData] = useState(null);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {

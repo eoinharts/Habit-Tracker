@@ -40,6 +40,7 @@ export interface CreateHabitData {
 }
 
 export interface CreateHabitVariables {
+  uid: string;
   title: string;
   description: string;
   category: string;
@@ -234,62 +235,6 @@ export interface User_Key {
 }
 
 /* Allow users to create refs without passing in DataConnect */
-export function getUserDetailsRef(vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
-/* Allow users to pass in custom DataConnect instances */
-export function getUserDetailsRef(dc: DataConnect, vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
-
-export function getUserDetails(vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
-export function getUserDetails(dc: DataConnect, vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
-
-/* Allow users to create refs without passing in DataConnect */
-export function getAllUsersRef(): QueryRef<GetAllUsersData, undefined>;
-/* Allow users to pass in custom DataConnect instances */
-export function getAllUsersRef(dc: DataConnect): QueryRef<GetAllUsersData, undefined>;
-
-export function getAllUsers(): QueryPromise<GetAllUsersData, undefined>;
-export function getAllUsers(dc: DataConnect): QueryPromise<GetAllUsersData, undefined>;
-
-/* Allow users to create refs without passing in DataConnect */
-export function listFriendsRef(vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
-/* Allow users to pass in custom DataConnect instances */
-export function listFriendsRef(dc: DataConnect, vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
-
-export function listFriends(vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
-export function listFriends(dc: DataConnect, vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
-
-/* Allow users to create refs without passing in DataConnect */
-export function listIncomingRequestsRef(): QueryRef<ListIncomingRequestsData, undefined>;
-/* Allow users to pass in custom DataConnect instances */
-export function listIncomingRequestsRef(dc: DataConnect): QueryRef<ListIncomingRequestsData, undefined>;
-
-export function listIncomingRequests(): QueryPromise<ListIncomingRequestsData, undefined>;
-export function listIncomingRequests(dc: DataConnect): QueryPromise<ListIncomingRequestsData, undefined>;
-
-/* Allow users to create refs without passing in DataConnect */
-export function getUserHabitRef(vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
-/* Allow users to pass in custom DataConnect instances */
-export function getUserHabitRef(dc: DataConnect, vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
-
-export function getUserHabit(vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
-export function getUserHabit(dc: DataConnect, vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
-
-/* Allow users to create refs without passing in DataConnect */
-export function getHabitByIdRef(vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;
-/* Allow users to pass in custom DataConnect instances */
-export function getHabitByIdRef(dc: DataConnect, vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;
-
-export function getHabitById(vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
-export function getHabitById(dc: DataConnect, vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
-
-/* Allow users to create refs without passing in DataConnect */
-export function debugFriendshipsRef(): QueryRef<DebugFriendshipsData, undefined>;
-/* Allow users to pass in custom DataConnect instances */
-export function debugFriendshipsRef(dc: DataConnect): QueryRef<DebugFriendshipsData, undefined>;
-
-export function debugFriendships(): QueryPromise<DebugFriendshipsData, undefined>;
-export function debugFriendships(dc: DataConnect): QueryPromise<DebugFriendshipsData, undefined>;
-
-/* Allow users to create refs without passing in DataConnect */
 export function createUserRef(vars?: CreateUserVariables): MutationRef<CreateUserData, CreateUserVariables>;
 /* Allow users to pass in custom DataConnect instances */
 export function createUserRef(dc: DataConnect, vars?: CreateUserVariables): MutationRef<CreateUserData, CreateUserVariables>;
@@ -376,4 +321,60 @@ export function updateHabitStreakRef(dc: DataConnect, vars: UpdateHabitStreakVar
 
 export function updateHabitStreak(vars: UpdateHabitStreakVariables): MutationPromise<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 export function updateHabitStreak(dc: DataConnect, vars: UpdateHabitStreakVariables): MutationPromise<UpdateHabitStreakData, UpdateHabitStreakVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function getUserDetailsRef(vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function getUserDetailsRef(dc: DataConnect, vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
+
+export function getUserDetails(vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
+export function getUserDetails(dc: DataConnect, vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function getAllUsersRef(): QueryRef<GetAllUsersData, undefined>;
+/* Allow users to pass in custom DataConnect instances */
+export function getAllUsersRef(dc: DataConnect): QueryRef<GetAllUsersData, undefined>;
+
+export function getAllUsers(): QueryPromise<GetAllUsersData, undefined>;
+export function getAllUsers(dc: DataConnect): QueryPromise<GetAllUsersData, undefined>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function listFriendsRef(vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function listFriendsRef(dc: DataConnect, vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
+
+export function listFriends(vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
+export function listFriends(dc: DataConnect, vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function listIncomingRequestsRef(): QueryRef<ListIncomingRequestsData, undefined>;
+/* Allow users to pass in custom DataConnect instances */
+export function listIncomingRequestsRef(dc: DataConnect): QueryRef<ListIncomingRequestsData, undefined>;
+
+export function listIncomingRequests(): QueryPromise<ListIncomingRequestsData, undefined>;
+export function listIncomingRequests(dc: DataConnect): QueryPromise<ListIncomingRequestsData, undefined>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function getUserHabitRef(vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function getUserHabitRef(dc: DataConnect, vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
+
+export function getUserHabit(vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
+export function getUserHabit(dc: DataConnect, vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function getHabitByIdRef(vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function getHabitByIdRef(dc: DataConnect, vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;
+
+export function getHabitById(vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
+export function getHabitById(dc: DataConnect, vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function debugFriendshipsRef(): QueryRef<DebugFriendshipsData, undefined>;
+/* Allow users to pass in custom DataConnect instances */
+export function debugFriendshipsRef(dc: DataConnect): QueryRef<DebugFriendshipsData, undefined>;
+
+export function debugFriendships(): QueryPromise<DebugFriendshipsData, undefined>;
+export function debugFriendships(dc: DataConnect): QueryPromise<DebugFriendshipsData, undefined>;
 

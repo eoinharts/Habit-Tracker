@@ -11,6 +11,7 @@ import Components from "../pages/Components";
 import ProfilePage from "../pages/ProfilePage";
 import FriendPage from "../pages/FriendPage";
 import HabitHomePage from "../pages/HabitHomePage";
+import CreateHabit from "../pages/Habit/CreateHabit";
 
 // Import components
 
@@ -48,6 +49,7 @@ export default function AuthenticatedRoutes() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/friend/:friendId" element={<FriendPage />} />
             <Route path="/habit-home" element={<HabitHomePage />} />
+            <Route path="/create-habit" element={<CreateHabit />} />
           </Routes>
         </>
       ) : (
