@@ -50,10 +50,11 @@ const ProfilePage = () => {
         debugFriendships({}, { cache: "no-store" }),
         getUserDetails({ userId }),
       ]);
-
+  
       const userData = userDetailsRes?.data?.users?.[0] || {};
       const allDebug = debugRes?.data?.friendships || [];
-
+  
+      // Map accepted friendships
       const accepted = await Promise.all(
         allDebug
           .filter(
@@ -73,7 +74,8 @@ const ProfilePage = () => {
             };
           })
       );
-
+  
+      // Map pending friendships
       const pending = await Promise.all(
         allDebug
           .filter(
@@ -94,8 +96,17 @@ const ProfilePage = () => {
             };
           })
       );
-
-      setFriends({ accepted, pending });
+  
+      // Helper function: deduplicate by friend ID (keep first occurrence)
+      const deduplicateById = (arr) => {
+        return arr.filter((item, index, self) =>
+          index === self.findIndex((t) => t.id === item.id)
+        );
+      };
+  
+      const uniqueAccepted = deduplicateById(accepted);
+  
+      setFriends({ accepted: uniqueAccepted, pending });
       setAchievements(userData.achievements || []);
       setUserPoints(userData.points || 0);
     } catch (err) {
@@ -103,7 +114,7 @@ const ProfilePage = () => {
       message.error("Failed to load profile data");
     }
   };
-
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (!currentUser) {
