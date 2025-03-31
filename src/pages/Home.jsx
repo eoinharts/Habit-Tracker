@@ -1,18 +1,18 @@
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import React from "react";
-import { Button, Progress, Segmented } from "antd";
-import { Card } from "antd";
+import { Button, Segmented } from "antd";
 import {
-  ClockCircleTwoTone,
-  CalendarTwoTone,
   BellTwoTone,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import ChallengesCard from "../components/Cards/ChallengesCard";
 import HabitsCard from "../components/Cards/HabitsCard";
 import MoodPng from "../assets/Mood-png.png";
+import { useAuth } from "../contexts/AuthProvider";
 
 const Home = () => {
+  const { logout } = useAuth();
   return (
     <div>
       <div className="bg-white shadow-btm p-3">
@@ -21,10 +21,10 @@ const Home = () => {
             onClick={() => alert("calendar action")}
             className="rounded-btn"
           >
-            <CalendarTwoTone style={{ fontSize: "18px" }} />
-          </Button>
-          <Button className="rounded-btn">
             <BellTwoTone style={{ fontSize: "18px" }} />
+          </Button>
+          <Button className="rounded-btn" onClick={logout}>
+            <LogoutOutlined style={{ fontSize: "18px" }} />
           </Button>
         </div>
         <div className="d-flex align-items-center justify-content-between">
@@ -32,7 +32,9 @@ const Home = () => {
             <Title level={4} style={{ fontWeight: "400" }} className="mb-0">
               Hi Mert 👋
             </Title>
-            <Text type="secondary d-block mb-2">Let's make habits together</Text>
+            <Text type="secondary d-block mb-2">
+              Let's make habits together
+            </Text>
           </div>
           <img
             src={MoodPng}
@@ -40,7 +42,7 @@ const Home = () => {
             className="ms-2"
             style={{ width: "40px", height: "40px" }}
           />
-          </div>
+        </div>
         <Segmented
           className="mt-1"
           style={{ fontWeight: "600" }}

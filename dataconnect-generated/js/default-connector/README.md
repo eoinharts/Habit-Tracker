@@ -7,7 +7,7 @@
   - [*GetAllUsers*](#getallusers)
   - [*ListFriends*](#listfriends)
   - [*ListIncomingRequests*](#listincomingrequests)
-  - [*GetUserHabits*](#getuserhabits)
+  - [*GetUserHabit*](#getuserhabit)
   - [*GetHabitById*](#gethabitbyid)
   - [*DebugFriendships*](#debugfriendships)
 - [**Mutations**](#mutations)
@@ -447,28 +447,34 @@ executeQuery(ref).then((response) => {
 });
 ```
 
-## GetUserHabits
-You can execute the `GetUserHabits` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+## GetUserHabit
+You can execute the `GetUserHabit` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
 ```javascript
-getUserHabits(): QueryPromise<GetUserHabitsData, undefined>;
+getUserHabit(vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
 
-getUserHabitsRef(): QueryRef<GetUserHabitsData, undefined>;
+getUserHabitRef(vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```javascript
-getUserHabits(dc: DataConnect): QueryPromise<GetUserHabitsData, undefined>;
+getUserHabit(dc: DataConnect, vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
 
-getUserHabitsRef(dc: DataConnect): QueryRef<GetUserHabitsData, undefined>;
+getUserHabitRef(dc: DataConnect, vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
 ```
 
 ### Variables
-The `GetUserHabits` query has no variables.
-### Return Type
-Recall that executing the `GetUserHabits` query returns a `QueryPromise` that resolves to an object with a `data` property.
+The `GetUserHabit` query requires an argument of type `GetUserHabitVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-The `data` property is an object of type `GetUserHabitsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 ```javascript
-export interface GetUserHabitsData {
+export interface GetUserHabitVariables {
+  uid: string;
+}
+```
+### Return Type
+Recall that executing the `GetUserHabit` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetUserHabitData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface GetUserHabitData {
   habits: ({
     id: UUIDString;
     title: string;
@@ -478,43 +484,55 @@ export interface GetUserHabitsData {
   } & Habit_Key)[];
 }
 ```
-### Using `GetUserHabits`'s action shortcut function
+### Using `GetUserHabit`'s action shortcut function
 
 ```javascript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, getUserHabits } from '@firebasegen/default-connector';
+import { connectorConfig, getUserHabit, GetUserHabitVariables } from '@firebasegen/default-connector';
 
+// The `GetUserHabit` query requires an argument of type `GetUserHabitVariables`:
+const getUserHabitVars: GetUserHabitVariables = {
+  uid: ..., 
+};
 
-// Call the `getUserHabits()` function to execute the query.
+// Call the `getUserHabit()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await getUserHabits();
+const { data } = await getUserHabit(getUserHabitVars);
+// Variables can be defined inline as well.
+const { data } = await getUserHabit({ uid: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await getUserHabits(dataConnect);
+const { data } = await getUserHabit(dataConnect, getUserHabitVars);
 
 console.log(data.habits);
 
 // Or, you can use the `Promise` API.
-getUserHabits().then((response) => {
+getUserHabit(getUserHabitVars).then((response) => {
   const data = response.data;
   console.log(data.habits);
 });
 ```
 
-### Using `GetUserHabits`'s `QueryRef` function
+### Using `GetUserHabit`'s `QueryRef` function
 
 ```javascript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, getUserHabitsRef } from '@firebasegen/default-connector';
+import { connectorConfig, getUserHabitRef, GetUserHabitVariables } from '@firebasegen/default-connector';
 
+// The `GetUserHabit` query requires an argument of type `GetUserHabitVariables`:
+const getUserHabitVars: GetUserHabitVariables = {
+  uid: ..., 
+};
 
-// Call the `getUserHabitsRef()` function to get a reference to the query.
-const ref = getUserHabitsRef();
+// Call the `getUserHabitRef()` function to get a reference to the query.
+const ref = getUserHabitRef(getUserHabitVars);
+// Variables can be defined inline as well.
+const ref = getUserHabitRef({ uid: ..., });
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = getUserHabitsRef(dataConnect);
+const ref = getUserHabitRef(dataConnect, getUserHabitVars);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.

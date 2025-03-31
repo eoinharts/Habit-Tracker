@@ -44,20 +44,6 @@ const Auth = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                setUser(user);
-                console.log("🔄 User session restored:", user.uid);
-                await getUserDetails({ userId: user.uid });
-            } else {
-                setUser(null);
-            }
-        });
-
-        return () => unsubscribe();
-    }, []);
-
-    useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % contentData.length);
         }, 5000);
@@ -75,6 +61,7 @@ const Auth = () => {
             });
             console.log("✅ User signed up:", userCredential.user);
             setError("");
+            navigate("/");
         } catch (err) {
             console.error("❌ Signup error:", err);
             setError(err.message);
@@ -87,6 +74,7 @@ const Auth = () => {
             setUser(userCredential.user);
             setError("");
             console.log("✅ User signed in!");
+            navigate("/");
         } catch (err) {
             setError(err.message);
         }
@@ -96,7 +84,17 @@ const Auth = () => {
         try {
             const userCredential = await signInWithPopup(auth, provider);
             setUser(userCredential.user);
-            setError("");
+            try {
+                await createUser({
+                  id: userCredential.user.uid,
+                  name: "test name",
+                  email: userCredential.user.email,
+                });
+                navigate("/");
+            } catch (err) {
+                setError("");
+                navigate("/");
+            }
         } catch (err) {
             setError(err.message);
         }
