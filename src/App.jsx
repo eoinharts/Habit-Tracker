@@ -41,7 +41,7 @@ function App() {
     setUserData(null);
   };
   return (
-    <PhoneContainer>
+    <PhoneContainer isSignedIn={signedIn}>
       <ConfigProvider {...antdConfig}>
         <AuthProvider
           userDetails={userData}

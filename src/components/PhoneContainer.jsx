@@ -1,6 +1,7 @@
 import { Layout } from 'antd';
+import FooterNav from './FooterNav';
 
-const PhoneContainer = ({ children }) => {
+const PhoneContainer = ({ children, isSignedIn }) => {
   return (
     <Layout
       style={{
@@ -11,7 +12,6 @@ const PhoneContainer = ({ children }) => {
         margin: "0 auto",
         borderRadius: "12px",
         boxShadow: "0 0 20px rgba(0,0,0,0.2)",
-        overflow: "hidden",
         display: "flex",
         flexDirection: "column",
         backgroundColor: "#F6F9FF",
@@ -22,6 +22,7 @@ const PhoneContainer = ({ children }) => {
       }}
     >
       {children}
+      {isSignedIn && <FooterNav />}
     </Layout>
   );
 };

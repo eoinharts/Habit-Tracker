@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 const NavContainer = styled.nav`
   position: relative;
   width: 100%;
-  background: rgba(255, 255, 255, 0.08);
+  background:rgba(56, 66, 255, 0.7);
   backdrop-filter: blur(12px);
   padding: 10px 0 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
@@ -144,19 +144,19 @@ const FooterNav = () => {
     <NavContainer>
       <NavList>
         <NavItem>
-          <NavLink to="/explore" active={location.pathname === '/explore'}>
-            <IconWrapper active={location.pathname === '/explore'}>
+          <NavLink to="/" active={location.pathname === '/'}>
+            <IconWrapper active={location.pathname === '/'}>
               <FaCompass />
             </IconWrapper>
-            <Label active={location.pathname === '/explore'}>Explore</Label>
+            <Label active={location.pathname === '/'}>Home</Label>
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink to="/activity" active={location.pathname === '/activity'}>
-            <IconWrapper active={location.pathname === '/activity'}>
+          <NavLink to="/create-habit" active={location.pathname === '/create-habit'}>
+            <IconWrapper active={location.pathname === '/create-habit'}>
               <FaBolt />
             </IconWrapper>
-            <Label active={location.pathname === '/activity'}>Activity</Label>
+            <Label active={location.pathname === '/create-habit'}>Create Habit</Label>
           </NavLink>
         </NavItem>
         <NavItem>
