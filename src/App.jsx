@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
+import "./styles/fonts.css";
 import { Routes, Route, Navigate } from "react-router";
 import { ConfigProvider } from "antd";
 import { antdConfig } from "./theme/antdConfig";
