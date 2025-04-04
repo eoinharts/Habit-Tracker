@@ -101,6 +101,22 @@ type UserHabit @table(key: ["habit", "user"]) {
   createdAt: Timestamp! @default(expr: "request.time")
 }
 
+type Achievement @table {
+  id: UUID! @default(expr: "uuidV4()")
+  title: String!
+  description: String
+  criteria: String  # A text description or a JSON blob defining the criteria (e.g., "7-day streak")
+  icon: String      # URL or icon identifier for UI purposes
+}
+
+type UserAchievement @table(key: ["user", "achievement"]) {
+  user: User!
+  achievement: Achievement!
+  unlockedAt: Timestamp! @default(expr: "request.time")
+}
+
+
+
 # Challenges Table
 # type Challenge @table() {
 #   id: UUID! @default(expr: "uuidV4()")  # Random UUID

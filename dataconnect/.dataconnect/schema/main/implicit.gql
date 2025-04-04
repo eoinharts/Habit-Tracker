@@ -4,6 +4,16 @@ extend type Habit {
   """
   creatorId: String! @fdc_generated(from: "Habit.creator", purpose: IMPLICIT_REF_FIELD)
 }
+extend type UserAchievement {
+  """
+  ✨ Implicit foreign key field based on `UserAchievement`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: String! @fdc_generated(from: "UserAchievement.user", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `UserAchievement`.`achievement`. It must match the value of `Achievement`.`id`. See `@ref` for how to customize it.
+  """
+  achievementId: UUID! @fdc_generated(from: "UserAchievement.achievement", purpose: IMPLICIT_REF_FIELD)
+}
 extend type UserHabit {
   """
   ✨ Implicit foreign key field based on `UserHabit`.`habit`. It must match the value of `Habit`.`id`. See `@ref` for how to customize it.

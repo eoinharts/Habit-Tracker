@@ -1,4 +1,10 @@
 """
+✨ `Achievement_KeyOutput` returns the primary key fields of table type `Achievement`.
+
+It has the same format as `Achievement_Key`, but is only used as mutation return value.
+"""
+scalar Achievement_KeyOutput
+"""
 ✨ `Friendship_KeyOutput` returns the primary key fields of table type `Friendship`.
 
 It has the same format as `Friendship_Key`, but is only used as mutation return value.
@@ -17,11 +23,216 @@ It has the same format as `User_Key`, but is only used as mutation return value.
 """
 scalar User_KeyOutput
 """
+✨ `UserAchievement_KeyOutput` returns the primary key fields of table type `UserAchievement`.
+
+It has the same format as `UserAchievement_Key`, but is only used as mutation return value.
+"""
+scalar UserAchievement_KeyOutput
+"""
 ✨ `UserHabit_KeyOutput` returns the primary key fields of table type `UserHabit`.
 
 It has the same format as `UserHabit_Key`, but is only used as mutation return value.
 """
 scalar UserHabit_KeyOutput
+"""
+✨ Generated data input type for table 'Achievement'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Achievement_Data {
+  """
+  ✨ Generated from Field `Achievement`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Achievement`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Achievement`.`criteria` of type `String`
+  """
+  criteria: String
+  """
+  ✨ `_expr` server value variant of `criteria` (✨ Generated from Field `Achievement`.`criteria` of type `String`)
+  """
+  criteria_expr: String_Expr
+  """
+  ✨ Generated from Field `Achievement`.`description` of type `String`
+  """
+  description: String
+  """
+  ✨ `_expr` server value variant of `description` (✨ Generated from Field `Achievement`.`description` of type `String`)
+  """
+  description_expr: String_Expr
+  """
+  ✨ Generated from Field `Achievement`.`icon` of type `String`
+  """
+  icon: String
+  """
+  ✨ `_expr` server value variant of `icon` (✨ Generated from Field `Achievement`.`icon` of type `String`)
+  """
+  icon_expr: String_Expr
+  """
+  ✨ Generated from Field `Achievement`.`title` of type `String!`
+  """
+  title: String
+  """
+  ✨ `_expr` server value variant of `title` (✨ Generated from Field `Achievement`.`title` of type `String!`)
+  """
+  title_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'Achievement'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Achievement_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Achievement_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Achievement_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Achievement_Filter!]
+  """
+  ✨ Generated from Field `Achievement`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Achievement`.`criteria` of type `String`
+  """
+  criteria: String_Filter
+  """
+  ✨ Generated from Field `Achievement`.`description` of type `String`
+  """
+  description: String_Filter
+  """
+  ✨ Generated from Field `Achievement`.`icon` of type `String`
+  """
+  icon: String_Filter
+  """
+  ✨ Generated from Field `Achievement`.`title` of type `String!`
+  """
+  title: String_Filter
+  """
+  ✨ Generated from Field `Achievement`.`userAchievements_on_achievement` of type `[UserAchievement!]!`
+  """
+  userAchievements_on_achievement: UserAchievement_ListFilter
+  """
+  ✨ Generated from Field `Achievement`.`users_via_UserAchievement` of type `[User!]!`
+  """
+  users_via_UserAchievement: User_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'Achievement'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Achievement_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Achievement_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Achievement_Filter
+}
+"""
+✨ Generated having input type for table 'Achievement'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Achievement_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Achievement_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Achievement_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Achievement_Having!]
+  """
+  ✨ Generated from Field `Achievement`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Achievement`.`criteria_count` of type `Int!`
+  """
+  criteria_count: Int_Filter
+  """
+  ✨ Generated from Field `Achievement`.`description_count` of type `Int!`
+  """
+  description_count: Int_Filter
+  """
+  ✨ Generated from Field `Achievement`.`icon_count` of type `Int!`
+  """
+  icon_count: Int_Filter
+  """
+  ✨ Generated from Field `Achievement`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Achievement`.`title_count` of type `Int!`
+  """
+  title_count: Int_Filter
+}
+"""
+✨ Generated key input type for table 'Achievement'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Achievement_Key {
+  """
+  ✨ Generated from Field `Achievement`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Achievement`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'Achievement'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Achievement_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Achievement_Filter
+}
+"""
+✨ Generated order input type for table 'Achievement'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Achievement_Order {
+  """
+  ✨ Generated from Field `Achievement`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Achievement`.`criteria` of type `String`
+  """
+  criteria: OrderDirection
+  """
+  ✨ Generated from Field `Achievement`.`description` of type `String`
+  """
+  description: OrderDirection
+  """
+  ✨ Generated from Field `Achievement`.`icon` of type `String`
+  """
+  icon: OrderDirection
+  """
+  ✨ Generated from Field `Achievement`.`title` of type `String!`
+  """
+  title: OrderDirection
+}
 """
 ✨ Generated data input type for table 'Friendship'. It includes all necessary fields for creating or upserting rows into table.
 """
@@ -265,6 +476,10 @@ input Habit_Data {
   ✨ `_expr` server value variant of `streakGoal` (✨ Generated from Field `Habit`.`streakGoal` of type `Int!`)
   """
   streakGoal_expr: Int_Expr
+  """
+  ✨ `_update` server value variant of `streakGoal` (✨ Generated from Field `Habit`.`streakGoal` of type `Int!`)
+  """
+  streakGoal_update: [Int_Update!]
   """
   ✨ Generated from Field `Habit`.`title` of type `String!`
   """
@@ -528,6 +743,10 @@ input User_Data {
   ✨ `_expr` server value variant of `totalStreak` (✨ Generated from Field `User`.`totalStreak` of type `Int!`)
   """
   totalStreak_expr: Int_Expr
+  """
+  ✨ `_update` server value variant of `totalStreak` (✨ Generated from Field `User`.`totalStreak` of type `Int!`)
+  """
+  totalStreak_update: [Int_Update!]
 }
 """
 ✨ Generated filter input type for table 'User'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
@@ -578,9 +797,17 @@ input User_Filter {
   """
   habits_on_creator: Habit_ListFilter
   """
+  ✨ Generated from Field `User`.`userAchievements_on_user` of type `[UserAchievement!]!`
+  """
+  userAchievements_on_user: UserAchievement_ListFilter
+  """
   ✨ Generated from Field `User`.`userHabits_on_user` of type `[UserHabit!]!`
   """
   userHabits_on_user: UserHabit_ListFilter
+  """
+  ✨ Generated from Field `User`.`achievements_via_UserAchievement` of type `[Achievement!]!`
+  """
+  achievements_via_UserAchievement: Achievement_ListFilter
   """
   ✨ Generated from Field `User`.`habits_via_UserHabit` of type `[Habit!]!`
   """
@@ -720,6 +947,201 @@ input User_Order {
   totalStreak: OrderDirection
 }
 """
+✨ Generated data input type for table 'UserAchievement'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input UserAchievement_Data {
+  """
+  ✨ Generated from Field `UserAchievement`.`userId` of type `String!`
+  """
+  userId: String
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `UserAchievement`.`userId` of type `String!`)
+  """
+  userId_expr: String_Expr
+  """
+  ✨ Generated from Field `UserAchievement`.`achievementId` of type `UUID!`
+  """
+  achievementId: UUID
+  """
+  ✨ `_expr` server value variant of `achievementId` (✨ Generated from Field `UserAchievement`.`achievementId` of type `UUID!`)
+  """
+  achievementId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `UserAchievement`.`achievement` of type `Achievement!`
+  """
+  achievement: Achievement_Key
+  """
+  ✨ Generated from Field `UserAchievement`.`user` of type `User!`
+  """
+  user: User_Key
+  """
+  ✨ Generated from Field `UserAchievement`.`unlockedAt` of type `Timestamp!`
+  """
+  unlockedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `unlockedAt` (✨ Generated from Field `UserAchievement`.`unlockedAt` of type `Timestamp!`)
+  """
+  unlockedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `unlockedAt` (✨ Generated from Field `UserAchievement`.`unlockedAt` of type `Timestamp!`)
+  """
+  unlockedAt_time: Timestamp_Relative
+}
+"""
+✨ Generated filter input type for table 'UserAchievement'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input UserAchievement_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [UserAchievement_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: UserAchievement_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [UserAchievement_Filter!]
+  """
+  ✨ Generated from Field `UserAchievement`.`userId` of type `String!`
+  """
+  userId: String_Filter
+  """
+  ✨ Generated from Field `UserAchievement`.`achievementId` of type `UUID!`
+  """
+  achievementId: UUID_Filter
+  """
+  ✨ Generated from Field `UserAchievement`.`achievement` of type `Achievement!`
+  """
+  achievement: Achievement_Filter
+  """
+  ✨ Generated from Field `UserAchievement`.`user` of type `User!`
+  """
+  user: User_Filter
+  """
+  ✨ Generated from Field `UserAchievement`.`unlockedAt` of type `Timestamp!`
+  """
+  unlockedAt: Timestamp_Filter
+}
+"""
+✨ Generated first-row input type for table 'UserAchievement'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input UserAchievement_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [UserAchievement_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: UserAchievement_Filter
+}
+"""
+✨ Generated having input type for table 'UserAchievement'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input UserAchievement_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [UserAchievement_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: UserAchievement_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [UserAchievement_Having!]
+  """
+  ✨ Generated from Field `UserAchievement`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `UserAchievement`.`achievementId_count` of type `Int!`
+  """
+  achievementId_count: Int_Filter
+  """
+  ✨ Generated from Field `UserAchievement`.`unlockedAt_count` of type `Int!`
+  """
+  unlockedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `UserAchievement`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `UserAchievement`.`unlockedAt_min` of type `Timestamp`
+  """
+  unlockedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `UserAchievement`.`unlockedAt_max` of type `Timestamp`
+  """
+  unlockedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'UserAchievement'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input UserAchievement_Key {
+  """
+  ✨ Generated from Field `UserAchievement`.`userId` of type `String!`
+  """
+  userId: String
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `UserAchievement`.`userId` of type `String!`)
+  """
+  userId_expr: String_Expr
+  """
+  ✨ Generated from Field `UserAchievement`.`achievementId` of type `UUID!`
+  """
+  achievementId: UUID
+  """
+  ✨ `_expr` server value variant of `achievementId` (✨ Generated from Field `UserAchievement`.`achievementId` of type `UUID!`)
+  """
+  achievementId_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'UserAchievement'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input UserAchievement_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: UserAchievement_Filter
+}
+"""
+✨ Generated order input type for table 'UserAchievement'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input UserAchievement_Order {
+  """
+  ✨ Generated from Field `UserAchievement`.`userId` of type `String!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `UserAchievement`.`achievementId` of type `UUID!`
+  """
+  achievementId: OrderDirection
+  """
+  ✨ Generated from Field `UserAchievement`.`achievement` of type `Achievement!`
+  """
+  achievement: Achievement_Order
+  """
+  ✨ Generated from Field `UserAchievement`.`user` of type `User!`
+  """
+  user: User_Order
+  """
+  ✨ Generated from Field `UserAchievement`.`unlockedAt` of type `Timestamp!`
+  """
+  unlockedAt: OrderDirection
+}
+"""
 ✨ Generated data input type for table 'UserHabit'. It includes all necessary fields for creating or upserting rows into table.
 """
 input UserHabit_Data {
@@ -768,6 +1190,10 @@ input UserHabit_Data {
   """
   currentStreak_expr: Int_Expr
   """
+  ✨ `_update` server value variant of `currentStreak` (✨ Generated from Field `UserHabit`.`currentStreak` of type `Int!`)
+  """
+  currentStreak_update: [Int_Update!]
+  """
   ✨ Generated from Field `UserHabit`.`lastTrackedDate` of type `Timestamp`
   """
   lastTrackedDate: Timestamp
@@ -787,6 +1213,10 @@ input UserHabit_Data {
   ✨ `_expr` server value variant of `longestStreak` (✨ Generated from Field `UserHabit`.`longestStreak` of type `Int!`)
   """
   longestStreak_expr: Int_Expr
+  """
+  ✨ `_update` server value variant of `longestStreak` (✨ Generated from Field `UserHabit`.`longestStreak` of type `Int!`)
+  """
+  longestStreak_update: [Int_Update!]
 }
 """
 ✨ Generated filter input type for table 'UserHabit'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.

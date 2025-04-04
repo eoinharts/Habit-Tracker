@@ -1,5 +1,24 @@
 extend type Query {
   """
+  ✨ Look up a single `Achievement` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  achievement(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Achievement_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Achievement_FirstRow
+  ): Achievement @fdc_generated(from: "Achievement", purpose: QUERY_SINGLE)
+  """
   ✨ Look up a single `Friendship` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
   """
   friendship(
@@ -57,6 +76,20 @@ extend type Query {
     first: User_FirstRow
   ): User @fdc_generated(from: "User", purpose: QUERY_SINGLE)
   """
+  ✨ Look up a single `UserAchievement` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  userAchievement(
+    """
+    The key used to identify the object.
+    """
+    key: UserAchievement_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: UserAchievement_FirstRow
+  ): UserAchievement @fdc_generated(from: "UserAchievement", purpose: QUERY_SINGLE)
+  """
   ✨ Look up a single `UserHabit` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
   """
   userHabit(
@@ -70,6 +103,40 @@ extend type Query {
     """
     first: UserHabit_FirstRow
   ): UserHabit @fdc_generated(from: "UserHabit", purpose: QUERY_SINGLE)
+  """
+  ✨ List `Achievement` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  achievements(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Achievement_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Achievement_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Achievement_Having
+  ): [Achievement!]! @fdc_generated(from: "Achievement", purpose: QUERY_MULTIPLE)
   """
   ✨ List `Friendship` objects in the table and return selected fields, optionally filtered by `where` conditions
   """
@@ -172,6 +239,40 @@ extend type Query {
     """
     having: User_Having
   ): [User!]! @fdc_generated(from: "User", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `UserAchievement` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  userAchievements(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: UserAchievement_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [UserAchievement_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: UserAchievement_Having
+  ): [UserAchievement!]! @fdc_generated(from: "UserAchievement", purpose: QUERY_MULTIPLE)
   """
   ✨ List `UserHabit` objects in the table and return selected fields, optionally filtered by `where` conditions
   """
