@@ -1,7 +1,7 @@
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import React from "react";
-import { Button, Segmented } from "antd";
+import { Button, Segmented, message } from "antd";
 import {
   BellTwoTone,
   LogoutOutlined,
@@ -12,25 +12,41 @@ import MoodPng from "../assets/Mood-png.png";
 import { useAuth } from "../contexts/AuthProvider";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getUserHabit } from "@firebasegen/default-connector";
+import { getUserHabit, deleteHabit } from "@firebasegen/default-connector";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { logout } = useAuth();
   const { userData } = useAuth();
   const [userHabits, setUserHabits] = useState([]);
+  const navigate = useNavigate();
 
   const fetchUserHabits = async () => {
     try {
       const data = await getUserHabit({ uid: userData.id });
       setUserHabits(data.data.habits);
     } catch (error) {
-      message.error("Failed to fetch applications");
+      message.error("Failed to fetch habits");
     }
   };
 
   useEffect(() => {
     fetchUserHabits();
-  }, [])
+  }, []);
+
+  const handleEdit = (habitId) => {
+    navigate(`/edit-habit/${habitId}`);
+  };
+
+  const handleDelete = async (habitId) => {
+    try {
+      await deleteHabit({ habitId });
+      message.success("Habit deleted successfully");
+      fetchUserHabits(); // Refresh the list
+    } catch (error) {
+      message.error("Failed to delete habit");
+    }
+  };
 
   return (
     <div>
@@ -93,6 +109,8 @@ const Home = () => {
             title={habit.title}
             goal={habit.streakGoal}
             emoji="💧"
+            onEdit={() => handleEdit(habit.id)}
+            onDelete={() => handleDelete(habit.id)}
           />
         ))}
       </div>

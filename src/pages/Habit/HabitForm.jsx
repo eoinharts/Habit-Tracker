@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Input, message, Space } from "antd";
 import { Segmented } from "antd";
-import { createHabit } from "@firebasegen/default-connector";
+import { createHabit, updateHabit } from "@firebasegen/default-connector";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useNavigate } from "react-router";
 import TextArea from "antd/es/input/TextArea";
+
 const SubmitButton = ({ form, children, isLoading }) => {
   const [submittable, setSubmittable] = React.useState(false);
 
@@ -31,29 +32,47 @@ const SubmitButton = ({ form, children, isLoading }) => {
   );
 };
 
-const HabitForm = () => {
+const HabitForm = ({ initialValues, habitId, isEditing }) => {
   const [form] = Form.useForm();
   const { userData } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (initialValues) {
+      form.setFieldsValue(initialValues);
+    }
+  }, [initialValues, form]);
+
   const onFinish = async ({ name, category, description, streakGoal }) => {
     setIsLoading(true);
     try {
-      const res = await createHabit({
-        uid: userData.id,
-        title: name,
-        description,
-        category: category,
-        streakGoal: Number(streakGoal),
-      });
-      message.success("Habit created successfully!");
+      if (isEditing) {
+        await updateHabit({
+          habitId,
+          title: name,
+          description,
+          category,
+          streakGoal: Number(streakGoal),
+        });
+        message.success("Habit updated successfully!");
+      } else {
+        await createHabit({
+          uid: userData.id,
+          title: name,
+          description,
+          category,
+          streakGoal: Number(streakGoal),
+        });
+        message.success("Habit created successfully!");
+      }
       navigate("/");
     } catch (error) {
       message.error(error.message);
     }
     setIsLoading(false);
   };
+
   return (
     <Form
       form={form}
@@ -68,7 +87,7 @@ const HabitForm = () => {
         rules={[
           {
             required: true,
-            error: "Please input habit name!",
+            message: "Please input habit name!",
           },
         ]}
       >
@@ -101,10 +120,11 @@ const HabitForm = () => {
       </Form.Item>
       <Form.Item>
         <SubmitButton form={form} isLoading={isLoading}>
-          Add Habit
+          {isEditing ? "Update Habit" : "Add Habit"}
         </SubmitButton>
       </Form.Item>
     </Form>
   );
 };
+
 export default HabitForm;
