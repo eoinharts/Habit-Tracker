@@ -31,18 +31,21 @@ import {
 import SelectFriendList from "../components/SelectFriendList";
 import SelectAchievementList from "../components/SelectAchievementList";
 import HeaderContainer from "../components/HeaderContainer.jsx";
-
+import AchievementsBadgeContainer from "../components/AchievementsBadgeContainer/AchievementsBadgeContainer";
+import { defaultAchievements } from "../utils/achievementData";
 const { Title, Text } = Typography;
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [friends, setFriends] = useState({ accepted: [], pending: [] });
-  const [achievements, setAchievements] = useState([]);
+  const [achievements, setAchievements] = useState(defaultAchievements);
   const [userPoints, setUserPoints] = useState(0);
   const [showFriendsModal, setShowFriendsModal] = useState(false);
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
+  
   const navigate = useNavigate();
+  console.log("Achievements in ProfilePage:", achievements);
 
   const fetchUserData = async (userId) => {
     try {
@@ -107,7 +110,13 @@ const ProfilePage = () => {
       const uniqueAccepted = deduplicateById(accepted);
   
       setFriends({ accepted: uniqueAccepted, pending });
-      setAchievements(userData.achievements || []);
+      setAchievements(
+        userData.achievements && userData.achievements.length > 0
+          ? userData.achievements
+          : defaultAchievements
+      );
+      // TEMP fallback: use default achievements for front-end display while backend habit tracking is still in progress.
+// Once userData.achievements is implemented and contains real data, this will automatically switch to use that.
       setUserPoints(userData.points || 0);
     } catch (err) {
       console.error("❌ Error loading profile:", err);
@@ -341,6 +350,10 @@ const ProfilePage = () => {
               boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
             }}
           />
+          
+{/* Achievement Badges Section */}
+
+<AchievementsBadgeContainer achievements={achievements} />
         </div>
 
         {/* Modals */}

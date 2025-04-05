@@ -1,0 +1,98 @@
+.achievements-wrapper {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 24px;
+  }
+  
+  .horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 16px;
+    padding: 10px 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .horizontal-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .horizontal-scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+  
+  .achievement-card {
+    flex: 0 0 auto;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    scroll-snap-align: start;
+    background: #fafafa;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px dashed #ccc;
+  }
+  
+  .achievement-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    background-color: #f2f2f2;
+  }
+  
+  .achievement-label {
+    font-size: 14px;
+    margin-top: 8px;
+    text-align: center;
+  }
+  .scroll-arrow-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .arrow-button {
+    background: #f3f3f3;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    transition: background 0.2s;
+    z-index: 1;
+  }
+  
+  .arrow-button:hover {
+    background: #e0e0e0;
+  }
+  
+  .arrow-button.left {
+    margin-right: 8px;
+  }
+  
+  .arrow-button.right {
+    margin-left: 8px;
+  }
+  
+  .horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 16px;
+    padding: 10px 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #bbb transparent;
+    flex: 1;
+  }
+  
