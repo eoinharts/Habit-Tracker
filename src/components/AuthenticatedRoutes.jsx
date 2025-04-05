@@ -48,7 +48,7 @@ export default function AuthenticatedRoutes() {
             <Route path="/components" element={<Components />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/friend/:friendId" element={<FriendPage />} />
-            <Route path="/habit-home" element={<HabitHomePage />} />
+            <Route path="/achievement-test" element={<AchievementTest />} />
             <Route path="/create-habit" element={<CreateHabit />} />
           </Routes>
         </>
