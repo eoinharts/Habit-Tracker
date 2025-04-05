@@ -14,6 +14,7 @@ import { getUserDetails } from "@firebasegen/default-connector";
 import { Spin } from "antd";
 import AuthenticatedRoutes from "./components/AuthenticatedRoutes";
 import { AuthProvider, useAuth } from "./contexts/AuthProvider";
+import AchievementTest from "./pages/AchievementTest";
 
 const provider = new GoogleAuthProvider();
 function App() {
@@ -58,6 +59,7 @@ function App() {
               <Route path="/" element={<WelcomePage />} />
               <Route path="/signup" element={<CreateAccount />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/achievement-test" element={<AchievementTest />} />
             </Routes>
           ) : (
             <AuthenticatedRoutes />
