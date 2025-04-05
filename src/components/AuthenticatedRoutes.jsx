@@ -10,7 +10,7 @@ import Home from "../pages/Home";
 import Components from "../pages/Components";
 import ProfilePage from "../pages/ProfilePage";
 import FriendPage from "../pages/FriendPage";
-import HabitHomePage from "../pages/HabitHomePage";
+import AchievementTest from "../pages/AchievementTest";
 import CreateHabit from "../pages/Habit/CreateHabit";
 
 // Import components
