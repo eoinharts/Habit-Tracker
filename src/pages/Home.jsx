@@ -102,8 +102,7 @@ const Home = () => {
       <div className="px-3 pt-2">
         {userHabits.length > 0 ? (
           <>
-            {/* <ChallengesCard timeLeft={"2d 4h 30m"} title="Run 10km " /> */}
-            {userHabits?.filter((habitDet) => hasExceededOneDay(habitDet.lastTrackedDate)).map((habitDet) => (
+            {userHabits?.filter((habitDet) => hasExceededOneDay(habitDet.lastTrackedDate)).length > 0 && (
               <>
                 <div className="d-flex align-items-center justify-content-between">
                   <Text strong className="d-block mb-1">
@@ -111,38 +110,41 @@ const Home = () => {
                   </Text>
                   <Button type="link">View All</Button>
                 </div>
-                <HabitsCard
-                  key={habitDet.habit.id}
-                  habitDet={habitDet}
-                  isDone={false}
-                  fetchUserHabits={fetchUserHabits}
-                  emoji="💧"
-                  onEdit={() => handleEdit(habitDet.habit.id)}
-                  onDelete={() => handleDelete(habitDet.habit.id)}
-                />
+                {userHabits?.filter((habitDet) => hasExceededOneDay(habitDet.lastTrackedDate)).map((habitDet) => (
+                  <HabitsCard
+                    key={habitDet.habit.id}
+                    habitDet={habitDet}
+                    isDone={false}
+                    fetchUserHabits={fetchUserHabits}
+                    onEdit={() => handleEdit(habitDet.habit.id)}
+                    onDelete={() => handleDelete(habitDet.habit.id)}
+                  />
+                ))}
               </>
-            ))}
+            )}
             {/* <HabitsCard title={"Run 10km"} goal="5/10km" emoji="🏃" />
         <HabitsCard title={"Stop Smoking"} goal="10/100 days" emoji="🚬" />
         <HabitsCard title={"Read Daily"} goal="10 days" emoji="📖" /> */}
-            {userHabits?.filter((habitDet) => !hasExceededOneDay(habitDet.lastTrackedDate)).map((habitDet) => (
-              <>
+            {userHabits?.filter((habitDet) => !hasExceededOneDay(habitDet.lastTrackedDate)).length > 0 && (
+              <> 
                 <div className="d-flex align-items-center justify-content-between">
                   <Text strong className="d-block mb-1">
                     Habits - Done
                   </Text>
                   <Button type="link">View All</Button>
                 </div>
-                <HabitsCard
-                  key={habitDet.habit.id}
-                  habitDet={habitDet}
-                  isDone={true}
-                  fetchUserHabits={fetchUserHabits}
-                  onEdit={() => handleEdit(habitDet.habit.id)}
-                  onDelete={() => handleDelete(habitDet.habit.id)}
-                />
+                {userHabits?.filter((habitDet) => !hasExceededOneDay(habitDet.lastTrackedDate)).map((habitDet) => (
+                  <HabitsCard
+                    key={habitDet.habit.id}
+                    habitDet={habitDet}
+                    isDone={true}
+                    fetchUserHabits={fetchUserHabits}
+                    onEdit={() => handleEdit(habitDet.habit.id)}
+                    onDelete={() => handleDelete(habitDet.habit.id)}
+                  />
+                ))}
               </>
-            ))}
+            )}
           </>
         ) : (
           <div className="d-flex justify-content-center mt-5">
