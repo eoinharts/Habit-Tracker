@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Input, message, Space } from "antd";
+import { Button, Form, Input, message, Space, Select } from "antd";
 import { Segmented } from "antd";
 import { createHabit, updateHabit, updateHabitStreak } from "@firebasegen/default-connector";
 import { useAuth } from "../../contexts/AuthProvider";
@@ -19,7 +19,6 @@ const SubmitButton = ({ form, children, isLoading }) => {
       .then(() => setSubmittable(true))
       .catch(() => setSubmittable(false));
   }, [form, values]);
-
 
   return (
     <Button
@@ -69,9 +68,7 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
     setIsLoading(false);
   };
 
-
   const createHabitFunction = async (name, description, category, streakGoal, emoji) => {
-    console.log("here", emoji);
     try {
       const res = await createHabit({
         uid: userData.id,
@@ -81,10 +78,13 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
         streakGoal: Number(streakGoal),
         emoji
       });
-      console.log(res.data.habit_insert.id);
       try {
-        const bes = await updateHabitStreak({ habitId: res.data.habit_insert.id, currentStreak: 0, longestStreak: 0, lastTrackedDate: new Date(new Date().getTime() - 25 * 60 * 60 * 1000).toISOString()});
-        console.log(bes);
+        await updateHabitStreak({ 
+          habitId: res.data.habit_insert.id, 
+          currentStreak: 0, 
+          longestStreak: 0, 
+          lastTrackedDate: new Date(new Date().getTime() - 25 * 60 * 60 * 1000).toISOString()
+        });
       } catch (error) {
         message.error(error.message);
       }
@@ -124,8 +124,39 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
       <Form.Item
         name="description"
         label="Description"
+        rules={[
+          {
+            required: true,
+            message: "Please input habit description!",
+          },
+        ]}
       >
         <TextArea />
+      </Form.Item>
+      <Form.Item
+        name="emoji"
+        label="Emoji"
+        rules={[
+          {
+            required: true,
+            message: "Please select an emoji!",
+          },
+        ]}
+      >
+        <Select
+          showSearch
+          placeholder="Select an emoji"
+          optionFilterProp="children"
+        >
+          <Select.Option value="🏃">🏃 Running</Select.Option>
+          <Select.Option value="📖">📖 Reading</Select.Option>
+          <Select.Option value="🚬">🚬 Smoking</Select.Option>
+          <Select.Option value="💧">💧 Water</Select.Option>
+          <Select.Option value="🍎">🍎 Healthy Eating</Select.Option>
+          <Select.Option value="🏋️">🏋️ Exercise</Select.Option>
+          <Select.Option value="🧘">🧘 Meditation</Select.Option>
+          <Select.Option value="🎯">🎯 Goal</Select.Option>
+        </Select>
       </Form.Item>
       <Form.Item
         name="streakGoal"
@@ -138,21 +169,6 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
         ]}
       >
         <Input type="number" />
-      </Form.Item>
-      <Form.Item
-        name="emoji"
-        label="Emoji / Placeholder"
-        rules={[
-          {
-            required: true,
-            message: "Please input an emoji!",
-          }, {
-            max: 2,
-            message: "Maximum of 2 characters allowed!",
-          }
-        ]}
-      >
-        <Input maxLength={2} />
       </Form.Item>
       <Form.Item>
         <SubmitButton form={form} isLoading={isLoading}>
