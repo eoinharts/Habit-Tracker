@@ -49,6 +49,7 @@ export interface CreateHabitVariables {
   description: string;
   category: string;
   streakGoal: number;
+  emoji: string;
 }
 
 export interface CreateUserData {
@@ -96,6 +97,15 @@ export interface DeleteHabitVariables {
   habitId: UUIDString;
 }
 
+export interface DeleteUserHabitData {
+  userHabit_delete?: UserHabit_Key | null;
+}
+
+export interface DeleteUserHabitVariables {
+  habitId: UUIDString;
+  userId: string;
+}
+
 export interface Friendship_Key {
   user1Id: string;
   user2Id: string;
@@ -131,6 +141,30 @@ export interface GetHabitByIdVariables {
   habitId: UUIDString;
 }
 
+export interface GetHabitsWithUserDetailsData {
+  user?: {
+    id: string;
+    name: string;
+    userHabits_on_user: ({
+      currentStreak: number;
+      longestStreak: number;
+      lastTrackedDate?: TimestampString | null;
+      habit: {
+        id: UUIDString;
+        title: string;
+        description?: string | null;
+        category?: string | null;
+        streakGoal: number;
+        emoji?: string | null;
+      } & Habit_Key;
+    })[];
+  } & User_Key;
+}
+
+export interface GetHabitsWithUserDetailsVariables {
+  userId: string;
+}
+
 export interface GetUserDetailsData {
   users: ({
     id: string;
@@ -152,6 +186,12 @@ export interface GetUserHabitData {
     description?: string | null;
     category?: string | null;
     streakGoal: number;
+    emoji?: string | null;
+    userHabitData: ({
+      currentStreak: number;
+      longestStreak: number;
+      lastTrackedDate?: TimestampString | null;
+    })[];
   } & Habit_Key)[];
 }
 
@@ -225,6 +265,7 @@ export interface UpdateHabitVariables {
   description?: string | null;
   category?: string | null;
   streakGoal?: number | null;
+  emoji: string;
 }
 
 export interface UserAchievement_Key {
@@ -333,6 +374,14 @@ export function updateHabitStreak(vars: UpdateHabitStreakVariables): MutationPro
 export function updateHabitStreak(dc: DataConnect, vars: UpdateHabitStreakVariables): MutationPromise<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 
 /* Allow users to create refs without passing in DataConnect */
+export function deleteUserHabitRef(vars: DeleteUserHabitVariables): MutationRef<DeleteUserHabitData, DeleteUserHabitVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function deleteUserHabitRef(dc: DataConnect, vars: DeleteUserHabitVariables): MutationRef<DeleteUserHabitData, DeleteUserHabitVariables>;
+
+export function deleteUserHabit(vars: DeleteUserHabitVariables): MutationPromise<DeleteUserHabitData, DeleteUserHabitVariables>;
+export function deleteUserHabit(dc: DataConnect, vars: DeleteUserHabitVariables): MutationPromise<DeleteUserHabitData, DeleteUserHabitVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
 export function getUserDetailsRef(vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
 /* Allow users to pass in custom DataConnect instances */
 export function getUserDetailsRef(dc: DataConnect, vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
@@ -371,6 +420,14 @@ export function getUserHabitRef(dc: DataConnect, vars: GetUserHabitVariables): Q
 
 export function getUserHabit(vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
 export function getUserHabit(dc: DataConnect, vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function getHabitsWithUserDetailsRef(vars: GetHabitsWithUserDetailsVariables): QueryRef<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function getHabitsWithUserDetailsRef(dc: DataConnect, vars: GetHabitsWithUserDetailsVariables): QueryRef<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+
+export function getHabitsWithUserDetails(vars: GetHabitsWithUserDetailsVariables): QueryPromise<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+export function getHabitsWithUserDetails(dc: DataConnect, vars: GetHabitsWithUserDetailsVariables): QueryPromise<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
 
 /* Allow users to create refs without passing in DataConnect */
 export function getHabitByIdRef(vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;

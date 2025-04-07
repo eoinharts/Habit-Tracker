@@ -8,6 +8,7 @@
   - [*ListFriends*](#listfriends)
   - [*ListIncomingRequests*](#listincomingrequests)
   - [*GetUserHabit*](#getuserhabit)
+  - [*GetHabitsWithUserDetails*](#gethabitswithuserdetails)
   - [*GetHabitById*](#gethabitbyid)
   - [*DebugFriendships*](#debugfriendships)
 - [**Mutations**](#mutations)
@@ -22,6 +23,7 @@
   - [*UpdateHabit*](#updatehabit)
   - [*DeleteHabit*](#deletehabit)
   - [*UpdateHabitStreak*](#updatehabitstreak)
+  - [*DeleteUserHabit*](#deleteuserhabit)
 
 # Generated TypeScript README
 This README will guide you through the process of using the generated TypeScript SDK package for the connector `default`. It will also provide examples on how to use your generated SDK to call your Data Connect queries and mutations.
@@ -481,6 +483,12 @@ export interface GetUserHabitData {
     description?: string | null;
     category?: string | null;
     streakGoal: number;
+    emoji?: string | null;
+    userHabitData: ({
+      currentStreak: number;
+      longestStreak: number;
+      lastTrackedDate?: TimestampString | null;
+    })[];
   } & Habit_Key)[];
 }
 ```
@@ -544,6 +552,116 @@ console.log(data.habits);
 executeQuery(ref).then((response) => {
   const data = response.data;
   console.log(data.habits);
+});
+```
+
+## GetHabitsWithUserDetails
+You can execute the `GetHabitsWithUserDetails` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+getHabitsWithUserDetails(vars: GetHabitsWithUserDetailsVariables): QueryPromise<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+
+getHabitsWithUserDetailsRef(vars: GetHabitsWithUserDetailsVariables): QueryRef<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```javascript
+getHabitsWithUserDetails(dc: DataConnect, vars: GetHabitsWithUserDetailsVariables): QueryPromise<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+
+getHabitsWithUserDetailsRef(dc: DataConnect, vars: GetHabitsWithUserDetailsVariables): QueryRef<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+```
+
+### Variables
+The `GetHabitsWithUserDetails` query requires an argument of type `GetHabitsWithUserDetailsVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+
+```javascript
+export interface GetHabitsWithUserDetailsVariables {
+  userId: string;
+}
+```
+### Return Type
+Recall that executing the `GetHabitsWithUserDetails` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetHabitsWithUserDetailsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface GetHabitsWithUserDetailsData {
+  user?: {
+    id: string;
+    name: string;
+    userHabits_on_user: ({
+      currentStreak: number;
+      longestStreak: number;
+      lastTrackedDate?: TimestampString | null;
+      habit: {
+        id: UUIDString;
+        title: string;
+        description?: string | null;
+        category?: string | null;
+        streakGoal: number;
+        emoji?: string | null;
+      } & Habit_Key;
+    })[];
+  } & User_Key;
+}
+```
+### Using `GetHabitsWithUserDetails`'s action shortcut function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getHabitsWithUserDetails, GetHabitsWithUserDetailsVariables } from '@firebasegen/default-connector';
+
+// The `GetHabitsWithUserDetails` query requires an argument of type `GetHabitsWithUserDetailsVariables`:
+const getHabitsWithUserDetailsVars: GetHabitsWithUserDetailsVariables = {
+  userId: ..., 
+};
+
+// Call the `getHabitsWithUserDetails()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getHabitsWithUserDetails(getHabitsWithUserDetailsVars);
+// Variables can be defined inline as well.
+const { data } = await getHabitsWithUserDetails({ userId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getHabitsWithUserDetails(dataConnect, getHabitsWithUserDetailsVars);
+
+console.log(data.user);
+
+// Or, you can use the `Promise` API.
+getHabitsWithUserDetails(getHabitsWithUserDetailsVars).then((response) => {
+  const data = response.data;
+  console.log(data.user);
+});
+```
+
+### Using `GetHabitsWithUserDetails`'s `QueryRef` function
+
+```javascript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getHabitsWithUserDetailsRef, GetHabitsWithUserDetailsVariables } from '@firebasegen/default-connector';
+
+// The `GetHabitsWithUserDetails` query requires an argument of type `GetHabitsWithUserDetailsVariables`:
+const getHabitsWithUserDetailsVars: GetHabitsWithUserDetailsVariables = {
+  userId: ..., 
+};
+
+// Call the `getHabitsWithUserDetailsRef()` function to get a reference to the query.
+const ref = getHabitsWithUserDetailsRef(getHabitsWithUserDetailsVars);
+// Variables can be defined inline as well.
+const ref = getHabitsWithUserDetailsRef({ userId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getHabitsWithUserDetailsRef(dataConnect, getHabitsWithUserDetailsVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.user);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.user);
 });
 ```
 
@@ -1456,6 +1574,7 @@ export interface CreateHabitVariables {
   description: string;
   category: string;
   streakGoal: number;
+  emoji: string;
 }
 ```
 ### Return Type
@@ -1480,13 +1599,14 @@ const createHabitVars: CreateHabitVariables = {
   description: ..., 
   category: ..., 
   streakGoal: ..., 
+  emoji: ..., 
 };
 
 // Call the `createHabit()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createHabit(createHabitVars);
 // Variables can be defined inline as well.
-const { data } = await createHabit({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
+const { data } = await createHabit({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., emoji: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1514,12 +1634,13 @@ const createHabitVars: CreateHabitVariables = {
   description: ..., 
   category: ..., 
   streakGoal: ..., 
+  emoji: ..., 
 };
 
 // Call the `createHabitRef()` function to get a reference to the mutation.
 const ref = createHabitRef(createHabitVars);
 // Variables can be defined inline as well.
-const ref = createHabitRef({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
+const ref = createHabitRef({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., emoji: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1562,6 +1683,7 @@ export interface UpdateHabitVariables {
   description?: string | null;
   category?: string | null;
   streakGoal?: number | null;
+  emoji: string;
 }
 ```
 ### Return Type
@@ -1586,13 +1708,14 @@ const updateHabitVars: UpdateHabitVariables = {
   description: ..., // optional
   category: ..., // optional
   streakGoal: ..., // optional
+  emoji: ..., 
 };
 
 // Call the `updateHabit()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await updateHabit(updateHabitVars);
 // Variables can be defined inline as well.
-const { data } = await updateHabit({ habitId: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
+const { data } = await updateHabit({ habitId: ..., title: ..., description: ..., category: ..., streakGoal: ..., emoji: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1620,12 +1743,13 @@ const updateHabitVars: UpdateHabitVariables = {
   description: ..., // optional
   category: ..., // optional
   streakGoal: ..., // optional
+  emoji: ..., 
 };
 
 // Call the `updateHabitRef()` function to get a reference to the mutation.
 const ref = updateHabitRef(updateHabitVars);
 // Variables can be defined inline as well.
-const ref = updateHabitRef({ habitId: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
+const ref = updateHabitRef({ habitId: ..., title: ..., description: ..., category: ..., streakGoal: ..., emoji: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1838,6 +1962,103 @@ console.log(data.userHabit_upsert);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.userHabit_upsert);
+});
+```
+
+## DeleteUserHabit
+You can execute the `DeleteUserHabit` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+deleteUserHabit(vars: DeleteUserHabitVariables): MutationPromise<DeleteUserHabitData, DeleteUserHabitVariables>;
+
+deleteUserHabitRef(vars: DeleteUserHabitVariables): MutationRef<DeleteUserHabitData, DeleteUserHabitVariables>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```javascript
+deleteUserHabit(dc: DataConnect, vars: DeleteUserHabitVariables): MutationPromise<DeleteUserHabitData, DeleteUserHabitVariables>;
+
+deleteUserHabitRef(dc: DataConnect, vars: DeleteUserHabitVariables): MutationRef<DeleteUserHabitData, DeleteUserHabitVariables>;
+```
+
+### Variables
+The `DeleteUserHabit` mutation requires an argument of type `DeleteUserHabitVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+
+```javascript
+export interface DeleteUserHabitVariables {
+  habitId: UUIDString;
+  userId: string;
+}
+```
+### Return Type
+Recall that executing the `DeleteUserHabit` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `DeleteUserHabitData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface DeleteUserHabitData {
+  userHabit_delete?: UserHabit_Key | null;
+}
+```
+### Using `DeleteUserHabit`'s action shortcut function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteUserHabit, DeleteUserHabitVariables } from '@firebasegen/default-connector';
+
+// The `DeleteUserHabit` mutation requires an argument of type `DeleteUserHabitVariables`:
+const deleteUserHabitVars: DeleteUserHabitVariables = {
+  habitId: ..., 
+  userId: ..., 
+};
+
+// Call the `deleteUserHabit()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await deleteUserHabit(deleteUserHabitVars);
+// Variables can be defined inline as well.
+const { data } = await deleteUserHabit({ habitId: ..., userId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await deleteUserHabit(dataConnect, deleteUserHabitVars);
+
+console.log(data.userHabit_delete);
+
+// Or, you can use the `Promise` API.
+deleteUserHabit(deleteUserHabitVars).then((response) => {
+  const data = response.data;
+  console.log(data.userHabit_delete);
+});
+```
+
+### Using `DeleteUserHabit`'s `MutationRef` function
+
+```javascript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteUserHabitRef, DeleteUserHabitVariables } from '@firebasegen/default-connector';
+
+// The `DeleteUserHabit` mutation requires an argument of type `DeleteUserHabitVariables`:
+const deleteUserHabitVars: DeleteUserHabitVariables = {
+  habitId: ..., 
+  userId: ..., 
+};
+
+// Call the `deleteUserHabitRef()` function to get a reference to the mutation.
+const ref = deleteUserHabitRef(deleteUserHabitVars);
+// Variables can be defined inline as well.
+const ref = deleteUserHabitRef({ habitId: ..., userId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteUserHabitRef(dataConnect, deleteUserHabitVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.userHabit_delete);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.userHabit_delete);
 });
 ```
 

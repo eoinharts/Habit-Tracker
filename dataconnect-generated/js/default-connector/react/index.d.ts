@@ -1,4 +1,4 @@
-import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, DeleteFriendData, DeleteFriendVariables, RemoveReverseFriendData, RemoveReverseFriendVariables, AcceptFriendRequestData, AcceptFriendRequestVariables, DeclineFriendRequestData, DeclineFriendRequestVariables, AddReverseFriendData, AddReverseFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, ListFriendsVariables, ListIncomingRequestsData, GetUserHabitData, GetUserHabitVariables, GetHabitByIdData, GetHabitByIdVariables, DebugFriendshipsData } from '../';
+import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, DeleteFriendData, DeleteFriendVariables, RemoveReverseFriendData, RemoveReverseFriendVariables, AcceptFriendRequestData, AcceptFriendRequestVariables, DeclineFriendRequestData, DeclineFriendRequestVariables, AddReverseFriendData, AddReverseFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, DeleteUserHabitData, DeleteUserHabitVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, ListFriendsVariables, ListIncomingRequestsData, GetUserHabitData, GetUserHabitVariables, GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables, GetHabitByIdData, GetHabitByIdVariables, DebugFriendshipsData } from '../';
 import { UseDataConnectQueryResult, useDataConnectQueryOptions, UseDataConnectMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
 import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
@@ -38,6 +38,9 @@ export function useDeleteHabit(dc: DataConnect, options?: useDataConnectMutation
 export function useUpdateHabitStreak(options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseDataConnectMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 export function useUpdateHabitStreak(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseDataConnectMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 
+export function useDeleteUserHabit(options?: useDataConnectMutationOptions<DeleteUserHabitData, FirebaseError, DeleteUserHabitVariables>): UseDataConnectMutationResult<DeleteUserHabitData, DeleteUserHabitVariables>;
+export function useDeleteUserHabit(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteUserHabitData, FirebaseError, DeleteUserHabitVariables>): UseDataConnectMutationResult<DeleteUserHabitData, DeleteUserHabitVariables>;
+
 export function useGetUserDetails(vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseDataConnectQueryResult<GetUserDetailsData, GetUserDetailsVariables>;
 export function useGetUserDetails(dc: DataConnect, vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseDataConnectQueryResult<GetUserDetailsData, GetUserDetailsVariables>;
 
@@ -52,6 +55,9 @@ export function useListIncomingRequests(dc: DataConnect, options?: useDataConnec
 
 export function useGetUserHabit(vars: GetUserHabitVariables, options?: useDataConnectQueryOptions<GetUserHabitData>): UseDataConnectQueryResult<GetUserHabitData, GetUserHabitVariables>;
 export function useGetUserHabit(dc: DataConnect, vars: GetUserHabitVariables, options?: useDataConnectQueryOptions<GetUserHabitData>): UseDataConnectQueryResult<GetUserHabitData, GetUserHabitVariables>;
+
+export function useGetHabitsWithUserDetails(vars: GetHabitsWithUserDetailsVariables, options?: useDataConnectQueryOptions<GetHabitsWithUserDetailsData>): UseDataConnectQueryResult<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+export function useGetHabitsWithUserDetails(dc: DataConnect, vars: GetHabitsWithUserDetailsVariables, options?: useDataConnectQueryOptions<GetHabitsWithUserDetailsData>): UseDataConnectQueryResult<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
 
 export function useGetHabitById(vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseDataConnectQueryResult<GetHabitByIdData, GetHabitByIdVariables>;
 export function useGetHabitById(dc: DataConnect, vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseDataConnectQueryResult<GetHabitByIdData, GetHabitByIdVariables>;

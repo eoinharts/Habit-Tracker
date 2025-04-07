@@ -85,7 +85,7 @@ type Habit @table {
   category: String
   createdAt: Timestamp! @default(expr: "request.time")
   streakGoal: Int!
-
+  emoji: String @col(dataType: "varchar(10)")
   # Relationships
 #   userHabits: [User_Habit!]! @link
 #   challenges: [Challenge!]! @link

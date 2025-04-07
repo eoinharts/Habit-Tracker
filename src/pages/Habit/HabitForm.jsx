@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Input, message, Space } from "antd";
 import { Segmented } from "antd";
-import { createHabit, updateHabit } from "@firebasegen/default-connector";
+import { createHabit, updateHabit, updateHabitStreak } from "@firebasegen/default-connector";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useNavigate } from "react-router";
 import TextArea from "antd/es/input/TextArea";
@@ -19,6 +19,8 @@ const SubmitButton = ({ form, children, isLoading }) => {
       .then(() => setSubmittable(true))
       .catch(() => setSubmittable(false));
   }, [form, values]);
+
+
   return (
     <Button
       type="primary"
@@ -44,7 +46,7 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
     }
   }, [initialValues, form]);
 
-  const onFinish = async ({ name, category, description, streakGoal }) => {
+  const onFinish = async ({ name, category, description, streakGoal, emoji }) => {
     setIsLoading(true);
     try {
       if (isEditing) {
@@ -54,23 +56,42 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
           description,
           category,
           streakGoal: Number(streakGoal),
+          emoji
         });
         message.success("Habit updated successfully!");
       } else {
-        await createHabit({
-          uid: userData.id,
-          title: name,
-          description,
-          category,
-          streakGoal: Number(streakGoal),
-        });
-        message.success("Habit created successfully!");
+        await createHabitFunction(name, description, category, streakGoal, emoji);
       }
       navigate("/");
     } catch (error) {
       message.error(error.message);
     }
     setIsLoading(false);
+  };
+
+
+  const createHabitFunction = async (name, description, category, streakGoal, emoji) => {
+    console.log("here", emoji);
+    try {
+      const res = await createHabit({
+        uid: userData.id,
+        title: name,
+        description,
+        category,
+        streakGoal: Number(streakGoal),
+        emoji
+      });
+      console.log(res.data.habit_insert.id);
+      try {
+        const bes = await updateHabitStreak({ habitId: res.data.habit_insert.id, currentStreak: 0, longestStreak: 0, lastTrackedDate: new Date(new Date().getTime() - 25 * 60 * 60 * 1000).toISOString()});
+        console.log(bes);
+      } catch (error) {
+        message.error(error.message);
+      }
+      message.success("Habit created successfully!");
+    } catch (error) {
+      message.error(error.message);
+    }
   };
 
   return (
@@ -117,6 +138,21 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
         ]}
       >
         <Input type="number" />
+      </Form.Item>
+      <Form.Item
+        name="emoji"
+        label="Emoji / Placeholder"
+        rules={[
+          {
+            required: true,
+            message: "Please input an emoji!",
+          }, {
+            max: 2,
+            message: "Maximum of 2 characters allowed!",
+          }
+        ]}
+      >
+        <Input maxLength={2} />
       </Form.Item>
       <Form.Item>
         <SubmitButton form={form} isLoading={isLoading}>

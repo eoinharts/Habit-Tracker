@@ -101,3 +101,57 @@ body {
 .font-bold {
   font-weight: 700;
 }
+
+
+/* Habit card */
+.action-buttons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  border-radius: 0px 0 0 0px !important;
+  overflow: hidden;
+}
+
+.action-button {
+  width: 50px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px 0 0 0px !important;
+  border: none;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.action-button.success {
+  background-color: #52c41a;
+}
+
+.action-button.success:hover {
+  background-color: #389e0d;
+}
+
+.action-button.danger {
+  background-color: #ff4d4f;
+}
+
+.action-button.danger:hover {
+  background-color: #cf1322;
+}
+
+.card-container {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  border-radius: 18px;
+}
+
+.card-wrapper {
+  transition: transform 0.3s ease;
+  touch-action: pan-y pinch-zoom;
+}

@@ -11,6 +11,7 @@
   - [*ListFriends*](#listfriends)
   - [*ListIncomingRequests*](#listincomingrequests)
   - [*GetUserHabit*](#getuserhabit)
+  - [*GetHabitsWithUserDetails*](#gethabitswithuserdetails)
   - [*GetHabitById*](#gethabitbyid)
   - [*DebugFriendships*](#debugfriendships)
 - [**Mutations**](#mutations)
@@ -25,6 +26,7 @@
   - [*UpdateHabit*](#updatehabit)
   - [*DeleteHabit*](#deletehabit)
   - [*UpdateHabitStreak*](#updatehabitstreak)
+  - [*DeleteUserHabit*](#deleteuserhabit)
 
 # Generated React README
 This README will guide you through the process of using the generated React SDK package for the connector `default`. It will also provide examples on how to use your generated SDK to call your Data Connect queries and mutations.
@@ -498,6 +500,12 @@ export interface GetUserHabitData {
     description?: string | null;
     category?: string | null;
     streakGoal: number;
+    emoji?: string | null;
+    userHabitData: ({
+      currentStreak: number;
+      longestStreak: number;
+      lastTrackedDate?: TimestampString | null;
+    })[];
   } & Habit_Key)[];
 }
 ```
@@ -549,6 +557,105 @@ export default function GetUserHabitComponent() {
   // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
   if (query.isSuccess) {
     console.log(query.data.habits);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## GetHabitsWithUserDetails
+You can execute the `GetHabitsWithUserDetails` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
+```javascript
+useGetHabitsWithUserDetails(dc: DataConnect, vars: GetHabitsWithUserDetailsVariables, options?: useDataConnectQueryOptions<GetHabitsWithUserDetailsData>): UseDataConnectQueryResult<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useGetHabitsWithUserDetails(vars: GetHabitsWithUserDetailsVariables, options?: useDataConnectQueryOptions<GetHabitsWithUserDetailsData>): UseDataConnectQueryResult<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+```
+
+### Variables
+The `GetHabitsWithUserDetails` Query requires an argument of type `GetHabitsWithUserDetailsVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface GetHabitsWithUserDetailsVariables {
+  userId: string;
+}
+```
+### Return Type
+Recall that calling the `GetHabitsWithUserDetails` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `GetHabitsWithUserDetails` Query is of type `GetHabitsWithUserDetailsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface GetHabitsWithUserDetailsData {
+  user?: {
+    id: string;
+    name: string;
+    userHabits_on_user: ({
+      currentStreak: number;
+      longestStreak: number;
+      lastTrackedDate?: TimestampString | null;
+      habit: {
+        id: UUIDString;
+        title: string;
+        description?: string | null;
+        category?: string | null;
+        streakGoal: number;
+        emoji?: string | null;
+      } & Habit_Key;
+    })[];
+  } & User_Key;
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `GetHabitsWithUserDetails`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, GetHabitsWithUserDetailsVariables } from '@firebasegen/default-connector';
+import { useGetHabitsWithUserDetails } from '@firebasegen/default-connector/react'
+
+export default function GetHabitsWithUserDetailsComponent() {
+
+  // The `useGetHabitsWithUserDetails` Query hook requires an argument of type `GetHabitsWithUserDetailsVariables`:
+  const getHabitsWithUserDetailsVars: GetHabitsWithUserDetailsVariables = {
+    userId: ..., 
+  };
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useGetHabitsWithUserDetails(getHabitsWithUserDetailsVars);
+  // Variables can be defined inline as well.
+  const query = useGetHabitsWithUserDetails({ userId: ..., });
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useGetHabitsWithUserDetails(dataConnect, getHabitsWithUserDetailsVars);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetHabitsWithUserDetails(getHabitsWithUserDetailsVars, options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetHabitsWithUserDetails(dataConnect, getHabitsWithUserDetailsVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.user);
   }
   return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
 }
@@ -1444,6 +1551,7 @@ export interface CreateHabitVariables {
   description: string;
   category: string;
   streakGoal: number;
+  emoji: string;
 }
 ```
 ### Return Type
@@ -1498,10 +1606,11 @@ export default function CreateHabitComponent() {
     description: ..., 
     category: ..., 
     streakGoal: ..., 
+    emoji: ..., 
   };
   mutation.mutate(createHabitVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
+  mutation.mutate({ uid: ..., title: ..., description: ..., category: ..., streakGoal: ..., emoji: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {
@@ -1546,6 +1655,7 @@ export interface UpdateHabitVariables {
   description?: string | null;
   category?: string | null;
   streakGoal?: number | null;
+  emoji: string;
 }
 ```
 ### Return Type
@@ -1600,10 +1710,11 @@ export default function UpdateHabitComponent() {
     description: ..., // optional
     category: ..., // optional
     streakGoal: ..., // optional
+    emoji: ..., 
   };
   mutation.mutate(updateHabitVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ habitId: ..., title: ..., description: ..., category: ..., streakGoal: ..., });
+  mutation.mutate({ habitId: ..., title: ..., description: ..., category: ..., streakGoal: ..., emoji: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {
@@ -1817,6 +1928,102 @@ export default function UpdateHabitStreakComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.userHabit_upsert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## DeleteUserHabit
+You can execute the `DeleteUserHabit` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
+```javascript
+useDeleteUserHabit(options?: useDataConnectMutationOptions<DeleteUserHabitData, FirebaseError, DeleteUserHabitVariables>): UseDataConnectMutationResult<DeleteUserHabitData, DeleteUserHabitVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useDeleteUserHabit(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteUserHabitData, FirebaseError, DeleteUserHabitVariables>): UseDataConnectMutationResult<DeleteUserHabitData, DeleteUserHabitVariables>;
+```
+
+### Variables
+The `DeleteUserHabit` Mutation requires an argument of type `DeleteUserHabitVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface DeleteUserHabitVariables {
+  habitId: UUIDString;
+  userId: string;
+}
+```
+### Return Type
+Recall that calling the `DeleteUserHabit` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `DeleteUserHabit` Mutation is of type `DeleteUserHabitData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface DeleteUserHabitData {
+  userHabit_delete?: UserHabit_Key | null;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `DeleteUserHabit`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, DeleteUserHabitVariables } from '@firebasegen/default-connector';
+import { useDeleteUserHabit } from '@firebasegen/default-connector/react'
+
+export default function DeleteUserHabitComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useDeleteUserHabit();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useDeleteUserHabit(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteUserHabit(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteUserHabit(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useDeleteUserHabit` Mutation requires an argument of type `DeleteUserHabitVariables`:
+  const deleteUserHabitVars: DeleteUserHabitVariables = {
+    habitId: ..., 
+    userId: ..., 
+  };
+  mutation.mutate(deleteUserHabitVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ habitId: ..., userId: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(deleteUserHabitVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.userHabit_delete);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }

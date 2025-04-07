@@ -104,17 +104,17 @@ mutation AddReverseFriend($friendId: String!) @auth(level: USER) {
 }
 
 # Create a habit
-mutation CreateHabit($uid: String!, $title: String!, $description: String!, $category: String!, $streakGoal: Int!) @auth(level: USER) {
+mutation CreateHabit($uid: String!, $title: String!, $description: String!, $category: String!, $streakGoal: Int!, $emoji: String!) @auth(level: USER) {
   habit_insert(
-    data: { creatorId: $uid, title: $title, description: $description, category: $category, streakGoal: $streakGoal }
+    data: { creatorId: $uid, title: $title, description: $description, category: $category, streakGoal: $streakGoal, emoji: $emoji }
   )
 }
 
 # Update a habit
-mutation UpdateHabit($habitId: UUID!, $title: String, $description: String, $category: String, $streakGoal: Int) @auth(level: USER) {
+mutation UpdateHabit($habitId: UUID!, $title: String, $description: String, $category: String, $streakGoal: Int, $emoji: String!) @auth(level: USER) {
   habit_update(
     key: { id: $habitId }
-    data: { title: $title, description: $description, category: $category, streakGoal: $streakGoal }
+    data: { title: $title, description: $description, category: $category, streakGoal: $streakGoal, emoji: $emoji }
   )
 }
 
@@ -134,6 +134,15 @@ mutation UpdateHabitStreak($habitId: UUID!, $currentStreak: Int!, $longestStreak
       currentStreak: $currentStreak,
       longestStreak: $longestStreak,
       lastTrackedDate: $lastTrackedDate
+    }
+  )
+}
+
+mutation DeleteUserHabit($habitId: UUID!, $userId: String!) @auth(level: USER) {
+  userHabit_delete(
+    key: {
+      habitId: $habitId
+      userId: $userId
     }
   )
 }

@@ -128,6 +128,17 @@ exports.updateHabitStreak = function updateHabitStreak(dcOrVars, vars) {
   return executeMutation(updateHabitStreakRef(dcOrVars, vars));
 };
 
+function deleteUserHabitRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteUserHabit', inputVars);
+}
+exports.deleteUserHabitRef = deleteUserHabitRef;
+
+exports.deleteUserHabit = function deleteUserHabit(dcOrVars, vars) {
+  return executeMutation(deleteUserHabitRef(dcOrVars, vars));
+};
+
 function getUserDetailsRef(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -181,6 +192,17 @@ exports.getUserHabitRef = getUserHabitRef;
 
 exports.getUserHabit = function getUserHabit(dcOrVars, vars) {
   return executeQuery(getUserHabitRef(dcOrVars, vars));
+};
+
+function getHabitsWithUserDetailsRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetHabitsWithUserDetails', inputVars);
+}
+exports.getHabitsWithUserDetailsRef = getHabitsWithUserDetailsRef;
+
+exports.getHabitsWithUserDetails = function getHabitsWithUserDetails(dcOrVars, vars) {
+  return executeQuery(getHabitsWithUserDetailsRef(dcOrVars, vars));
 };
 
 function getHabitByIdRef(dcOrVars, vars) {
