@@ -7,83 +7,6 @@ const connectorConfig = {
 };
 exports.connectorConfig = connectorConfig;
 
-function getUserDetailsRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetUserDetails', inputVars);
-}
-exports.getUserDetailsRef = getUserDetailsRef;
-
-exports.getUserDetails = function getUserDetails(dcOrVars, vars) {
-  return executeQuery(getUserDetailsRef(dcOrVars, vars));
-};
-
-function getAllUsersRef(dc) {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetAllUsers');
-}
-exports.getAllUsersRef = getAllUsersRef;
-
-exports.getAllUsers = function getAllUsers(dc) {
-  return executeQuery(getAllUsersRef(dc));
-};
-
-function listFriendsRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListFriends', inputVars);
-}
-exports.listFriendsRef = listFriendsRef;
-
-exports.listFriends = function listFriends(dcOrVars, vars) {
-  return executeQuery(listFriendsRef(dcOrVars, vars));
-};
-
-function listIncomingRequestsRef(dc) {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListIncomingRequests');
-}
-exports.listIncomingRequestsRef = listIncomingRequestsRef;
-
-exports.listIncomingRequests = function listIncomingRequests(dc) {
-  return executeQuery(listIncomingRequestsRef(dc));
-};
-
-function getUserHabitRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetUserHabit', inputVars);
-}
-exports.getUserHabitRef = getUserHabitRef;
-
-exports.getUserHabit = function getUserHabit(dcOrVars, vars) {
-  return executeQuery(getUserHabitRef(dcOrVars, vars));
-};
-
-function getHabitByIdRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetHabitById', inputVars);
-}
-exports.getHabitByIdRef = getHabitByIdRef;
-
-exports.getHabitById = function getHabitById(dcOrVars, vars) {
-  return executeQuery(getHabitByIdRef(dcOrVars, vars));
-};
-
-function debugFriendshipsRef(dc) {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'DebugFriendships');
-}
-exports.debugFriendshipsRef = debugFriendshipsRef;
-
-exports.debugFriendships = function debugFriendships(dc) {
-  return executeQuery(debugFriendshipsRef(dc));
-};
-
 function createUserRef(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
   dcInstance._useGeneratedSdk();
@@ -203,4 +126,103 @@ exports.updateHabitStreakRef = updateHabitStreakRef;
 
 exports.updateHabitStreak = function updateHabitStreak(dcOrVars, vars) {
   return executeMutation(updateHabitStreakRef(dcOrVars, vars));
+};
+
+function deleteUserHabitRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteUserHabit', inputVars);
+}
+exports.deleteUserHabitRef = deleteUserHabitRef;
+
+exports.deleteUserHabit = function deleteUserHabit(dcOrVars, vars) {
+  return executeMutation(deleteUserHabitRef(dcOrVars, vars));
+};
+
+function getUserDetailsRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetUserDetails', inputVars);
+}
+exports.getUserDetailsRef = getUserDetailsRef;
+
+exports.getUserDetails = function getUserDetails(dcOrVars, vars) {
+  return executeQuery(getUserDetailsRef(dcOrVars, vars));
+};
+
+function getAllUsersRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetAllUsers');
+}
+exports.getAllUsersRef = getAllUsersRef;
+
+exports.getAllUsers = function getAllUsers(dc) {
+  return executeQuery(getAllUsersRef(dc));
+};
+
+function listFriendsRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListFriends', inputVars);
+}
+exports.listFriendsRef = listFriendsRef;
+
+exports.listFriends = function listFriends(dcOrVars, vars) {
+  return executeQuery(listFriendsRef(dcOrVars, vars));
+};
+
+function listIncomingRequestsRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListIncomingRequests');
+}
+exports.listIncomingRequestsRef = listIncomingRequestsRef;
+
+exports.listIncomingRequests = function listIncomingRequests(dc) {
+  return executeQuery(listIncomingRequestsRef(dc));
+};
+
+function getUserHabitRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetUserHabit', inputVars);
+}
+exports.getUserHabitRef = getUserHabitRef;
+
+exports.getUserHabit = function getUserHabit(dcOrVars, vars) {
+  return executeQuery(getUserHabitRef(dcOrVars, vars));
+};
+
+function getHabitsWithUserDetailsRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetHabitsWithUserDetails', inputVars);
+}
+exports.getHabitsWithUserDetailsRef = getHabitsWithUserDetailsRef;
+
+exports.getHabitsWithUserDetails = function getHabitsWithUserDetails(dcOrVars, vars) {
+  return executeQuery(getHabitsWithUserDetailsRef(dcOrVars, vars));
+};
+
+function getHabitByIdRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetHabitById', inputVars);
+}
+exports.getHabitByIdRef = getHabitByIdRef;
+
+exports.getHabitById = function getHabitById(dcOrVars, vars) {
+  return executeQuery(getHabitByIdRef(dcOrVars, vars));
+};
+
+function debugFriendshipsRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'DebugFriendships');
+}
+exports.debugFriendshipsRef = debugFriendshipsRef;
+
+exports.debugFriendships = function debugFriendships(dc) {
+  return executeQuery(debugFriendshipsRef(dc));
 };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import { Routes, Route, Navigate } from "react-router";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import { antdConfig } from "./theme/antdConfig";
 import CreateAccount from "./pages/CreateAccount";

@@ -272,6 +272,15 @@ extend type Habit {
     distinct: Boolean = false
   ): Int! @fdc_generated(from: "Habit.description", purpose: QUERY_COUNT)
   """
+  ✨ Count the number of rows in the `Habit` table where the `emoji` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  emoji_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Habit.emoji", purpose: QUERY_COUNT)
+  """
   ✨ Count the number of rows in the `Habit` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
   """
   id_count(

@@ -50,7 +50,9 @@ const NavItem = styled.li`
   width: 42px;
 `;
 
-const NavLink = styled(Link)`
+const NavLink = styled(Link, {
+  shouldForwardProp: prop => prop !== 'active'
+})`
   display: flex;
   flex-direction: column;
   align-items: center;

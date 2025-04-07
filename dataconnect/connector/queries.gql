@@ -156,6 +156,36 @@ query GetUserHabit($uid: String!) @auth(level: USER) {
     description
     category
     streakGoal
+    emoji
+    userHabitData: userHabits_on_habit(where: { userId: { eq: $uid } }) {
+      currentStreak
+      longestStreak
+      lastTrackedDate
+    }
+  }
+}
+
+
+query GetHabitsWithUserDetails($userId: String!) @auth(level: PUBLIC) {
+  user(key: { id: $userId }) {
+    id
+    name
+
+    # Join from User → UserHabits → Habit
+    userHabits_on_user {
+      currentStreak
+      longestStreak
+      lastTrackedDate
+
+      habit {
+        id
+        title
+        description
+        category
+        streakGoal
+        emoji
+      }
+    }
   }
 }
 

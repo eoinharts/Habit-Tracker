@@ -1,7 +1,7 @@
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import React from "react";
-import { Button, Segmented } from "antd";
+import { Button, Segmented, message, Empty } from "antd";
 import {
   BellTwoTone,
   LogoutOutlined,
@@ -12,25 +12,55 @@ import MoodPng from "../assets/Mood-png.png";
 import { useAuth } from "../contexts/AuthProvider";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getUserHabit } from "@firebasegen/default-connector";
+import { getUserHabit, deleteHabit, getHabitsWithUserDetails } from "@firebasegen/default-connector";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { logout } = useAuth();
   const { userData } = useAuth();
   const [userHabits, setUserHabits] = useState([]);
+  const navigate = useNavigate();
 
   const fetchUserHabits = async () => {
     try {
-      const data = await getUserHabit({ uid: userData.id });
-      setUserHabits(data.data.habits);
+      const data = await getHabitsWithUserDetails({ userId: userData.id });
+      setUserHabits(data.data.user.userHabits_on_user);
     } catch (error) {
-      message.error("Failed to fetch applications");
+      message.error("Failed to fetch habits");
     }
   };
 
   useEffect(() => {
     fetchUserHabits();
-  }, [])
+  }, []);
+
+  const handleEdit = (habitId) => {
+    navigate(`/edit-habit/${habitId}`);
+  };
+
+  const handleDelete = async (habitId) => {
+    try {
+      await deleteHabit({ habitId });
+      message.success("Habit deleted successfully");
+      fetchUserHabits(); // Refresh the list
+    } catch (error) {
+      message.error("Failed to delete habit");
+    }
+  };
+
+  function hasExceededOneDay(timestamp) {
+    const now = new Date(); // current time
+    const givenTimestamp = new Date(timestamp); // convert the string timestamp to a Date object
+
+    // Calculate the difference in milliseconds
+    const timeDifference = now - givenTimestamp;
+
+    // Convert 1 day to milliseconds (24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
+    const oneDayInMs = 24 * 60 * 60 * 1000;
+
+    // Check if the difference exceeds 1 day
+    return timeDifference > oneDayInMs;
+  }
 
   return (
     <div>
@@ -70,31 +100,55 @@ const Home = () => {
         />
       </div>
       <div className="px-3 pt-2">
-        <div className="d-flex align-items-center justify-content-between">
-          <Text strong className="d-block mb-1">
-            Challenges
-          </Text>
-          <Button type="link">View All</Button>
-        </div>
-        <ChallengesCard timeLeft={"2d 4h 30m"} title="Run 10km " />
-
-        <div className="d-flex align-items-center justify-content-between">
-          <Text strong className="d-block mb-1">
-            Habits
-          </Text>
-          <Button type="link">View All</Button>
-        </div>
-        <HabitsCard title={"Run 10km"} goal="5/10km" emoji="🏃" />
+        {userHabits.length > 0 ? (
+          <>
+            {/* <ChallengesCard timeLeft={"2d 4h 30m"} title="Run 10km " /> */}
+            {userHabits?.filter((habitDet) => hasExceededOneDay(habitDet.lastTrackedDate)).map((habitDet) => (
+              <>
+                <div className="d-flex align-items-center justify-content-between">
+                  <Text strong className="d-block mb-1">
+                    Habits - To Do
+                  </Text>
+                  <Button type="link">View All</Button>
+                </div>
+                <HabitsCard
+                  key={habitDet.habit.id}
+                  habitDet={habitDet}
+                  isDone={false}
+                  fetchUserHabits={fetchUserHabits}
+                  emoji="💧"
+                  onEdit={() => handleEdit(habitDet.habit.id)}
+                  onDelete={() => handleDelete(habitDet.habit.id)}
+                />
+              </>
+            ))}
+            {/* <HabitsCard title={"Run 10km"} goal="5/10km" emoji="🏃" />
         <HabitsCard title={"Stop Smoking"} goal="10/100 days" emoji="🚬" />
-        <HabitsCard title={"Read Daily"} goal="10 days" emoji="📖" />
-        {userHabits?.map((habit) => (
-          <HabitsCard
-            key={habit.id}
-            title={habit.title}
-            goal={habit.streakGoal}
-            emoji="💧"
-          />
-        ))}
+        <HabitsCard title={"Read Daily"} goal="10 days" emoji="📖" /> */}
+            {userHabits?.filter((habitDet) => !hasExceededOneDay(habitDet.lastTrackedDate)).map((habitDet) => (
+              <>
+                <div className="d-flex align-items-center justify-content-between">
+                  <Text strong className="d-block mb-1">
+                    Habits - Done
+                  </Text>
+                  <Button type="link">View All</Button>
+                </div>
+                <HabitsCard
+                  key={habitDet.habit.id}
+                  habitDet={habitDet}
+                  isDone={true}
+                  fetchUserHabits={fetchUserHabits}
+                  onEdit={() => handleEdit(habitDet.habit.id)}
+                  onDelete={() => handleDelete(habitDet.habit.id)}
+                />
+              </>
+            ))}
+          </>
+        ) : (
+          <div className="d-flex justify-content-center mt-5">
+            <Empty description="No habits found, please create one" />
+          </div>
+        )}
       </div>
     </div>
   );

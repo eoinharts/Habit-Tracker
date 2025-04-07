@@ -469,6 +469,14 @@ input Habit_Data {
   """
   description_expr: String_Expr
   """
+  ✨ Generated from Field `Habit`.`emoji` of type `String`
+  """
+  emoji: String
+  """
+  ✨ `_expr` server value variant of `emoji` (✨ Generated from Field `Habit`.`emoji` of type `String`)
+  """
+  emoji_expr: String_Expr
+  """
   ✨ Generated from Field `Habit`.`streakGoal` of type `Int!`
   """
   streakGoal: Int
@@ -529,6 +537,10 @@ input Habit_Filter {
   ✨ Generated from Field `Habit`.`description` of type `String`
   """
   description: String_Filter
+  """
+  ✨ Generated from Field `Habit`.`emoji` of type `String`
+  """
+  emoji: String_Filter
   """
   ✨ Generated from Field `Habit`.`streakGoal` of type `Int!`
   """
@@ -599,6 +611,10 @@ input Habit_Having {
   ✨ Generated from Field `Habit`.`description_count` of type `Int!`
   """
   description_count: Int_Filter
+  """
+  ✨ Generated from Field `Habit`.`emoji_count` of type `Int!`
+  """
+  emoji_count: Int_Filter
   """
   ✨ Generated from Field `Habit`.`id_count` of type `Int!`
   """
@@ -690,6 +706,10 @@ input Habit_Order {
   ✨ Generated from Field `Habit`.`description` of type `String`
   """
   description: OrderDirection
+  """
+  ✨ Generated from Field `Habit`.`emoji` of type `String`
+  """
+  emoji: OrderDirection
   """
   ✨ Generated from Field `Habit`.`streakGoal` of type `Int!`
   """
