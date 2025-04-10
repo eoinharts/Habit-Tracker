@@ -1,118 +1,158 @@
 .achievement-modal .ant-modal-content {
-    overflow: hidden;
-    position: relative;
-    background: linear-gradient(#ffcc66, #ffaa00);
-    text-align: center;
-    border-radius: 20px;
-    box-shadow: 0 0 30px #ffaa00;
-    padding: 40px 20px;
-  }
-  
-  .achievement-popup-inner {
-    position: relative;
-    z-index: 0;
-  }
-  
-  .rays {
-    position: absolute;
-    top: 18%;
-    left: 50%;
-    width: 1200px;
-    height: 1200px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(#ffcc66, #ffaa00);
+  text-align: center;
+  border-radius: 20px;
+  box-shadow: 0 0 30px #ffaa00;
+  padding: 40px 20px;
+}
+
+.achievement-popup-inner {
+  position: relative;
+  z-index: 0;
+}
+
+.rays {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  width: 1200px;
+  height: 1200px;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.7) 0deg,
+    rgba(255, 255, 255, 0.3) 10deg,
+    transparent 20deg
+  );
+  animation: spin 18s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(6px) contrast(120%);
+  opacity: 1;
+  mask-image: radial-gradient(
+    circle,
+    transparent 0%,
+    rgba(0, 0, 0, 0.9) 60%,
+    black 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle,
+    transparent 0%,
+    rgba(0, 0, 0, 0.9) 60%,
+    black 100%
+  );
+  mask-composite: exclude;
+  -webkit-mask-composite: destination-out;
+}
+
+@keyframes spin {
+  from {
     transform: translate(-50%, -50%) rotate(0deg);
-    background: repeating-conic-gradient(
-      from 0deg,
-      rgba(255, 255, 255, 0.7) 0deg,
-      rgba(255, 255, 255, 0.3) 10deg,
-      transparent 20deg
-    );
-    animation: spin 18s linear infinite;
-    z-index: 0;
-    pointer-events: none;
-    filter: blur(6px) contrast(120%);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.achievement-content {
+  position: relative;
+  z-index: 1;
+}
+
+.badge-container {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 20px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge {
+  width: 85%;
+  height: 85%;
+  background: gold;
+  border-radius: 50%;
+  box-shadow:
+     0 0 25px rgba(255, 215, 0, 0.8),
+    0 0 50px rgba(255, 215, 0, 0.6),
+    0 0 100px rgba(255, 215, 0, 0.4),
+    0 0 140px rgba(255, 215, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  animation: bounceIn 0.5s ease-in-out forwards;
+  z-index: 1;
+}
+
+.badge-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.badge-number {
+  z-index: 3;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
     opacity: 1;
-  
-    mask-image: radial-gradient(
-      circle,
-      transparent 0%,
-      rgba(0, 0, 0, 0.9) 60%,
-      black 100%
-    );
-    -webkit-mask-image: radial-gradient(
-      circle,
-      transparent 0%,
-      rgba(0, 0, 0, 0.9) 60%,
-      black 100%
-    );
-    mask-composite: exclude;
-    -webkit-mask-composite: destination-out;
   }
-  
-  @keyframes spin {
-    from {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
   }
-  
-  .achievement-content {
-    position: relative;
-    z-index: 1;
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
-  
-  .badge-container {
-    position: relative;
-    display: inline-block;
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 20px;
-    z-index: 1;
-  }
-  
-  .badge {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    background: gold;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    font-weight: bold;
-    animation: pop 0.6s ease;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-  }
-  
-  .badge-number {
-    z-index: 3;
-  }
-  
-  @keyframes pop {
-    0% { transform: scale(0.3); opacity: 0; }
-    60% { transform: scale(1.1); opacity: 1; }
-    100% { transform: scale(1); }
-  }
-  
-  .claim-button {
-    background: white;
-    color: black;
-    padding: 12px 24px;
-    font-weight: bold;
-    border-radius: 999px;
-    margin-top: 20px;
-    cursor: pointer;
-    border: none;
-  }
-  
-  .secondary {
-    color: #333;
-    font-size: 0.95rem;
-    margin-top: 10px;
-    margin-bottom: 0;
-    line-height: 1.5;
-  }
-  
+}
+
+.claim-button {
+  background: white;
+  color: black;
+  padding: 12px 24px;
+  font-weight: bold;
+  border-radius: 999px;
+  margin-top: 20px;
+  cursor: pointer;
+  border: none;
+}
+
+.secondary {
+  color: #333;
+  font-size: 0.95rem;
+  margin-top: 10px;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+.text-box {
+  position: relative;
+  padding: 16px 20px;
+  border-radius: 16px;
+  margin-top: 12px;
+  background: white;
+  z-index: 1;
+  opacity: 0.8;
+}
+
