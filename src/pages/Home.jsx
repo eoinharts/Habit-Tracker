@@ -20,6 +20,7 @@ const Home = () => {
   const { userData } = useAuth();
   const [userHabits, setUserHabits] = useState([]);
   const navigate = useNavigate();
+  const [bronzePopupVisible, setBronzePopupVisible] = useState(false);
 
   const fetchUserHabits = async () => {
     try {

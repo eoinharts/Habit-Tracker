@@ -32,6 +32,8 @@ import SelectFriendList from "../components/SelectFriendList";
 import SelectAchievementList from "../components/SelectAchievementList";
 import HeaderContainer from "../components/HeaderContainer.jsx";
 import AchievementsBadgeContainer from "../components/AchievementsBadgeContainer/AchievementsBadgeContainer";
+import AchievementPopup from "../components/AchievementPopup/AchievementPopup.jsx";
+
 import { defaultAchievements } from "../utils/achievementData";
 const { Title, Text } = Typography;
 
@@ -43,6 +45,9 @@ const ProfilePage = () => {
   const [userPoints, setUserPoints] = useState(0);
   const [showFriendsModal, setShowFriendsModal] = useState(false);
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const showResetPopupButton = true; // Change to false or remove for production
+  const [bronzePopupVisible, setBronzePopupVisible] = useState(false);
   
   const navigate = useNavigate();
   console.log("Achievements in ProfilePage:", achievements);
@@ -55,6 +60,7 @@ const ProfilePage = () => {
       ]);
   
       const userData = userDetailsRes?.data?.users?.[0] || {};
+      console.log("🔍 Full userData response:", userData);
       const allDebug = debugRes?.data?.friendships || [];
   
       // Map accepted friendships
@@ -131,6 +137,12 @@ const ProfilePage = () => {
       } else {
         setUser(currentUser);
         await fetchUserData(currentUser.uid);
+
+        if (!localStorage.getItem("signedUpPopupShown")) {
+          setTimeout(() => setPopupVisible(true), 1000); // delay to make it look smooth
+          localStorage.setItem("signedUpPopupShown", "true");
+        }
+        
       }
       setLoading(false);
     });
@@ -304,8 +316,9 @@ const ProfilePage = () => {
   return (
     <>
       <HeaderContainer title="Your Profile" />
-      <div style={{ padding: "20px", flex: 1 }}>
-        <div style={{ maxWidth: "800px", margin: "0 auto", width: "100%" }}>
+      <div style={{ padding: "0 12px", flex: 1 }}>
+  <div style={{ width: "100%" }}>
+
 
           {/* Profile Card */}
           <div
@@ -389,9 +402,59 @@ const ProfilePage = () => {
             }}
             onClose={() => setShowAchievementsModal(false)}
           />
+         
         </Modal>
+        <AchievementPopup
+  visible={popupVisible}
+  onClose={() => setPopupVisible(false)}
+  badgeImage="/badges/blue_badge.png"
+  title="Welcome Aboard! 🚀"
+  message="You've officially signed up and started your habit journey!"
+/>
+<AchievementPopup
+  visible={bronzePopupVisible}
+  onClose={() => setBronzePopupVisible(false)}
+  badgeImage="/badges/bronze_badge.png"
+  title="You're on Your Way! 🌟"
+  message="You’ve just crushed your first habit milestone — keep that momentum going!"
+/>
+{showResetPopupButton && (
+  <div style={{ textAlign: "center", marginTop: 20 }}>
+    <Button
+      type="dashed"
+      onClick={() => {
+        localStorage.removeItem("signedUpPopupShown");
+        localStorage.removeItem("bronzePopupShown");
+        message.success("Popup reset! Refresh the page to test.");
+      }}
+    >
+      🔁 Reset Achievement Popup
+    </Button>
+    <Button
+  onClick={() => {
+    // 1. Show the popup
+    setBronzePopupVisible(true);
+
+    // 2. Mark the badge as unlocked in state
+    setAchievements((prev) =>
+      prev.map((a) =>
+        a.id === "first_good" ? { ...a, unlocked: true } : a
+      )
+    );
+
+    // 3. Optional: set localStorage for future backend simulation
+    localStorage.setItem("bronzePopupShown", "true");
+  }}
+  type="dashed"
+  style={{ marginTop: "12px" }}
+>
+  🧪 Show Bronze Achievement Popup
+</Button>
+  </div>
+)}
       </div>
     </>
+    
   );
 };
 
