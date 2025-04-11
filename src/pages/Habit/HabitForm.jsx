@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Input, message, Space } from "antd";
+import { Button, Form, Input, message, Space, Popover } from "antd";
 import { Segmented } from "antd";
 import { createHabit, updateHabit, updateHabitStreak } from "@firebasegen/default-connector";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useNavigate } from "react-router";
 import TextArea from "antd/es/input/TextArea";
+import EmojiSelector from "../../components/EmojiSelector";
 
 const SubmitButton = ({ form, children, isLoading }) => {
   const [submittable, setSubmittable] = React.useState(false);
@@ -152,7 +153,20 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
           }
         ]}
       >
-        <Input maxLength={2} />
+        <Popover
+          content={<EmojiSelector value={form.getFieldValue('emoji')} onChange={(emoji) => form.setFieldValue('emoji', emoji)} />}
+          title="Select an Emoji"
+          trigger="click"
+          placement="bottomLeft"
+        >
+          <Input
+            maxLength={2}
+            placeholder="Click to select emoji"
+            value={form.getFieldValue('emoji')}
+            style={{ cursor: 'pointer' }}
+            readOnly
+          />
+        </Popover>
       </Form.Item>
       <Form.Item>
         <SubmitButton form={form} isLoading={isLoading}>
