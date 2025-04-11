@@ -1,7 +1,7 @@
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import React from "react";
-import { Button, Segmented, message, Empty } from "antd";
+import { Button, Segmented, message, Empty, Badge } from "antd";
 import {
   BellTwoTone,
   LogoutOutlined,
@@ -93,12 +93,24 @@ const Home = () => {
             style={{ width: "40px", height: "40px" }}
           />
         </div>
-        <Segmented
+        {/* <Segmented
           className="mt-1"
           style={{ fontWeight: "600" }}
           options={["Today", "Clubs"]}
           block
-        />
+        /> */}
+        <div className="d-flex">
+        <div className="color-box-header d-inline-block p-2 me-2" style={{ backgroundColor: "#93d123" }}>
+          <Title level={5}  style={{ fontWeight: "500", color: "white" }} className="d-block mb-1">
+          🥇 Points: &nbsp;<Badge count={userData.totalPoints} color="red" size={30} style={{fontSize: "14px", width: "20px"}}/>
+          </Title>
+        </div>
+        <div className="color-box-header d-inline-block p-2" style={{ backgroundColor: "#FFC107" }}>
+          <Title level={5}  style={{ fontWeight: "500", color: "white" }} className="d-block mb-1">
+          🔥 Streak: &nbsp;<Badge count={userData.totalStreak} showZero color="red" size={30} style={{fontSize: "14px", width: "20px"}}/>
+          </Title>
+        </div>
+        </div>
       </div>
       <div className="px-3 pt-2">
         {userHabits.length > 0 ? (
@@ -109,7 +121,7 @@ const Home = () => {
                   <Text strong className="d-block mb-1">
                     Habits - To Do
                   </Text>
-                  <Button type="link">View All</Button>
+                  {/* <Button type="link">View All</Button> */}
                 </div>
                 {userHabits?.filter((habitDet) => hasExceededOneDay(habitDet.lastTrackedDate)).map((habitDet) => (
                   <HabitsCard
@@ -132,7 +144,7 @@ const Home = () => {
                   <Text strong className="d-block mb-1">
                     Habits - Done
                   </Text>
-                  <Button type="link">View All</Button>
+                  {/* <Button type="link">View All</Button> */}
                 </div>
                 {userHabits?.filter((habitDet) => !hasExceededOneDay(habitDet.lastTrackedDate)).map((habitDet) => (
                   <HabitsCard

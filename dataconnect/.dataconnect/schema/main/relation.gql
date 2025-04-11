@@ -685,6 +685,15 @@ extend type User {
     distinct: Boolean = false
   ): Int! @fdc_generated(from: "User.imageUrl", purpose: QUERY_COUNT)
   """
+  ✨ Count the number of rows in the `User` table where the `lastUpdatedStreakDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  lastUpdatedStreakDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.lastUpdatedStreakDate", purpose: QUERY_COUNT)
+  """
   ✨ Count the number of rows in the `User` table where the `name` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
   """
   name_count(
@@ -693,6 +702,15 @@ extend type User {
     """
     distinct: Boolean = false
   ): Int! @fdc_generated(from: "User.name", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `totalPoints` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  totalPoints_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.totalPoints", purpose: QUERY_COUNT)
   """
   ✨ Count the number of rows in the `User` table where the `totalStreak` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
   """
@@ -703,6 +721,15 @@ extend type User {
     distinct: Boolean = false
   ): Int! @fdc_generated(from: "User.totalStreak", purpose: QUERY_COUNT)
   """
+  ✨ Sum the `totalPoints` field in the `User` table.
+  """
+  totalPoints_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "User.totalPoints", purpose: QUERY_SUM)
+  """
   ✨ Sum the `totalStreak` field in the `User` table.
   """
   totalStreak_sum(
@@ -711,6 +738,15 @@ extend type User {
     """
     distinct: Boolean = false
   ): Int @fdc_generated(from: "User.totalStreak", purpose: QUERY_SUM)
+  """
+  ✨ Average the `totalPoints` field in the `User` table.
+  """
+  totalPoints_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "User.totalPoints", purpose: QUERY_AVG)
   """
   ✨ Average the `totalStreak` field in the `User` table.
   """
@@ -721,9 +757,25 @@ extend type User {
     distinct: Boolean = false
   ): Float @fdc_generated(from: "User.totalStreak", purpose: QUERY_AVG)
   """
+  ✨ Minimum of the `lastUpdatedStreakDate` field in the `User` table.
+  """
+  lastUpdatedStreakDate_min: Timestamp @fdc_generated(from: "User.lastUpdatedStreakDate", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `totalPoints` field in the `User` table.
+  """
+  totalPoints_min: Int @fdc_generated(from: "User.totalPoints", purpose: QUERY_MIN)
+  """
   ✨ Minimum of the `totalStreak` field in the `User` table.
   """
   totalStreak_min: Int @fdc_generated(from: "User.totalStreak", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `lastUpdatedStreakDate` field in the `User` table.
+  """
+  lastUpdatedStreakDate_max: Timestamp @fdc_generated(from: "User.lastUpdatedStreakDate", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `totalPoints` field in the `User` table.
+  """
+  totalPoints_max: Int @fdc_generated(from: "User.totalPoints", purpose: QUERY_MAX)
   """
   ✨ Maximum of the `totalStreak` field in the `User` table.
   """

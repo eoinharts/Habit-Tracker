@@ -23,6 +23,7 @@
   - [*UpdateHabit*](#updatehabit)
   - [*DeleteHabit*](#deletehabit)
   - [*UpdateHabitStreak*](#updatehabitstreak)
+  - [*updatePoints*](#updatepoints)
   - [*DeleteUserHabit*](#deleteuserhabit)
 
 # Generated TypeScript README
@@ -111,6 +112,8 @@ export interface GetUserDetailsData {
     email: string;
     imageUrl?: string | null;
     totalStreak: number;
+    totalPoints: number;
+    lastUpdatedStreakDate?: TimestampString | null;
   } & User_Key)[];
 }
 ```
@@ -1885,6 +1888,8 @@ export interface UpdateHabitStreakVariables {
   currentStreak: number;
   longestStreak: number;
   lastTrackedDate: TimestampString;
+  userId?: string | null;
+  points?: number | null;
 }
 ```
 ### Return Type
@@ -1908,13 +1913,15 @@ const updateHabitStreakVars: UpdateHabitStreakVariables = {
   currentStreak: ..., 
   longestStreak: ..., 
   lastTrackedDate: ..., 
+  userId: ..., // optional
+  points: ..., // optional
 };
 
 // Call the `updateHabitStreak()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await updateHabitStreak(updateHabitStreakVars);
 // Variables can be defined inline as well.
-const { data } = await updateHabitStreak({ habitId: ..., currentStreak: ..., longestStreak: ..., lastTrackedDate: ..., });
+const { data } = await updateHabitStreak({ habitId: ..., currentStreak: ..., longestStreak: ..., lastTrackedDate: ..., userId: ..., points: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1941,12 +1948,14 @@ const updateHabitStreakVars: UpdateHabitStreakVariables = {
   currentStreak: ..., 
   longestStreak: ..., 
   lastTrackedDate: ..., 
+  userId: ..., // optional
+  points: ..., // optional
 };
 
 // Call the `updateHabitStreakRef()` function to get a reference to the mutation.
 const ref = updateHabitStreakRef(updateHabitStreakVars);
 // Variables can be defined inline as well.
-const ref = updateHabitStreakRef({ habitId: ..., currentStreak: ..., longestStreak: ..., lastTrackedDate: ..., });
+const ref = updateHabitStreakRef({ habitId: ..., currentStreak: ..., longestStreak: ..., lastTrackedDate: ..., userId: ..., points: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1962,6 +1971,109 @@ console.log(data.userHabit_upsert);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.userHabit_upsert);
+});
+```
+
+## updatePoints
+You can execute the `updatePoints` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+updatePoints(vars: UpdatePointsVariables): MutationPromise<UpdatePointsData, UpdatePointsVariables>;
+
+updatePointsRef(vars: UpdatePointsVariables): MutationRef<UpdatePointsData, UpdatePointsVariables>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```javascript
+updatePoints(dc: DataConnect, vars: UpdatePointsVariables): MutationPromise<UpdatePointsData, UpdatePointsVariables>;
+
+updatePointsRef(dc: DataConnect, vars: UpdatePointsVariables): MutationRef<UpdatePointsData, UpdatePointsVariables>;
+```
+
+### Variables
+The `updatePoints` mutation requires an argument of type `UpdatePointsVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+
+```javascript
+export interface UpdatePointsVariables {
+  userId: string;
+  points: number;
+  totalStreak: number;
+  newDate: TimestampString;
+}
+```
+### Return Type
+Recall that executing the `updatePoints` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UpdatePointsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface UpdatePointsData {
+  user_update?: User_Key | null;
+}
+```
+### Using `updatePoints`'s action shortcut function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, updatePoints, UpdatePointsVariables } from '@firebasegen/default-connector';
+
+// The `updatePoints` mutation requires an argument of type `UpdatePointsVariables`:
+const updatePointsVars: UpdatePointsVariables = {
+  userId: ..., 
+  points: ..., 
+  totalStreak: ..., 
+  newDate: ..., 
+};
+
+// Call the `updatePoints()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await updatePoints(updatePointsVars);
+// Variables can be defined inline as well.
+const { data } = await updatePoints({ userId: ..., points: ..., totalStreak: ..., newDate: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await updatePoints(dataConnect, updatePointsVars);
+
+console.log(data.user_update);
+
+// Or, you can use the `Promise` API.
+updatePoints(updatePointsVars).then((response) => {
+  const data = response.data;
+  console.log(data.user_update);
+});
+```
+
+### Using `updatePoints`'s `MutationRef` function
+
+```javascript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, updatePointsRef, UpdatePointsVariables } from '@firebasegen/default-connector';
+
+// The `updatePoints` mutation requires an argument of type `UpdatePointsVariables`:
+const updatePointsVars: UpdatePointsVariables = {
+  userId: ..., 
+  points: ..., 
+  totalStreak: ..., 
+  newDate: ..., 
+};
+
+// Call the `updatePointsRef()` function to get a reference to the mutation.
+const ref = updatePointsRef(updatePointsVars);
+// Variables can be defined inline as well.
+const ref = updatePointsRef({ userId: ..., points: ..., totalStreak: ..., newDate: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = updatePointsRef(dataConnect, updatePointsVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.user_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.user_update);
 });
 ```
 

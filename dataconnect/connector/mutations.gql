@@ -126,7 +126,7 @@ mutation DeleteHabit($habitId: UUID!) @auth(level: USER) {
 }
 
 # Update habit streak
-mutation UpdateHabitStreak($habitId: UUID!, $currentStreak: Int!, $longestStreak: Int!, $lastTrackedDate: Timestamp!) @auth(level: USER) {
+mutation UpdateHabitStreak($habitId: UUID!, $currentStreak: Int!, $longestStreak: Int!, $lastTrackedDate: Timestamp!, $userId: String, $points: Int) @auth(level: USER) {
   userHabit_upsert(
     data: {
       habitId: $habitId,
@@ -136,6 +136,13 @@ mutation UpdateHabitStreak($habitId: UUID!, $currentStreak: Int!, $longestStreak
       lastTrackedDate: $lastTrackedDate
     }
   )
+}
+
+mutation updatePoints( $userId: String!, $points: Int!, $totalStreak: Int!, $newDate: Timestamp!) @auth(level: USER) {
+    user_update(
+      key: { id: $userId }
+      data: { totalPoints: $points, totalStreak: $totalStreak, lastUpdatedStreakDate: $newDate }
+    )
 }
 
 mutation DeleteUserHabit($habitId: UUID!, $userId: String!) @auth(level: USER) {

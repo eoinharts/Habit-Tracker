@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Card, Progress, Button } from 'antd';
 import { EditOutlined, DeleteOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { updateHabitStreak } from "@firebasegen/default-connector";
+import { updateHabitStreak, updatePoints } from "@firebasegen/default-connector";
 import Text from 'antd/lib/typography/Text';
+import { useAuth } from '../../contexts/AuthProvider';
+import { isNewDay } from '../../utils/helper';
 
 const HabitsCard = ({
   emoji,
@@ -15,12 +17,13 @@ const HabitsCard = ({
 }) => {
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const {userData, getNewStreakCount} = useAuth();
   const startXRef = useRef(0);
   const currentXRef = useRef(0);
   const cardRef = useRef(null);
   const BUTTONS_WIDTH = 100;
 
-  const {currentStreak, longestStreak, lastTrackedDate, habit} = habitDet
+  const {currentStreak, longestStreak, lastTrackedDate, habit} = habitDet;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -38,14 +41,37 @@ const HabitsCard = ({
   const updateHabit = async(accepted) => {
     try{
       const streak = accepted ? currentStreak + 1 : currentStreak;
-      const res = await updateHabitStreak({ habitId: habit.id, currentStreak: streak, longestStreak: streak > longestStreak ? streak : longestStreak, lastTrackedDate: new Date().toISOString()});
+      const res = await updateHabitStreak({ 
+        habitId: habit.id, 
+        currentStreak: streak, 
+        longestStreak: streak > longestStreak ? streak : longestStreak, 
+        lastTrackedDate: new Date().toISOString()
+      });
+      await updatePointsFunc(accepted);
       fetchUserHabits();
       console.log(res);  
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const updatePointsFunc = async(accepted) => {
+    try{
+      const points = accepted ? 1 : 0;
+      const streak = isNewDay(userData.lastUpdatedStreakDate) ? 1 : 0;
+      const res = await updatePoints({ 
+        userId: userData.id, 
+        points: userData.totalPoints + points,
+        totalStreak: userData.totalStreak + streak,
+        newDate: new Date().toISOString()
+      });
+      getNewStreakCount(userData.id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
+  // Touch event handlers
   const handleTouchStart = (e) => {
     startXRef.current = e.touches[0].clientX;
     currentXRef.current = swipeOffset;
@@ -56,7 +82,7 @@ const HabitsCard = ({
     if (!isDragging) return;
     
     const diff = e.touches[0].clientX - startXRef.current;
-    const newOffset = Math.max(0, Math.min(BUTTONS_WIDTH, currentXRef.current - diff));
+    const newOffset = Math.max(0, Math.min(BUTTONS_WIDTH, currentXRef.current + diff));
     setSwipeOffset(newOffset);
   };
 
@@ -66,6 +92,41 @@ const HabitsCard = ({
       setSwipeOffset(BUTTONS_WIDTH);
     } else {
       setSwipeOffset(0);
+    }
+  };
+
+  // Mouse event handlers
+  const handleMouseDown = (e) => {
+    startXRef.current = e.clientX;
+    currentXRef.current = swipeOffset;
+    setIsDragging(true);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    
+    const diff = e.clientX - startXRef.current;
+    const newOffset = Math.max(0, Math.min(BUTTONS_WIDTH, currentXRef.current + diff));
+    setSwipeOffset(newOffset);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    if (swipeOffset > BUTTONS_WIDTH / 2) {
+      setSwipeOffset(BUTTONS_WIDTH);
+    } else {
+      setSwipeOffset(0);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      if (swipeOffset > BUTTONS_WIDTH / 2) {
+        setSwipeOffset(BUTTONS_WIDTH);
+      } else {
+        setSwipeOffset(0);
+      }
     }
   };
 
@@ -108,6 +169,10 @@ const HabitsCard = ({
           onTouchStart={isDone ? null : handleTouchStart}
           onTouchMove={isDone ? null : handleTouchMove}
           onTouchEnd={isDone ? null : handleTouchEnd}
+          onMouseDown={isDone ? null : handleMouseDown}
+          onMouseMove={isDone ? null : handleMouseMove}
+          onMouseUp={isDone ? null : handleMouseUp}
+          onMouseLeave={isDone ? null : handleMouseLeave}
         >
           <div className="d-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center">
