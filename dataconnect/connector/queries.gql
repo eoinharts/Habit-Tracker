@@ -88,6 +88,8 @@ query GetUserDetails($userId: String!) @auth(level: USER) {
     email
     imageUrl
     totalStreak
+    totalPoints
+    lastUpdatedStreakDate
   }
 }
 

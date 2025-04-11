@@ -113,7 +113,7 @@ body {
   width: 100px;
   display: flex;
   align-items: center;
-  border-radius: 0px 0 0 0px;
+  border-radius: 8px 0 0 8px;
   overflow: hidden;
 }
 
@@ -125,7 +125,6 @@ body {
   justify-content: center;
   border: none;
   color: white;
-  border-radius: 0px;
   transition: background-color 0.2s ease;
   cursor: pointer;
 }
@@ -150,7 +149,7 @@ body {
   position: relative;
   overflow: hidden;
   margin-bottom: 0.5rem;
-  border-radius: 18px;
+  border-radius: 8px;
   user-select: none;
 }
 
@@ -165,18 +164,6 @@ body {
 }
 
 /* Override Ant Design card border radius to match */
-/* .ant-card {
+.ant-card {
   border-radius: 8px !important;
-} */
-
-
-
-.color-box-header {
-  background-color: rgba(56, 66, 255, 0.7);
-  border-radius: 16px;
-  color: #fff;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }

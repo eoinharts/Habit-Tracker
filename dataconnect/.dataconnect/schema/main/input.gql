@@ -748,6 +748,18 @@ input User_Data {
   """
   imageUrl_expr: String_Expr
   """
+  ✨ Generated from Field `User`.`lastUpdatedStreakDate` of type `Timestamp`
+  """
+  lastUpdatedStreakDate: Timestamp
+  """
+  ✨ `_expr` server value variant of `lastUpdatedStreakDate` (✨ Generated from Field `User`.`lastUpdatedStreakDate` of type `Timestamp`)
+  """
+  lastUpdatedStreakDate_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `lastUpdatedStreakDate` (✨ Generated from Field `User`.`lastUpdatedStreakDate` of type `Timestamp`)
+  """
+  lastUpdatedStreakDate_time: Timestamp_Relative
+  """
   ✨ Generated from Field `User`.`name` of type `String!`
   """
   name: String
@@ -755,6 +767,18 @@ input User_Data {
   ✨ `_expr` server value variant of `name` (✨ Generated from Field `User`.`name` of type `String!`)
   """
   name_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`totalPoints` of type `Int!`
+  """
+  totalPoints: Int
+  """
+  ✨ `_expr` server value variant of `totalPoints` (✨ Generated from Field `User`.`totalPoints` of type `Int!`)
+  """
+  totalPoints_expr: Int_Expr
+  """
+  ✨ `_update` server value variant of `totalPoints` (✨ Generated from Field `User`.`totalPoints` of type `Int!`)
+  """
+  totalPoints_update: [Int_Update!]
   """
   ✨ Generated from Field `User`.`totalStreak` of type `Int!`
   """
@@ -797,9 +821,17 @@ input User_Filter {
   """
   imageUrl: String_Filter
   """
+  ✨ Generated from Field `User`.`lastUpdatedStreakDate` of type `Timestamp`
+  """
+  lastUpdatedStreakDate: Timestamp_Filter
+  """
   ✨ Generated from Field `User`.`name` of type `String!`
   """
   name: String_Filter
+  """
+  ✨ Generated from Field `User`.`totalPoints` of type `Int!`
+  """
+  totalPoints: Int_Filter
   """
   ✨ Generated from Field `User`.`totalStreak` of type `Int!`
   """
@@ -891,25 +923,57 @@ input User_Having {
   """
   imageUrl_count: Int_Filter
   """
+  ✨ Generated from Field `User`.`lastUpdatedStreakDate_count` of type `Int!`
+  """
+  lastUpdatedStreakDate_count: Int_Filter
+  """
   ✨ Generated from Field `User`.`name_count` of type `Int!`
   """
   name_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`totalPoints_count` of type `Int!`
+  """
+  totalPoints_count: Int_Filter
   """
   ✨ Generated from Field `User`.`totalStreak_count` of type `Int!`
   """
   totalStreak_count: Int_Filter
   """
+  ✨ Generated from Field `User`.`totalPoints_sum` of type `Int`
+  """
+  totalPoints_sum: Int_Filter
+  """
   ✨ Generated from Field `User`.`totalStreak_sum` of type `Int`
   """
   totalStreak_sum: Int_Filter
+  """
+  ✨ Generated from Field `User`.`totalPoints_avg` of type `Float`
+  """
+  totalPoints_avg: Float_Filter
   """
   ✨ Generated from Field `User`.`totalStreak_avg` of type `Float`
   """
   totalStreak_avg: Float_Filter
   """
+  ✨ Generated from Field `User`.`lastUpdatedStreakDate_min` of type `Timestamp`
+  """
+  lastUpdatedStreakDate_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `User`.`totalPoints_min` of type `Int`
+  """
+  totalPoints_min: Int_Filter
+  """
   ✨ Generated from Field `User`.`totalStreak_min` of type `Int`
   """
   totalStreak_min: Int_Filter
+  """
+  ✨ Generated from Field `User`.`lastUpdatedStreakDate_max` of type `Timestamp`
+  """
+  lastUpdatedStreakDate_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `User`.`totalPoints_max` of type `Int`
+  """
+  totalPoints_max: Int_Filter
   """
   ✨ Generated from Field `User`.`totalStreak_max` of type `Int`
   """
@@ -958,9 +1022,17 @@ input User_Order {
   """
   imageUrl: OrderDirection
   """
+  ✨ Generated from Field `User`.`lastUpdatedStreakDate` of type `Timestamp`
+  """
+  lastUpdatedStreakDate: OrderDirection
+  """
   ✨ Generated from Field `User`.`name` of type `String!`
   """
   name: OrderDirection
+  """
+  ✨ Generated from Field `User`.`totalPoints` of type `Int!`
+  """
+  totalPoints: OrderDirection
   """
   ✨ Generated from Field `User`.`totalStreak` of type `Int!`
   """

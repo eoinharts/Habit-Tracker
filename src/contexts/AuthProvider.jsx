@@ -3,6 +3,7 @@ import { auth } from "../utils/firebaseConfig";
 import {
     signOut,
 } from "firebase/auth";
+import { getUserDetails } from "@firebasegen/default-connector";
 
 const AuthContext = createContext(null);
 
@@ -14,6 +15,16 @@ export const AuthProvider = ({
 }) => {
   const [signedIn, setSignedIn] = useState(isSignedIn);
   const [userData, setUserData] = useState(userDetails);
+
+  const getNewStreakCount = async (userId) => {
+    try {
+      const res = await getUserDetails({ userId: userId });
+      console.log(res.data.users[0]);
+      setUserData({ ...userData, totalStreak: res.data.users[0].totalStreak, totalPoints: res.data.users[0].totalPoints });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
   useEffect(() => {
     setSignedIn(isSignedIn);
@@ -50,6 +61,7 @@ export const AuthProvider = ({
         userData,
         setUserData,
         logout,
+        getNewStreakCount
       }}
     >
       {children}
