@@ -9,10 +9,10 @@ import {
   unlockAchievement
   // OPTIONAL: Import a function to get existing user achievements if you implement that check
   // getUserAchievements
-} from "@firebasegen/default-connector"; // Ensure this path is correct
-import { useAuth } from "../../contexts/AuthProvider"; // Ensure this path is correct
+} from "@firebasegen/default-connector"; 
+import { useAuth } from "../../contexts/AuthProvider";
 import { useNavigate } from "react-router";
-import AchievementPopup from "../../components/AchievementPopup/AchievementPopup.jsx"; // Ensure this path is correct
+import AchievementPopup from "../../components/AchievementPopup/AchievementPopup.jsx"; 
 
 // Helper Submit Button (Unchanged from original)
 const SubmitButton = ({ form, children, isLoading }) => {
@@ -30,7 +30,7 @@ const SubmitButton = ({ form, children, isLoading }) => {
       htmlType="submit"
       loading={isLoading}
       disabled={!submittable}
-      className="w-100 py-4" // Adjust styling as needed
+      className="w-100 py-4" 
     >
       {children}
     </Button>
@@ -51,15 +51,14 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
   const [wasPopupTriggered, setWasPopupTriggered] = useState(false); // Track if popup logic ran
 
   // --- Achievement Configuration ---
-  // Ensure these keys match the EXACT counts for unlocking
-   // Example: Unlock at 2nd, 5th, 10th good habit
+ 
   const GOOD_HABIT_ACHIEVEMENTS = {
     1: "d617ec69b4434be1b73acd7866172dff",  // ID for 2 Good Habits
     5: "f51ef17a74614193ba6d45d89b67b7b5",  // ID for 5 Good Habits
     10: "4489c9eba9a7489ca5b2e8631d08f054", // ID for 10 Good Habits
   };
 
-  // Example: Unlock at 1st, 5th, 10th bad habit logged
+  
   const BAD_HABIT_ACHIEVEMENTS = {
     1: "6808cc372cee4b7e99009615e44103bd", // ID for 1st Bad Habit Logged
     5: "d51da255e6f94da4a42f333ac97b5d9e", // ID for 5 Bad Habits Logged
