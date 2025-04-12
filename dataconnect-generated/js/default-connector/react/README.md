@@ -13,6 +13,8 @@
   - [*GetUserHabit*](#getuserhabit)
   - [*GetHabitsWithUserDetails*](#gethabitswithuserdetails)
   - [*GetHabitById*](#gethabitbyid)
+  - [*ListAchievements*](#listachievements)
+  - [*ListUserAchievements*](#listuserachievements)
   - [*DebugFriendships*](#debugfriendships)
 - [**Mutations**](#mutations)
   - [*CreateUser*](#createuser)
@@ -28,6 +30,8 @@
   - [*UpdateHabitStreak*](#updatehabitstreak)
   - [*updatePoints*](#updatepoints)
   - [*DeleteUserHabit*](#deleteuserhabit)
+  - [*UnlockAchievement*](#unlockachievement)
+  - [*CreateAchievement*](#createachievement)
 
 # Generated React README
 This README will guide you through the process of using the generated React SDK package for the connector `default`. It will also provide examples on how to use your generated SDK to call your Data Connect queries and mutations.
@@ -753,6 +757,175 @@ export default function GetHabitByIdComponent() {
   // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
   if (query.isSuccess) {
     console.log(query.data.habit);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## ListAchievements
+You can execute the `ListAchievements` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
+```javascript
+useListAchievements(dc: DataConnect, options?: useDataConnectQueryOptions<ListAchievementsData>): UseDataConnectQueryResult<ListAchievementsData, undefined>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useListAchievements(options?: useDataConnectQueryOptions<ListAchievementsData>): UseDataConnectQueryResult<ListAchievementsData, undefined>;
+```
+
+### Variables
+The `ListAchievements` Query has no variables.
+### Return Type
+Recall that calling the `ListAchievements` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `ListAchievements` Query is of type `ListAchievementsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ListAchievementsData {
+  achievements: ({
+    id: UUIDString;
+    title: string;
+    description?: string | null;
+    criteria?: string | null;
+    icon?: string | null;
+  } & Achievement_Key)[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `ListAchievements`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig } from '@firebasegen/default-connector';
+import { useListAchievements } from '@firebasegen/default-connector/react'
+
+export default function ListAchievementsComponent() {
+
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useListAchievements();
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useListAchievements(dataConnect);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useListAchievements(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useListAchievements(dataConnect, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.achievements);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## ListUserAchievements
+You can execute the `ListUserAchievements` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
+```javascript
+useListUserAchievements(dc: DataConnect, vars: ListUserAchievementsVariables, options?: useDataConnectQueryOptions<ListUserAchievementsData>): UseDataConnectQueryResult<ListUserAchievementsData, ListUserAchievementsVariables>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useListUserAchievements(vars: ListUserAchievementsVariables, options?: useDataConnectQueryOptions<ListUserAchievementsData>): UseDataConnectQueryResult<ListUserAchievementsData, ListUserAchievementsVariables>;
+```
+
+### Variables
+The `ListUserAchievements` Query requires an argument of type `ListUserAchievementsVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface ListUserAchievementsVariables {
+  userId: string;
+}
+```
+### Return Type
+Recall that calling the `ListUserAchievements` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `ListUserAchievements` Query is of type `ListUserAchievementsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ListUserAchievementsData {
+  userAchievements: ({
+    achievement: {
+      id: UUIDString;
+      title: string;
+      description?: string | null;
+      criteria?: string | null;
+      icon?: string | null;
+    } & Achievement_Key;
+      unlockedAt: TimestampString;
+  })[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `ListUserAchievements`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, ListUserAchievementsVariables } from '@firebasegen/default-connector';
+import { useListUserAchievements } from '@firebasegen/default-connector/react'
+
+export default function ListUserAchievementsComponent() {
+
+  // The `useListUserAchievements` Query hook requires an argument of type `ListUserAchievementsVariables`:
+  const listUserAchievementsVars: ListUserAchievementsVariables = {
+    userId: ..., 
+  };
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useListUserAchievements(listUserAchievementsVars);
+  // Variables can be defined inline as well.
+  const query = useListUserAchievements({ userId: ..., });
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useListUserAchievements(dataConnect, listUserAchievementsVars);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useListUserAchievements(listUserAchievementsVars, options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useListUserAchievements(dataConnect, listUserAchievementsVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.userAchievements);
   }
   return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
 }
@@ -2131,6 +2304,202 @@ export default function DeleteUserHabitComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.userHabit_delete);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## UnlockAchievement
+You can execute the `UnlockAchievement` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
+```javascript
+useUnlockAchievement(options?: useDataConnectMutationOptions<UnlockAchievementData, FirebaseError, UnlockAchievementVariables>): UseDataConnectMutationResult<UnlockAchievementData, UnlockAchievementVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useUnlockAchievement(dc: DataConnect, options?: useDataConnectMutationOptions<UnlockAchievementData, FirebaseError, UnlockAchievementVariables>): UseDataConnectMutationResult<UnlockAchievementData, UnlockAchievementVariables>;
+```
+
+### Variables
+The `UnlockAchievement` Mutation requires an argument of type `UnlockAchievementVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface UnlockAchievementVariables {
+  userId: string;
+  achievementId: UUIDString;
+}
+```
+### Return Type
+Recall that calling the `UnlockAchievement` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `UnlockAchievement` Mutation is of type `UnlockAchievementData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface UnlockAchievementData {
+  userAchievement_insert: UserAchievement_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `UnlockAchievement`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, UnlockAchievementVariables } from '@firebasegen/default-connector';
+import { useUnlockAchievement } from '@firebasegen/default-connector/react'
+
+export default function UnlockAchievementComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useUnlockAchievement();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useUnlockAchievement(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUnlockAchievement(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUnlockAchievement(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useUnlockAchievement` Mutation requires an argument of type `UnlockAchievementVariables`:
+  const unlockAchievementVars: UnlockAchievementVariables = {
+    userId: ..., 
+    achievementId: ..., 
+  };
+  mutation.mutate(unlockAchievementVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ userId: ..., achievementId: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(unlockAchievementVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.userAchievement_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## CreateAchievement
+You can execute the `CreateAchievement` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
+```javascript
+useCreateAchievement(options?: useDataConnectMutationOptions<CreateAchievementData, FirebaseError, CreateAchievementVariables>): UseDataConnectMutationResult<CreateAchievementData, CreateAchievementVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useCreateAchievement(dc: DataConnect, options?: useDataConnectMutationOptions<CreateAchievementData, FirebaseError, CreateAchievementVariables>): UseDataConnectMutationResult<CreateAchievementData, CreateAchievementVariables>;
+```
+
+### Variables
+The `CreateAchievement` Mutation requires an argument of type `CreateAchievementVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface CreateAchievementVariables {
+  title: string;
+  description?: string | null;
+  criteria?: string | null;
+  icon?: string | null;
+}
+```
+### Return Type
+Recall that calling the `CreateAchievement` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `CreateAchievement` Mutation is of type `CreateAchievementData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface CreateAchievementData {
+  achievement_insert: Achievement_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `CreateAchievement`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, CreateAchievementVariables } from '@firebasegen/default-connector';
+import { useCreateAchievement } from '@firebasegen/default-connector/react'
+
+export default function CreateAchievementComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useCreateAchievement();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useCreateAchievement(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateAchievement(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateAchievement(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useCreateAchievement` Mutation requires an argument of type `CreateAchievementVariables`:
+  const createAchievementVars: CreateAchievementVariables = {
+    title: ..., 
+    description: ..., // optional
+    criteria: ..., // optional
+    icon: ..., // optional
+  };
+  mutation.mutate(createAchievementVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ title: ..., description: ..., criteria: ..., icon: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(createAchievementVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.achievement_insert);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }
