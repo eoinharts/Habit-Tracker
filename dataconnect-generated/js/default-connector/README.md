@@ -10,6 +10,8 @@
   - [*GetUserHabit*](#getuserhabit)
   - [*GetHabitsWithUserDetails*](#gethabitswithuserdetails)
   - [*GetHabitById*](#gethabitbyid)
+  - [*ListAchievements*](#listachievements)
+  - [*ListUserAchievements*](#listuserachievements)
   - [*DebugFriendships*](#debugfriendships)
 - [**Mutations**](#mutations)
   - [*CreateUser*](#createuser)
@@ -25,6 +27,8 @@
   - [*UpdateHabitStreak*](#updatehabitstreak)
   - [*updatePoints*](#updatepoints)
   - [*DeleteUserHabit*](#deleteuserhabit)
+  - [*UnlockAchievement*](#unlockachievement)
+  - [*CreateAchievement*](#createachievement)
 
 # Generated TypeScript README
 This README will guide you through the process of using the generated TypeScript SDK package for the connector `default`. It will also provide examples on how to use your generated SDK to call your Data Connect queries and mutations.
@@ -770,6 +774,191 @@ console.log(data.habit);
 executeQuery(ref).then((response) => {
   const data = response.data;
   console.log(data.habit);
+});
+```
+
+## ListAchievements
+You can execute the `ListAchievements` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+listAchievements(): QueryPromise<ListAchievementsData, undefined>;
+
+listAchievementsRef(): QueryRef<ListAchievementsData, undefined>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```javascript
+listAchievements(dc: DataConnect): QueryPromise<ListAchievementsData, undefined>;
+
+listAchievementsRef(dc: DataConnect): QueryRef<ListAchievementsData, undefined>;
+```
+
+### Variables
+The `ListAchievements` query has no variables.
+### Return Type
+Recall that executing the `ListAchievements` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `ListAchievementsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface ListAchievementsData {
+  achievements: ({
+    id: UUIDString;
+    title: string;
+    description?: string | null;
+    criteria?: string | null;
+    icon?: string | null;
+  } & Achievement_Key)[];
+}
+```
+### Using `ListAchievements`'s action shortcut function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, listAchievements } from '@firebasegen/default-connector';
+
+
+// Call the `listAchievements()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await listAchievements();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await listAchievements(dataConnect);
+
+console.log(data.achievements);
+
+// Or, you can use the `Promise` API.
+listAchievements().then((response) => {
+  const data = response.data;
+  console.log(data.achievements);
+});
+```
+
+### Using `ListAchievements`'s `QueryRef` function
+
+```javascript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, listAchievementsRef } from '@firebasegen/default-connector';
+
+
+// Call the `listAchievementsRef()` function to get a reference to the query.
+const ref = listAchievementsRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = listAchievementsRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.achievements);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.achievements);
+});
+```
+
+## ListUserAchievements
+You can execute the `ListUserAchievements` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+listUserAchievements(vars: ListUserAchievementsVariables): QueryPromise<ListUserAchievementsData, ListUserAchievementsVariables>;
+
+listUserAchievementsRef(vars: ListUserAchievementsVariables): QueryRef<ListUserAchievementsData, ListUserAchievementsVariables>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```javascript
+listUserAchievements(dc: DataConnect, vars: ListUserAchievementsVariables): QueryPromise<ListUserAchievementsData, ListUserAchievementsVariables>;
+
+listUserAchievementsRef(dc: DataConnect, vars: ListUserAchievementsVariables): QueryRef<ListUserAchievementsData, ListUserAchievementsVariables>;
+```
+
+### Variables
+The `ListUserAchievements` query requires an argument of type `ListUserAchievementsVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+
+```javascript
+export interface ListUserAchievementsVariables {
+  userId: string;
+}
+```
+### Return Type
+Recall that executing the `ListUserAchievements` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `ListUserAchievementsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface ListUserAchievementsData {
+  userAchievements: ({
+    achievement: {
+      id: UUIDString;
+      title: string;
+      description?: string | null;
+      criteria?: string | null;
+      icon?: string | null;
+    } & Achievement_Key;
+      unlockedAt: TimestampString;
+  })[];
+}
+```
+### Using `ListUserAchievements`'s action shortcut function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, listUserAchievements, ListUserAchievementsVariables } from '@firebasegen/default-connector';
+
+// The `ListUserAchievements` query requires an argument of type `ListUserAchievementsVariables`:
+const listUserAchievementsVars: ListUserAchievementsVariables = {
+  userId: ..., 
+};
+
+// Call the `listUserAchievements()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await listUserAchievements(listUserAchievementsVars);
+// Variables can be defined inline as well.
+const { data } = await listUserAchievements({ userId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await listUserAchievements(dataConnect, listUserAchievementsVars);
+
+console.log(data.userAchievements);
+
+// Or, you can use the `Promise` API.
+listUserAchievements(listUserAchievementsVars).then((response) => {
+  const data = response.data;
+  console.log(data.userAchievements);
+});
+```
+
+### Using `ListUserAchievements`'s `QueryRef` function
+
+```javascript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, listUserAchievementsRef, ListUserAchievementsVariables } from '@firebasegen/default-connector';
+
+// The `ListUserAchievements` query requires an argument of type `ListUserAchievementsVariables`:
+const listUserAchievementsVars: ListUserAchievementsVariables = {
+  userId: ..., 
+};
+
+// Call the `listUserAchievementsRef()` function to get a reference to the query.
+const ref = listUserAchievementsRef(listUserAchievementsVars);
+// Variables can be defined inline as well.
+const ref = listUserAchievementsRef({ userId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = listUserAchievementsRef(dataConnect, listUserAchievementsVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.userAchievements);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.userAchievements);
 });
 ```
 
@@ -2171,6 +2360,206 @@ console.log(data.userHabit_delete);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.userHabit_delete);
+});
+```
+
+## UnlockAchievement
+You can execute the `UnlockAchievement` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+unlockAchievement(vars: UnlockAchievementVariables): MutationPromise<UnlockAchievementData, UnlockAchievementVariables>;
+
+unlockAchievementRef(vars: UnlockAchievementVariables): MutationRef<UnlockAchievementData, UnlockAchievementVariables>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```javascript
+unlockAchievement(dc: DataConnect, vars: UnlockAchievementVariables): MutationPromise<UnlockAchievementData, UnlockAchievementVariables>;
+
+unlockAchievementRef(dc: DataConnect, vars: UnlockAchievementVariables): MutationRef<UnlockAchievementData, UnlockAchievementVariables>;
+```
+
+### Variables
+The `UnlockAchievement` mutation requires an argument of type `UnlockAchievementVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+
+```javascript
+export interface UnlockAchievementVariables {
+  userId: string;
+  achievementId: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `UnlockAchievement` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UnlockAchievementData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface UnlockAchievementData {
+  userAchievement_insert: UserAchievement_Key;
+}
+```
+### Using `UnlockAchievement`'s action shortcut function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, unlockAchievement, UnlockAchievementVariables } from '@firebasegen/default-connector';
+
+// The `UnlockAchievement` mutation requires an argument of type `UnlockAchievementVariables`:
+const unlockAchievementVars: UnlockAchievementVariables = {
+  userId: ..., 
+  achievementId: ..., 
+};
+
+// Call the `unlockAchievement()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await unlockAchievement(unlockAchievementVars);
+// Variables can be defined inline as well.
+const { data } = await unlockAchievement({ userId: ..., achievementId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await unlockAchievement(dataConnect, unlockAchievementVars);
+
+console.log(data.userAchievement_insert);
+
+// Or, you can use the `Promise` API.
+unlockAchievement(unlockAchievementVars).then((response) => {
+  const data = response.data;
+  console.log(data.userAchievement_insert);
+});
+```
+
+### Using `UnlockAchievement`'s `MutationRef` function
+
+```javascript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, unlockAchievementRef, UnlockAchievementVariables } from '@firebasegen/default-connector';
+
+// The `UnlockAchievement` mutation requires an argument of type `UnlockAchievementVariables`:
+const unlockAchievementVars: UnlockAchievementVariables = {
+  userId: ..., 
+  achievementId: ..., 
+};
+
+// Call the `unlockAchievementRef()` function to get a reference to the mutation.
+const ref = unlockAchievementRef(unlockAchievementVars);
+// Variables can be defined inline as well.
+const ref = unlockAchievementRef({ userId: ..., achievementId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = unlockAchievementRef(dataConnect, unlockAchievementVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.userAchievement_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.userAchievement_insert);
+});
+```
+
+## CreateAchievement
+You can execute the `CreateAchievement` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+createAchievement(vars: CreateAchievementVariables): MutationPromise<CreateAchievementData, CreateAchievementVariables>;
+
+createAchievementRef(vars: CreateAchievementVariables): MutationRef<CreateAchievementData, CreateAchievementVariables>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```javascript
+createAchievement(dc: DataConnect, vars: CreateAchievementVariables): MutationPromise<CreateAchievementData, CreateAchievementVariables>;
+
+createAchievementRef(dc: DataConnect, vars: CreateAchievementVariables): MutationRef<CreateAchievementData, CreateAchievementVariables>;
+```
+
+### Variables
+The `CreateAchievement` mutation requires an argument of type `CreateAchievementVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+
+```javascript
+export interface CreateAchievementVariables {
+  title: string;
+  description?: string | null;
+  criteria?: string | null;
+  icon?: string | null;
+}
+```
+### Return Type
+Recall that executing the `CreateAchievement` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateAchievementData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+```javascript
+export interface CreateAchievementData {
+  achievement_insert: Achievement_Key;
+}
+```
+### Using `CreateAchievement`'s action shortcut function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createAchievement, CreateAchievementVariables } from '@firebasegen/default-connector';
+
+// The `CreateAchievement` mutation requires an argument of type `CreateAchievementVariables`:
+const createAchievementVars: CreateAchievementVariables = {
+  title: ..., 
+  description: ..., // optional
+  criteria: ..., // optional
+  icon: ..., // optional
+};
+
+// Call the `createAchievement()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createAchievement(createAchievementVars);
+// Variables can be defined inline as well.
+const { data } = await createAchievement({ title: ..., description: ..., criteria: ..., icon: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createAchievement(dataConnect, createAchievementVars);
+
+console.log(data.achievement_insert);
+
+// Or, you can use the `Promise` API.
+createAchievement(createAchievementVars).then((response) => {
+  const data = response.data;
+  console.log(data.achievement_insert);
+});
+```
+
+### Using `CreateAchievement`'s `MutationRef` function
+
+```javascript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createAchievementRef, CreateAchievementVariables } from '@firebasegen/default-connector';
+
+// The `CreateAchievement` mutation requires an argument of type `CreateAchievementVariables`:
+const createAchievementVars: CreateAchievementVariables = {
+  title: ..., 
+  description: ..., // optional
+  criteria: ..., // optional
+  icon: ..., // optional
+};
+
+// Call the `createAchievementRef()` function to get a reference to the mutation.
+const ref = createAchievementRef(createAchievementVars);
+// Variables can be defined inline as well.
+const ref = createAchievementRef({ title: ..., description: ..., criteria: ..., icon: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createAchievementRef(dataConnect, createAchievementVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.achievement_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.achievement_insert);
 });
 ```
 

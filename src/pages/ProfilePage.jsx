@@ -185,7 +185,6 @@ const ProfilePage = () => {
   };
 
   const handleAcceptFriend = async (friendId) => {
-    // 1) Optimistically move the friend in local state:
     setFriends((prev) => {
       const movedFriend = prev.pending.find((p) => p.id === friendId);
       return {
@@ -195,14 +194,12 @@ const ProfilePage = () => {
       };
     });
 
-    // 2) Then call the backend
     try {
       await acceptFriendRequest({ user1Id: friendId, user2Id: user.uid });
 
       await fetchUserData(user.uid);
       message.success("Friend request accepted");
     } catch (err) {
-      // If error, revert local state or show error
       console.error("Error accepting friend:", err);
       message.error("Failed to accept request");
     }

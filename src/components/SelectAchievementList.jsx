@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { List, Card, Button, message, Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { getAllAchievements, addAchievement } from '../utils/fireStore';
-import AddAchievementForm from './AddAchievementForm';
+
 
 const SelectAchievementList = ({ userId, onSuccess, onClose }) => {
     const [achievements, setAchievements] = useState([]);
