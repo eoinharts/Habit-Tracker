@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Input, message, Segmented } from "antd";
+import { Button, Form, Input, message, Space, Popover, Segmented } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import {
   createHabit,
@@ -13,6 +13,7 @@ import {
 import { useAuth } from "../../contexts/AuthProvider";
 import { useNavigate } from "react-router";
 import AchievementPopup from "../../components/AchievementPopup/AchievementPopup.jsx"; 
+import EmojiSelector from "../../components/EmojiSelector";
 
 // Helper Submit Button (Unchanged from original)
 const SubmitButton = ({ form, children, isLoading }) => {
@@ -24,6 +25,7 @@ const SubmitButton = ({ form, children, isLoading }) => {
       .then(() => setSubmittable(true))
       .catch(() => setSubmittable(false));
   }, [form, values]);
+
   return (
     <Button
       type="primary"
@@ -177,17 +179,17 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
       });
       const newHabitId = res?.data?.habit_insert?.id;
       if (!newHabitId) {
-          throw new Error("Failed to get new habit ID after creation.");
+        throw new Error("Failed to get new habit ID after creation.");
       }
       console.log("Created habit id:", newHabitId);
 
       // Initialize streak
       await updateHabitStreak({
-          habitId: newHabitId,
-          currentStreak: 0,
-          longestStreak: 0,
-          // Set last tracked date to yesterday to allow tracking today
-          lastTrackedDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+        habitId: newHabitId,
+        currentStreak: 0,
+        longestStreak: 0,
+        // Set last tracked date to yesterday to allow tracking today
+        lastTrackedDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       });
       console.log("Streak initialized for habit:", newHabitId);
       message.success("Habit created successfully!");
@@ -196,9 +198,9 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
     } catch (error) {
       console.error("Error creating habit or initializing streak:", error);
       if (error.message?.includes("$description (String) is missing")) {
-          message.error("Habit creation failed: Description is missing.");
+        message.error("Habit creation failed: Description is missing.");
       } else {
-         message.error(`Failed to create habit: ${error.message || "Unknown error"}`);
+        message.error(`Failed to create habit: ${error.message || "Unknown error"}`);
       }
       return false; // Failure
     }
