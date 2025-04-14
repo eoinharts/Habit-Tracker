@@ -64,7 +64,7 @@ const FriendPage = () => {
                 <Col>
                   <Statistic
                     title="Total Points"
-                    value={friend.points || 0}
+                    value={friend.totalPoints || 0}
                     prefix={<StarOutlined />}
                     valueStyle={{ color: '#52c41a' }}
                   />
