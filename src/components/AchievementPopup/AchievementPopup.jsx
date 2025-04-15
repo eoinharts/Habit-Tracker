@@ -10,7 +10,7 @@ const AchievementPopup = ({
   badgeNumber,
   badgeImage,
   title,
-  message,
+  customMessage,
 }) => {
   useEffect(() => {
     if (visible) {
@@ -24,7 +24,7 @@ const AchievementPopup = ({
 });
     }
   }, [visible]);
-
+  console.log("Popup received:", { badgeImage, title, customMessage });
   return (
     <Modal
       open={visible}
@@ -54,7 +54,7 @@ const AchievementPopup = ({
           </div>
           <div className="text-box">
           <h2>{title || "Congrats!"}</h2>
-          <p>{message || "You just reached your first habit goal!"}</p>
+          <p>{customMessage || "You just reached your first habit goal!"}</p>
           {badgeImage?.includes("blue_badge") && (
   <>
     <p className="secondary">

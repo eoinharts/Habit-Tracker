@@ -54,17 +54,46 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
 
   // --- Achievement Configuration ---
  
-  const GOOD_HABIT_ACHIEVEMENTS = {
-    1: "d617ec69b4434be1b73acd7866172dff",  // ID for 2 Good Habits
-    5: "f51ef17a74614193ba6d45d89b67b7b5",  // ID for 5 Good Habits
-    10: "4489c9eba9a7489ca5b2e8631d08f054", // ID for 10 Good Habits
+  const GOOD_HABIT_ACHIEVEMENT_DATA = {
+    1: {
+      id: "d617ec69b4434be1b73acd7866172dff",
+      badgeImage: "/badges/bronze_badge.png",
+      title: "Good Habit Starter 🌱",
+      message: "You added your first good habit! Great work!"
+    },
+    5: {
+      id: "f51ef17a74614193ba6d45d89b67b7b5",
+      badgeImage: "/badges/silver_badge.png",
+      title: "Good Habit Climber ⛰️",
+      message: "You’ve added 5 good habits. Keep growing!"
+    },
+    10: {
+      id: "4489c9eba9a7489ca5b2e8631d08f054",
+      badgeImage: "/badges/gold_badge.png",
+      title: "Good Habit Master 🌟",
+      message: "10 good habits added! You're unstoppable!"
+    }
   };
-
   
-  const BAD_HABIT_ACHIEVEMENTS = {
-    1: "6808cc372cee4b7e99009615e44103bd", // ID for 1st Bad Habit Logged
-    5: "d51da255e6f94da4a42f333ac97b5d9e", // ID for 5 Bad Habits Logged
-    10: "4bc71f655a3e4eb4bb0c4e88450e6ede", // ID for 10 Bad Habits Logged
+  const BAD_HABIT_ACHIEVEMENT_DATA = {
+    1: {
+      id: "6808cc372cee4b7e99009615e44103bd",
+      badgeImage: "/badges/bronze_badge.png",
+      title: "First Step to Change 🔄",
+      message: "You've logged your first bad habit. Awareness is key!"
+    },
+    5: {
+      id: "d51da255e6f94da4a42f333ac97b5d9e",
+      badgeImage: "/badges/silver_badge.png",
+      title: "Breaking the Cycle ⛓️",
+      message: "You’ve logged 5 bad habits. Keep moving forward!"
+    },
+    10: {
+      id: "4bc71f655a3e4eb4bb0c4e88450e6ede",
+      badgeImage: "/badges/gold_badge.png",
+      title: "Breaking Bad Habits Champ 🧹",
+      message: "10 bad habits logged. You're taking control!"
+    }
   };
   // --- End Achievement Configuration ---
 
@@ -94,21 +123,25 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
       const allHabits = habitsRes?.data?.habits || [];
 
       let habitMap, currentCount;
-      if (newHabitCategory === "Good Habit") {
-        habitMap = GOOD_HABIT_ACHIEVEMENTS;
-        currentCount = allHabits.filter(h => h.category === "Good Habit").length;
-        console.log("Good Habits Count:", currentCount);
-      } else if (newHabitCategory === "Bad Habit") {
-        habitMap = BAD_HABIT_ACHIEVEMENTS;
-        currentCount = allHabits.filter(h => h.category === "Bad Habit").length;
-        console.log("Bad Habits Count:", currentCount);
-      } else {
+        if (newHabitCategory === "Good Habit") {
+          habitMap = GOOD_HABIT_ACHIEVEMENT_DATA;
+          currentCount = allHabits.filter(h => h.category === "Good Habit").length;
+          console.log("Good Habits Count:", currentCount);
+        } else if (newHabitCategory === "Bad Habit") {
+          habitMap = BAD_HABIT_ACHIEVEMENT_DATA;
+          currentCount = allHabits.filter(h => h.category === "Bad Habit").length;
+          console.log("Bad Habits Count:", currentCount);
+        }
+        else {
         return false; // Should not happen with current form setup
       }
 
-      const achievementId = habitMap[currentCount];
+      
 
-      if (achievementId) {
+      const achievement = habitMap[currentCount];
+      const achievementId = achievement?.id;
+
+       if (achievementId) {
         console.log(`Threshold count ${currentCount} reached for ${newHabitCategory}. Attempting unlock...`);
         // --- Optional but Recommended: Check if already unlocked ---
         // This requires another fetch (e.g., getUserAchievements) and might complicate the flow slightly.
@@ -128,12 +161,18 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
             : `Unlocked achievement for ${currentCount} bad habit(s)!`;
           message.success(successMsg);
 
-          // Set state for popup
-          setPopupBadgeNumber(currentCount);
-          setPopupMessage(newHabitCategory === "Good Habit"
-             ? `You have reached ${currentCount} Good Habit(s)!`
-             : `You have logged ${currentCount} Bad Habit(s)!`
-          );
+          const achievementData = newHabitCategory === "Good Habit"
+          ? GOOD_HABIT_ACHIEVEMENT_DATA[currentCount]
+          : BAD_HABIT_ACHIEVEMENT_DATA[currentCount];
+        
+        if (achievementData) {
+          setPopupVisible(true);
+          setPopupMessage({
+            badgeImage: achievementData.badgeImage,
+            title: achievementData.title,
+            message: achievementData.message
+          });
+        }
           setPopupVisible(true);
           popupWasSet = true; // Mark that popup state was set
 
@@ -348,10 +387,11 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
       {/* Achievement Popup */}
       {/* It only renders when popupVisible is true */}
       <AchievementPopup
-        visible={popupVisible}
-        onClose={handlePopupClose} // Use the handler that navigates after close
-        badgeNumber={popupBadgeNumber}
-        customMessage={popupMessage}
+       visible={popupVisible}
+       onClose={handlePopupClose}
+       badgeImage={popupMessage?.badgeImage}
+       title={popupMessage?.title}
+       customMessage={popupMessage?.message}
       />
     </>
   );

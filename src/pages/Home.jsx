@@ -60,31 +60,42 @@ const Home = () => {
 
   // --- Total Points Achievement Logic ---
   // Mapping thresholds for total points (for testing: 2, 5, 10)
-  const POINTS_ACHIEVEMENTS = {
-    2: "97a70902845e45d28cbc50702adec7e6",  // 2 Points Achieved
-    5: "a3197b9ad87546f2b32ea4f22677b1f2",  // 5 Points Achieved
-    10: "99f489d3729f409f8f764a25fe21702a", // 10 Points Achieved
+  const POINTS_ACHIEVEMENT_DATA = {
+    2: {
+      id: "97a70902845e45d28cbc50702adec7e6",
+      badgeImage: "/badges/bronze_badge.png",
+      title: "Bronze Beginner 🎉",
+      message: "You’ve reached 2 total points! Great start!"
+    },
+    5: {
+      id: "a3197b9ad87546f2b32ea4f22677b1f2",
+      badgeImage: "/badges/silver_badge.png",
+      title: "Silver Climber 🥈",
+      message: "You’ve earned 5 points! Keep up the momentum!"
+    },
+    10: {
+      id: "99f489d3729f409f8f764a25fe21702a",
+      badgeImage: "/badges/gold_badge.png",
+      title: "Golden Master 🏆",
+      message: "Amazing! You've reached 10 total points!"
+    }
   };
 
   useEffect(() => {
     if (userData && typeof userData.totalPoints === "number") {
       console.log("Checking total points:", userData.totalPoints);
-      // Loop through each threshold. Here we trigger if the user's totalPoints exactly equals the threshold.
-      Object.entries(POINTS_ACHIEVEMENTS).forEach(([thresholdStr, achievementId]) => {
+      Object.entries(POINTS_ACHIEVEMENT_DATA).forEach(([thresholdStr, achievement]) => {
         const threshold = Number(thresholdStr);
         if (userData.totalPoints === threshold) {
-          unlockAchievement({ userId: userData.id, achievementId })
+          unlockAchievement({ userId: userData.id, achievementId: achievement.id })
             .then(() => {
-              message.success(`Unlocked achievement for reaching ${threshold} total points!`);
+              message.success(`Unlocked achievement: ${achievement.title}`);
+              console.log("Achievement object keys:", Object.keys(achievement));
+              console.log("Achievement.message:", achievement.message);
               setPopupData({
-                badgeImage:
-                  threshold === 2
-                    ? "/badges/points_badge_bronze.png"
-                    : threshold === 5
-                    ? "/badges/points_badge_silver.png"
-                    : "/badges/points_badge_gold.png",
-                title: "Points Achievement Unlocked!",
-                message: `You have reached ${threshold} total points!`
+                badgeImage: achievement.badgeImage || "/badges/default_badge.png",
+                title: achievement.title || "Points Achievement Unlocked!",
+                message: achievement.message || `You've reached ${threshold} total points! 🎉`,
               });
               setPopupVisible(true);
             })
