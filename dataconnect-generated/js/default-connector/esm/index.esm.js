@@ -236,14 +236,24 @@ export function listAchievements(dc) {
   return executeQuery(listAchievementsRef(dc));
 }
 
-export function listUserAchievementsRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+export function listMyAchievementsRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListUserAchievements', inputVars);
+  return queryRef(dcInstance, 'ListMyAchievements');
 }
 
-export function listUserAchievements(dcOrVars, vars) {
-  return executeQuery(listUserAchievementsRef(dcOrVars, vars));
+export function listMyAchievements(dc) {
+  return executeQuery(listMyAchievementsRef(dc));
+}
+
+export function listUserAchievementsRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListUserAchievements');
+}
+
+export function listUserAchievements(dc) {
+  return executeQuery(listUserAchievementsRef(dc));
 }
 
 export function debugFriendshipsRef(dc) {

@@ -138,9 +138,21 @@ query ListAchievements @auth(level: NO_ACCESS) {
   }
 }
 
+query ListMyAchievements @auth(level: USER) {
+  userAchievements(where: { user: { id: { eq: "auth.uid" } } }) {
+    achievement {
+      id
+      title
+      description
+      criteria
+      icon
+    }
+    unlockedAt
+  }
+}
 
-query ListUserAchievements($userId: String!) @auth(level: NO_ACCESS) {
-  userAchievements(where: { user: { id: { eq: $userId } } }) {
+query ListUserAchievements @auth(level: USER) {
+  userAchievements(where: { user: { id: { eq: "auth.uid" } } }) {
     achievement {
       id
       title

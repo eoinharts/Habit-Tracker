@@ -1,4 +1,4 @@
-const { createUserRef, addFriendRef, deleteFriendRef, removeReverseFriendRef, acceptFriendRequestRef, declineFriendRequestRef, addReverseFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, updatePointsRef, deleteUserHabitRef, unlockAchievementRef, createAchievementRef, getUserDetailsRef, getAllUsersRef, listFriendsRef, listIncomingRequestsRef, getUserHabitRef, getHabitsWithUserDetailsRef, getHabitByIdRef, listAchievementsRef, listUserAchievementsRef, debugFriendshipsRef, connectorConfig } = require('../index.cjs.js');
+const { createUserRef, addFriendRef, deleteFriendRef, removeReverseFriendRef, acceptFriendRequestRef, declineFriendRequestRef, addReverseFriendRef, createHabitRef, updateHabitRef, deleteHabitRef, updateHabitStreakRef, updatePointsRef, deleteUserHabitRef, unlockAchievementRef, createAchievementRef, getUserDetailsRef, getAllUsersRef, listFriendsRef, listIncomingRequestsRef, getUserHabitRef, getHabitsWithUserDetailsRef, getHabitByIdRef, listAchievementsRef, listMyAchievementsRef, listUserAchievementsRef, debugFriendshipsRef, connectorConfig } = require('../index.cjs.js');
 const { validateArgs, CallerSdkTypeEnum } = require('firebase/data-connect');
 const { useDataConnectQuery, useDataConnectMutation, validateReactArgs } = require('@tanstack-query-firebase/react/data-connect');
 
@@ -171,9 +171,15 @@ exports.useListAchievements = function useListAchievements(dcOrOptions, options)
   return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
 
-exports.useListUserAchievements = function useListUserAchievements(dcOrVars, varsOrOptions, options) {
-  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateReactArgs(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
-  const ref = listUserAchievementsRef(dcInstance, inputVars);
+exports.useListMyAchievements = function useListMyAchievements(dcOrOptions, options) {
+  const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);
+  const ref = listMyAchievementsRef(dcInstance);
+  return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useListUserAchievements = function useListUserAchievements(dcOrOptions, options) {
+  const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);
+  const ref = listUserAchievementsRef(dcInstance);
   return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
 

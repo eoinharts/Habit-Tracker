@@ -259,7 +259,7 @@ export interface ListIncomingRequestsData {
   })[];
 }
 
-export interface ListUserAchievementsData {
+export interface ListMyAchievementsData {
   userAchievements: ({
     achievement: {
       id: UUIDString;
@@ -272,8 +272,17 @@ export interface ListUserAchievementsData {
   })[];
 }
 
-export interface ListUserAchievementsVariables {
-  userId: string;
+export interface ListUserAchievementsData {
+  userAchievements: ({
+    achievement: {
+      id: UUIDString;
+      title: string;
+      description?: string | null;
+      criteria?: string | null;
+      icon?: string | null;
+    } & Achievement_Key;
+      unlockedAt: TimestampString;
+  })[];
 }
 
 export interface RemoveReverseFriendData {
@@ -532,12 +541,20 @@ export function listAchievements(): QueryPromise<ListAchievementsData, undefined
 export function listAchievements(dc: DataConnect): QueryPromise<ListAchievementsData, undefined>;
 
 /* Allow users to create refs without passing in DataConnect */
-export function listUserAchievementsRef(vars: ListUserAchievementsVariables): QueryRef<ListUserAchievementsData, ListUserAchievementsVariables>;
+export function listMyAchievementsRef(): QueryRef<ListMyAchievementsData, undefined>;
 /* Allow users to pass in custom DataConnect instances */
-export function listUserAchievementsRef(dc: DataConnect, vars: ListUserAchievementsVariables): QueryRef<ListUserAchievementsData, ListUserAchievementsVariables>;
+export function listMyAchievementsRef(dc: DataConnect): QueryRef<ListMyAchievementsData, undefined>;
 
-export function listUserAchievements(vars: ListUserAchievementsVariables): QueryPromise<ListUserAchievementsData, ListUserAchievementsVariables>;
-export function listUserAchievements(dc: DataConnect, vars: ListUserAchievementsVariables): QueryPromise<ListUserAchievementsData, ListUserAchievementsVariables>;
+export function listMyAchievements(): QueryPromise<ListMyAchievementsData, undefined>;
+export function listMyAchievements(dc: DataConnect): QueryPromise<ListMyAchievementsData, undefined>;
+
+/* Allow users to create refs without passing in DataConnect */
+export function listUserAchievementsRef(): QueryRef<ListUserAchievementsData, undefined>;
+/* Allow users to pass in custom DataConnect instances */
+export function listUserAchievementsRef(dc: DataConnect): QueryRef<ListUserAchievementsData, undefined>;
+
+export function listUserAchievements(): QueryPromise<ListUserAchievementsData, undefined>;
+export function listUserAchievements(dc: DataConnect): QueryPromise<ListUserAchievementsData, undefined>;
 
 /* Allow users to create refs without passing in DataConnect */
 export function debugFriendshipsRef(): QueryRef<DebugFriendshipsData, undefined>;

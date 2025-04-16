@@ -11,6 +11,7 @@
   - [*GetHabitsWithUserDetails*](#gethabitswithuserdetails)
   - [*GetHabitById*](#gethabitbyid)
   - [*ListAchievements*](#listachievements)
+  - [*ListMyAchievements*](#listmyachievements)
   - [*ListUserAchievements*](#listuserachievements)
   - [*DebugFriendships*](#debugfriendships)
 - [**Mutations**](#mutations)
@@ -859,28 +860,107 @@ executeQuery(ref).then((response) => {
 });
 ```
 
-## ListUserAchievements
-You can execute the `ListUserAchievements` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+## ListMyAchievements
+You can execute the `ListMyAchievements` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
 ```javascript
-listUserAchievements(vars: ListUserAchievementsVariables): QueryPromise<ListUserAchievementsData, ListUserAchievementsVariables>;
+listMyAchievements(): QueryPromise<ListMyAchievementsData, undefined>;
 
-listUserAchievementsRef(vars: ListUserAchievementsVariables): QueryRef<ListUserAchievementsData, ListUserAchievementsVariables>;
+listMyAchievementsRef(): QueryRef<ListMyAchievementsData, undefined>;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```javascript
-listUserAchievements(dc: DataConnect, vars: ListUserAchievementsVariables): QueryPromise<ListUserAchievementsData, ListUserAchievementsVariables>;
+listMyAchievements(dc: DataConnect): QueryPromise<ListMyAchievementsData, undefined>;
 
-listUserAchievementsRef(dc: DataConnect, vars: ListUserAchievementsVariables): QueryRef<ListUserAchievementsData, ListUserAchievementsVariables>;
+listMyAchievementsRef(dc: DataConnect): QueryRef<ListMyAchievementsData, undefined>;
 ```
 
 ### Variables
-The `ListUserAchievements` query requires an argument of type `ListUserAchievementsVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
+The `ListMyAchievements` query has no variables.
+### Return Type
+Recall that executing the `ListMyAchievements` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
+The `data` property is an object of type `ListMyAchievementsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 ```javascript
-export interface ListUserAchievementsVariables {
-  userId: string;
+export interface ListMyAchievementsData {
+  userAchievements: ({
+    achievement: {
+      id: UUIDString;
+      title: string;
+      description?: string | null;
+      criteria?: string | null;
+      icon?: string | null;
+    } & Achievement_Key;
+      unlockedAt: TimestampString;
+  })[];
 }
 ```
+### Using `ListMyAchievements`'s action shortcut function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, listMyAchievements } from '@firebasegen/default-connector';
+
+
+// Call the `listMyAchievements()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await listMyAchievements();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await listMyAchievements(dataConnect);
+
+console.log(data.userAchievements);
+
+// Or, you can use the `Promise` API.
+listMyAchievements().then((response) => {
+  const data = response.data;
+  console.log(data.userAchievements);
+});
+```
+
+### Using `ListMyAchievements`'s `QueryRef` function
+
+```javascript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, listMyAchievementsRef } from '@firebasegen/default-connector';
+
+
+// Call the `listMyAchievementsRef()` function to get a reference to the query.
+const ref = listMyAchievementsRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = listMyAchievementsRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.userAchievements);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.userAchievements);
+});
+```
+
+## ListUserAchievements
+You can execute the `ListUserAchievements` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
+```javascript
+listUserAchievements(): QueryPromise<ListUserAchievementsData, undefined>;
+
+listUserAchievementsRef(): QueryRef<ListUserAchievementsData, undefined>;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```javascript
+listUserAchievements(dc: DataConnect): QueryPromise<ListUserAchievementsData, undefined>;
+
+listUserAchievementsRef(dc: DataConnect): QueryRef<ListUserAchievementsData, undefined>;
+```
+
+### Variables
+The `ListUserAchievements` query has no variables.
 ### Return Type
 Recall that executing the `ListUserAchievements` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
@@ -903,27 +983,21 @@ export interface ListUserAchievementsData {
 
 ```javascript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, listUserAchievements, ListUserAchievementsVariables } from '@firebasegen/default-connector';
+import { connectorConfig, listUserAchievements } from '@firebasegen/default-connector';
 
-// The `ListUserAchievements` query requires an argument of type `ListUserAchievementsVariables`:
-const listUserAchievementsVars: ListUserAchievementsVariables = {
-  userId: ..., 
-};
 
 // Call the `listUserAchievements()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await listUserAchievements(listUserAchievementsVars);
-// Variables can be defined inline as well.
-const { data } = await listUserAchievements({ userId: ..., });
+const { data } = await listUserAchievements();
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await listUserAchievements(dataConnect, listUserAchievementsVars);
+const { data } = await listUserAchievements(dataConnect);
 
 console.log(data.userAchievements);
 
 // Or, you can use the `Promise` API.
-listUserAchievements(listUserAchievementsVars).then((response) => {
+listUserAchievements().then((response) => {
   const data = response.data;
   console.log(data.userAchievements);
 });
@@ -933,21 +1007,15 @@ listUserAchievements(listUserAchievementsVars).then((response) => {
 
 ```javascript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, listUserAchievementsRef, ListUserAchievementsVariables } from '@firebasegen/default-connector';
+import { connectorConfig, listUserAchievementsRef } from '@firebasegen/default-connector';
 
-// The `ListUserAchievements` query requires an argument of type `ListUserAchievementsVariables`:
-const listUserAchievementsVars: ListUserAchievementsVariables = {
-  userId: ..., 
-};
 
 // Call the `listUserAchievementsRef()` function to get a reference to the query.
-const ref = listUserAchievementsRef(listUserAchievementsVars);
-// Variables can be defined inline as well.
-const ref = listUserAchievementsRef({ userId: ..., });
+const ref = listUserAchievementsRef();
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = listUserAchievementsRef(dataConnect, listUserAchievementsVars);
+const ref = listUserAchievementsRef(dataConnect);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.

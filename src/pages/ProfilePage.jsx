@@ -15,6 +15,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import {
   getUserDetails,
+  listMyAchievements,
   listFriends,
   deleteFriend, // Updated import
   removeReverseFriend,
@@ -33,15 +34,14 @@ import SelectAchievementList from "../components/SelectAchievementList";
 import HeaderContainer from "../components/HeaderContainer.jsx";
 import AchievementsBadgeContainer from "../components/AchievementsBadgeContainer/AchievementsBadgeContainer";
 import AchievementPopup from "../components/AchievementPopup/AchievementPopup.jsx";
-
-import { defaultAchievements } from "../utils/achievementData";
+import { ALL_ACHIEVEMENTS } from "../utils/achievementData";
 const { Title, Text } = Typography;
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [friends, setFriends] = useState({ accepted: [], pending: [] });
-  const [achievements, setAchievements] = useState(defaultAchievements);
+  const [achievements, setAchievements] = useState(ALL_ACHIEVEMENTS);
   const [userPoints, setUserPoints] = useState(0);
   const [showFriendsModal, setShowFriendsModal] = useState(false);
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
@@ -54,16 +54,24 @@ const ProfilePage = () => {
 
   const fetchUserData = async (userId) => {
     try {
-      const [debugRes, userDetailsRes] = await Promise.all([
+      console.log("👤 Current Firebase user ID:", userId); // ✅ Add this line
+      console.log("📡 Calling listUserAchievements with no args");
+      const [debugRes, userDetailsRes, userAchievementsRes] = await Promise.all([
         debugFriendships({}, { cache: "no-store" }),
         getUserDetails({ userId }),
+        listMyAchievements(), // ✅ NEW — no variables needed because the query uses auth.uid
       ]);
   
       const userData = userDetailsRes?.data?.users?.[0] || {};
-      console.log("🔍 Full userData response:", userData);
       const allDebug = debugRes?.data?.friendships || [];
+      const unlockedAchievements = userAchievementsRes?.data?.userAchievements || [];
   
-      // Map accepted friendships
+      // 🧠 Extract just the IDs (adjust the key if needed — sometimes it's "achievementId")
+      const earnedIds = unlockedAchievements.map((a) => a.achievement_id);
+  
+      console.log("🎯 Earned Achievement IDs:", earnedIds);
+  
+      // Friend Mapping (unchanged)
       const accepted = await Promise.all(
         allDebug
           .filter(
@@ -84,7 +92,6 @@ const ProfilePage = () => {
           })
       );
   
-      // Map pending friendships
       const pending = await Promise.all(
         allDebug
           .filter(
@@ -106,7 +113,6 @@ const ProfilePage = () => {
           })
       );
   
-      // Helper function: deduplicate by friend ID (keep first occurrence)
       const deduplicateById = (arr) => {
         return arr.filter((item, index, self) =>
           index === self.findIndex((t) => t.id === item.id)
@@ -116,14 +122,8 @@ const ProfilePage = () => {
       const uniqueAccepted = deduplicateById(accepted);
   
       setFriends({ accepted: uniqueAccepted, pending });
-      setAchievements(
-        userData.achievements && userData.achievements.length > 0
-          ? userData.achievements
-          : defaultAchievements
-      );
-      // TEMP fallback: use default achievements for front-end display while backend habit tracking is still in progress.
-// Once userData.achievements is implemented and contains real data, this will automatically switch to use that.
-      setUserPoints(userData.points || 0);
+      setAchievements(earnedIds); // ✅ These will be passed to your badge container
+      setUserPoints(userData.totalPoints || 0);
     } catch (err) {
       console.error("❌ Error loading profile:", err);
       message.error("Failed to load profile data");
@@ -185,6 +185,7 @@ const ProfilePage = () => {
   };
 
   const handleAcceptFriend = async (friendId) => {
+    // 1) Optimistically move the friend in local state:
     setFriends((prev) => {
       const movedFriend = prev.pending.find((p) => p.id === friendId);
       return {
@@ -194,12 +195,14 @@ const ProfilePage = () => {
       };
     });
 
+    // 2) Then call the backend
     try {
       await acceptFriendRequest({ user1Id: friendId, user2Id: user.uid });
 
       await fetchUserData(user.uid);
       message.success("Friend request accepted");
     } catch (err) {
+      // If error, revert local state or show error
       console.error("Error accepting friend:", err);
       message.error("Failed to accept request");
     }
@@ -309,7 +312,8 @@ const ProfilePage = () => {
       ),
     },
   ];
-
+  console.log("🏅 Earned Achievements:", achievements);
+  console.log("🏅 Earned Achievement IDs:", achievements.map(a => a.id));
   return (
     <>
       <HeaderContainer title="Your Profile" />
@@ -363,7 +367,7 @@ const ProfilePage = () => {
           
 {/* Achievement Badges Section */}
 
-<AchievementsBadgeContainer achievements={achievements} />
+<AchievementsBadgeContainer earnedAchievementIds={achievements.map(a => a.id)} />
         </div>
 
         {/* Modals */}

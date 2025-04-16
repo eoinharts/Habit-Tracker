@@ -14,6 +14,7 @@
   - [*GetHabitsWithUserDetails*](#gethabitswithuserdetails)
   - [*GetHabitById*](#gethabitbyid)
   - [*ListAchievements*](#listachievements)
+  - [*ListMyAchievements*](#listmyachievements)
   - [*ListUserAchievements*](#listuserachievements)
   - [*DebugFriendships*](#debugfriendships)
 - [**Mutations**](#mutations)
@@ -839,25 +840,99 @@ export default function ListAchievementsComponent() {
 }
 ```
 
+## ListMyAchievements
+You can execute the `ListMyAchievements` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
+
+```javascript
+useListMyAchievements(dc: DataConnect, options?: useDataConnectQueryOptions<ListMyAchievementsData>): UseDataConnectQueryResult<ListMyAchievementsData, undefined>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useListMyAchievements(options?: useDataConnectQueryOptions<ListMyAchievementsData>): UseDataConnectQueryResult<ListMyAchievementsData, undefined>;
+```
+
+### Variables
+The `ListMyAchievements` Query has no variables.
+### Return Type
+Recall that calling the `ListMyAchievements` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `ListMyAchievements` Query is of type `ListMyAchievementsData`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ListMyAchievementsData {
+  userAchievements: ({
+    achievement: {
+      id: UUIDString;
+      title: string;
+      description?: string | null;
+      criteria?: string | null;
+      icon?: string | null;
+    } & Achievement_Key;
+      unlockedAt: TimestampString;
+  })[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `ListMyAchievements`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig } from '@firebasegen/default-connector';
+import { useListMyAchievements } from '@firebasegen/default-connector/react'
+
+export default function ListMyAchievementsComponent() {
+
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useListMyAchievements();
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useListMyAchievements(dataConnect);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useListMyAchievements(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useListMyAchievements(dataConnect, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.userAchievements);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
 ## ListUserAchievements
 You can execute the `ListUserAchievements` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
 
 ```javascript
-useListUserAchievements(dc: DataConnect, vars: ListUserAchievementsVariables, options?: useDataConnectQueryOptions<ListUserAchievementsData>): UseDataConnectQueryResult<ListUserAchievementsData, ListUserAchievementsVariables>;
+useListUserAchievements(dc: DataConnect, options?: useDataConnectQueryOptions<ListUserAchievementsData>): UseDataConnectQueryResult<ListUserAchievementsData, undefined>;
 ```
 You can also pass in a `DataConnect` instance to the Query hook function.
 ```javascript
-useListUserAchievements(vars: ListUserAchievementsVariables, options?: useDataConnectQueryOptions<ListUserAchievementsData>): UseDataConnectQueryResult<ListUserAchievementsData, ListUserAchievementsVariables>;
+useListUserAchievements(options?: useDataConnectQueryOptions<ListUserAchievementsData>): UseDataConnectQueryResult<ListUserAchievementsData, undefined>;
 ```
 
 ### Variables
-The `ListUserAchievements` Query requires an argument of type `ListUserAchievementsVariables`, which is defined in [default-connector/index.d.ts](../index.d.ts). It has the following fields:
-
-```javascript
-export interface ListUserAchievementsVariables {
-  userId: string;
-}
-```
+The `ListUserAchievements` Query has no variables.
 ### Return Type
 Recall that calling the `ListUserAchievements` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
 
@@ -885,34 +960,28 @@ To learn more about the `UseQueryResult` object, see the [TanStack React Query d
 
 ```javascript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, ListUserAchievementsVariables } from '@firebasegen/default-connector';
+import { connectorConfig } from '@firebasegen/default-connector';
 import { useListUserAchievements } from '@firebasegen/default-connector/react'
 
 export default function ListUserAchievementsComponent() {
 
-  // The `useListUserAchievements` Query hook requires an argument of type `ListUserAchievementsVariables`:
-  const listUserAchievementsVars: ListUserAchievementsVariables = {
-    userId: ..., 
-  };
 
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
-  const query = useListUserAchievements(listUserAchievementsVars);
-  // Variables can be defined inline as well.
-  const query = useListUserAchievements({ userId: ..., });
+  const query = useListUserAchievements();
 
   // You can also pass in a `DataConnect` instance to the Query hook function.
   const dataConnect = getDataConnect(connectorConfig);
-  const query = useListUserAchievements(dataConnect, listUserAchievementsVars);
+  const query = useListUserAchievements(dataConnect);
 
   // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
   const options = { staleTime: 5 * 1000 };
-  const query = useListUserAchievements(listUserAchievementsVars, options);
+  const query = useListUserAchievements(options);
 
   // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
   const dataConnect = getDataConnect(connectorConfig);
   const options = { staleTime: 5 * 1000 };
-  const query = useListUserAchievements(dataConnect, listUserAchievementsVars, options);
+  const query = useListUserAchievements(dataConnect, options);
 
   // Then, you can render your component dynamically based on the status of the Query.
   if (query.isPending) {
