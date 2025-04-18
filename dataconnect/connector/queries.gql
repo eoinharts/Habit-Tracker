@@ -128,7 +128,7 @@ query GetHabitById($habitId: UUID!) @auth(level: USER) {
     }
   }
 }
-query ListAchievements @auth(level: NO_ACCESS) {
+query ListAchievements @auth(level: USER) {
   achievements {
     id
     title
@@ -139,7 +139,7 @@ query ListAchievements @auth(level: NO_ACCESS) {
 }
 
 
-query ListUserAchievements($userId: String!) @auth(level: NO_ACCESS) {
+query ListUserAchievements($userId: String!) @auth(level:PUBLIC) {
   userAchievements(where: { user: { id: { eq: $userId } } }) {
     achievement {
       id
