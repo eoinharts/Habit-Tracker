@@ -15,7 +15,7 @@ import { Spin } from "antd";
 import AuthenticatedRoutes from "./components/AuthenticatedRoutes";
 import { AuthProvider, useAuth } from "./contexts/AuthProvider";
 import AchievementTest from "./pages/AchievementTest";
-
+import TestAchievements from "./pages/TestAchievements";
 const provider = new GoogleAuthProvider();
 function App() {
   const [signedIn, setSignedIn] = useState(null);
@@ -62,12 +62,19 @@ function App() {
               <Route path="/achievement-test" element={<AchievementTest />} />
             </Routes>
           ) : (
-            <AuthenticatedRoutes />
+            <Routes>
+              {/* 👇 Your NEW test route explicitly placed here 👇 */}
+              <Route path="/test-achievements" element={<TestAchievements />} />
+  
+              {/* 👇 Existing protected routes 👇 */}
+              <Route path="/*" element={<AuthenticatedRoutes />} />
+            </Routes>
           )}
         </AuthProvider>
       </ConfigProvider>
     </PhoneContainer>
   );
+  
 }
 
 export default App;

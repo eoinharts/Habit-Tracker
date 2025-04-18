@@ -1,5 +1,7 @@
 
 
+
+
 # Firebase Data Connect GraphQL Queries for Habit Tracker
 
 # Get User Details
@@ -220,5 +222,3 @@ query DebugFriendships @auth(level: USER) {
     status
   }
 }
-
-

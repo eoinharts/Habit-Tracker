@@ -2,27 +2,29 @@ import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import React, { useState, useEffect } from "react";
 import { Button, Segmented, message, Empty, Badge } from "antd";
-import {
-  BellTwoTone,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { BellTwoTone, LogoutOutlined } from "@ant-design/icons";
 import ChallengesCard from "../components/Cards/ChallengesCard";
 import HabitsCard from "../components/Cards/HabitsCard";
 import MoodPng from "../assets/Mood-png.png";
 import { useAuth } from "../contexts/AuthProvider";
-import { getUserHabit, deleteHabit, getHabitsWithUserDetails, unlockAchievement } from "@firebasegen/default-connector";
+import {
+  getUserHabit,
+  deleteHabit,
+  getHabitsWithUserDetails,
+  unlockAchievement,
+  listMyAchievements,
+} from "@firebasegen/default-connector";
 import { useNavigate } from "react-router-dom";
-import AchievementPopup from "../components/AchievementPopup/AchievementPopup.jsx"; 
+import AchievementPopup from "../components/AchievementPopup/AchievementPopup.jsx";
+
 
 const Home = () => {
   const { logout, userData } = useAuth();
   const [userHabits, setUserHabits] = useState([]);
-  const navigate = useNavigate();
-  const [bronzePopupVisible, setBronzePopupVisible] = useState(false);
-
-  // States for total points achievement popup
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupData, setPopupData] = useState({ badgeImage: "", title: "", message: "" });
+  const navigate = useNavigate();
+  const [earnedAchievementIds, setEarnedAchievementIds] = useState([]);
 
   const fetchUserHabits = async () => {
     try {
@@ -32,6 +34,34 @@ const Home = () => {
       message.error("Failed to fetch habits");
     }
   };
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      await waitForAuthReady(); // 👈 Ensure auth is ready
+      if (!userData?.id) {
+        console.warn("🚫 Skipping achievement fetch: no user ID");
+        return;
+      }
+  
+      try {
+        console.log("🛰️ Fetching user achievements for ID:", userData.id);
+        const response = await listMyAchievements(); // 👈 NO `where` clause!
+        const unlocked = response?.data?.userAchievements || [];
+        console.log("🎯 Response from listMyAchievements:", response);
+        console.log("🟢 Unlocked achievements:", unlocked);
+  
+        const ids = unlocked.map(a => a.achievement?.id || a.achievement_id);
+        setEarnedAchievementIds(ids);
+      } catch (err) {
+        console.error("❌ Failed to fetch achievements:", err);
+      }
+    };
+  
+    fetchAchievements();
+  }, [userData?.id]);
+  
+  
+  
+
 
   useEffect(() => {
     fetchUserHabits();
@@ -52,14 +82,13 @@ const Home = () => {
   };
 
   function hasExceededOneDay(timestamp) {
-    const now = new Date(); // current time
-    const givenTimestamp = new Date(timestamp); // convert the string timestamp to a Date object
-    const oneDayInMs = 24 * 60 * 60 * 1000; // 1 day in ms
+    const now = new Date();
+    const givenTimestamp = new Date(timestamp);
+    const oneDayInMs = 24 * 60 * 60 * 1000;
     return now - givenTimestamp > oneDayInMs;
   }
 
-  // --- Total Points Achievement Logic ---
-  // Mapping thresholds for total points (for testing: 2, 5, 10)
+  // --- Achievement logic (total points only) ---
   const POINTS_ACHIEVEMENT_DATA = {
     2: {
       id: "97a70902845e45d28cbc50702adec7e6",
@@ -82,30 +111,51 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (userData && typeof userData.totalPoints === "number") {
-      console.log("Checking total points:", userData.totalPoints);
-      Object.entries(POINTS_ACHIEVEMENT_DATA).forEach(([thresholdStr, achievement]) => {
-        const threshold = Number(thresholdStr);
-        if (userData.totalPoints === threshold) {
-          unlockAchievement({ userId: userData.id, achievementId: achievement.id })
-            .then(() => {
-              message.success(`Unlocked achievement: ${achievement.title}`);
-              console.log("Achievement object keys:", Object.keys(achievement));
-              console.log("Achievement.message:", achievement.message);
-              setPopupData({
-                badgeImage: achievement.badgeImage || "/badges/default_badge.png",
-                title: achievement.title || "Points Achievement Unlocked!",
-                message: achievement.message || `You've reached ${threshold} total points! 🎉`,
-              });
-              setPopupVisible(true);
-            })
-            .catch((err) => {
-              console.error("Error unlocking points achievement:", err);
-            });
-        }
-      });
-    }
-  }, [userData?.totalPoints]);
+    const checkAndUnlockPointsAchievement = async () => {
+      if (!userData?.id || typeof userData.totalPoints !== "number") return;
+  
+      // Wait until earnedAchievementIds has populated (even if empty array)
+      if (!Array.isArray(earnedAchievementIds)) {
+        console.log("⏳ Waiting for earnedAchievementIds to initialize");
+        return;
+      }
+  
+      const achievement = POINTS_ACHIEVEMENT_DATA[userData.totalPoints];
+      if (!achievement) {
+        console.log("ℹ️ No achievement defined for this point total:", userData.totalPoints);
+        return;
+      }
+  
+      // Prevent duplicate unlocks
+      if (earnedAchievementIds.includes(achievement.id)) {
+        console.log("⚠️ Already unlocked:", achievement.id);
+        return;
+      }
+  
+      try {
+        const result = await unlockAchievement({
+          userId: userData.id,
+          achievementId: achievement.id,
+        });
+        console.log("🏆 Achievement unlocked:", result);
+  
+        // Add to local state to prevent future unlock attempts
+        setEarnedAchievementIds(prev => [...prev, achievement.id]);
+  
+        // 🎉 Show the popup
+        setPopupData({
+          badgeImage: achievement.badgeImage,
+          title: achievement.title,
+          message: achievement.message,
+        });
+        setPopupVisible(true);
+      } catch (err) {
+        console.error("🔥 Error unlocking achievement:", err);
+      }
+    };
+  
+    checkAndUnlockPointsAchievement();
+  }, [userData?.totalPoints, earnedAchievementIds]);
 
   return (
     <div>
@@ -121,7 +171,7 @@ const Home = () => {
         <div className="d-flex align-items-center justify-content-between">
           <div className="mt-2">
             <Title level={4} style={{ fontWeight: "400" }} className="mb-0">
-              Hi Mert 👋
+              Hi {userData.displayName || "there"} 👋
             </Title>
             <Text type="secondary d-block mb-2">Let's make habits together</Text>
           </div>
@@ -188,12 +238,12 @@ const Home = () => {
           </div>
         )}
       </div>
-      
-      {/* Render Achievement Popup for Total Points Achievements */}
+
+      {/* Achievement Popup */}
       <AchievementPopup
         visible={popupVisible}
         onClose={() => setPopupVisible(false)}
-        badgeNumber={null}  // You can omit badge number or set a custom one if desired
+        badgeNumber={null}
         customMessage={popupData.message}
         title={popupData.title}
         badgeImage={popupData.badgeImage}

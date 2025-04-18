@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import {
   getUserDetails,
   listMyAchievements,
+  listUserAchievements,
   listFriends,
   deleteFriend, // Updated import
   removeReverseFriend,
@@ -39,6 +40,7 @@ const { Title, Text } = Typography;
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [friends, setFriends] = useState({ accepted: [], pending: [] });
   const [achievements, setAchievements] = useState(ALL_ACHIEVEMENTS);
@@ -48,22 +50,47 @@ const ProfilePage = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const showResetPopupButton = true; // Change to false or remove for production
   const [bronzePopupVisible, setBronzePopupVisible] = useState(false);
+  const [earnedAchievementIds, setEarnedAchievementIds] = useState([]);
   
   const navigate = useNavigate();
   console.log("Achievements in ProfilePage:", achievements);
 
   const fetchUserData = async (userId) => {
+   
     try {
+      console.log("🔄 fetchUserData triggered for user:", userId);
       console.log("👤 Current Firebase user ID:", userId); // ✅ Add this line
-      console.log("📡 Calling listUserAchievements with no args");
-      const [debugRes, userDetailsRes, userAchievementsRes] = await Promise.all([
-        debugFriendships({}, { cache: "no-store" }),
-        getUserDetails({ userId }),
-        listMyAchievements(), // ✅ NEW — no variables needed because the query uses auth.uid
-      ]);
+      console.log("📡 About to fetch all user data...");
+
+const debugPromise = debugFriendships({}, { cache: "no-store" });
+const userDetailsPromise = getUserDetails({ userId });
+const achievementsPromise = listUserAchievements({ userId }) // <- pass manually
+  .then((res) => {
+    console.log("🧪 listUserAchievements fallback result:", res);
+    return res;
+  })
+  .catch((err) => {
+    console.error("❌ Error fetching achievements:", err);
+    return { data: { userAchievements: [] } }; // fail-safe fallback
+  });
   
-      const userData = userDetailsRes?.data?.users?.[0] || {};
+const [debugRes, userDetailsRes, userAchievementsRes] = await Promise.all([
+  debugPromise,
+  userDetailsPromise,
+  achievementsPromise,
+]);
+console.log("⚠️ Reached after listUserAchievements call");
+const extractedUserData = userDetailsRes?.data?.users?.[0];
+
+if (!extractedUserData) {
+  console.warn("🛑 No user details found in userDetailsRes:", userDetailsRes);
+  setUserData(null);
+  return; // Exit early to avoid crashing below
+}
+
+setUserData(extractedUserData);
       const allDebug = debugRes?.data?.friendships || [];
+      console.log("🚨 Raw listMyAchievements result:", userAchievementsRes);
       const unlockedAchievements = userAchievementsRes?.data?.userAchievements || [];
   
       // 🧠 Extract just the IDs (adjust the key if needed — sometimes it's "achievementId")
@@ -122,14 +149,35 @@ const ProfilePage = () => {
       const uniqueAccepted = deduplicateById(accepted);
   
       setFriends({ accepted: uniqueAccepted, pending });
-      setAchievements(earnedIds); // ✅ These will be passed to your badge container
-      setUserPoints(userData.totalPoints || 0);
+      const earnedAchievements = ALL_ACHIEVEMENTS.filter((ach) =>
+        earnedIds.includes(ach.id)
+      );
+      setAchievements(earnedAchievements);
+      setUserPoints(extractedUserData.totalPoints || 0);
     } catch (err) {
       console.error("❌ Error loading profile:", err);
       message.error("Failed to load profile data");
     }
   };
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      if (!userData?.id) return;
+      try {
+        console.log("⏳ Fetching achievements for:", userData.id);
+        const response = await listMyAchievements(); // no args needed for "my" achievements
+        console.log("🎯 listMyAchievements raw response:", response);
+        
+        const unlocked = response?.data?.userAchievements || [];
+        const ids = unlocked.map((a) => a.achievement_id);
   
+        console.log("✅ Earned achievements loaded:", unlocked);
+        setEarnedAchievementIds(ids);
+      } catch (err) {
+        console.error("❌ Failed to fetch achievements:", err);
+      }
+    };
+    fetchAchievements();
+  }, [userData?.id]);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (!currentUser) {
@@ -367,7 +415,7 @@ const ProfilePage = () => {
           
 {/* Achievement Badges Section */}
 
-<AchievementsBadgeContainer earnedAchievementIds={achievements.map(a => a.id)} />
+<AchievementsBadgeContainer earnedAchievementIds={achievements.map((a) => a.id)} />
         </div>
 
         {/* Modals */}

@@ -6,9 +6,8 @@ import {
   updateHabit,
   updateHabitStreak,
   getUserHabit,
-  unlockAchievement
-  // OPTIONAL: Import a function to get existing user achievements if you implement that check
-  // getUserAchievements
+  unlockAchievement,
+  listMyAchievements
 } from "@firebasegen/default-connector"; 
 import { useAuth } from "../../contexts/AuthProvider";
 import { useNavigate } from "react-router";
@@ -155,11 +154,47 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
         // --- End Optional Check ---
 
         try {
-          await unlockAchievement({ userId: userData.id, achievementId });
-          const successMsg = newHabitCategory === "Good Habit"
-            ? `Unlocked achievement for ${currentCount} good habit(s)!`
-            : `Unlocked achievement for ${currentCount} bad habit(s)!`;
-          message.success(successMsg);
+          const existingAchievements = await listMyAchievements();
+          const unlockedIds = (existingAchievements?.data?.userAchievements || []).map(
+    (a) => a.achievement_id
+  );
+
+  if (unlockedIds.includes(achievementId)) {
+    console.log(`⚠️ Achievement already unlocked: ${achievementId}`);
+    return false; // ✅ Don't unlock again or trigger popup
+  }
+  try {
+    const result = await unlockAchievement({ userId: userData.id, achievementId });
+    console.log("✅ Achievement unlock success:", result);
+  
+    const successMsg = newHabitCategory === "Good Habit"
+      ? `Unlocked achievement for ${currentCount} good habit(s)!`
+      : `Unlocked achievement for ${currentCount} bad habit(s)!`;
+    message.success(successMsg);
+  
+    const achievementData = newHabitCategory === "Good Habit"
+      ? GOOD_HABIT_ACHIEVEMENT_DATA[currentCount]
+      : BAD_HABIT_ACHIEVEMENT_DATA[currentCount];
+  
+    if (achievementData) {
+      setPopupVisible(true);
+      setPopupMessage({
+        badgeImage: achievementData.badgeImage,
+        title: achievementData.title,
+        message: achievementData.message
+      });
+    }
+  
+    popupWasSet = true; // Mark that popup state was set
+  
+  } catch (unlockError) {
+    if (unlockError.message?.includes("duplicate key value violates unique constraint")) {
+      console.warn(`⚠️ Attempted to unlock already-earned achievement: ${achievementId}`);
+    } else {
+      console.error("❌ Error unlocking achievement:", unlockError);
+      message.error("Failed to unlock achievement. " + (unlockError.message || ""));
+    }
+  }
 
           const achievementData = newHabitCategory === "Good Habit"
           ? GOOD_HABIT_ACHIEVEMENT_DATA[currentCount]

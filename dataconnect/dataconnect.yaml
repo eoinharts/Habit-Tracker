@@ -9,4 +9,6 @@ schema:
       cloudSql:
         instanceId: "momentum-sql"
       # schemaValidation: "COMPATIBLE"
+allowedOrigins:
+  - http://localhost:5173
 connectorDirs: ["./connector"]
