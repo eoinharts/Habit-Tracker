@@ -15,6 +15,7 @@ import { Spin } from "antd";
 import AuthenticatedRoutes from "./components/AuthenticatedRoutes";
 import { AuthProvider, useAuth } from "./contexts/AuthProvider";
 import AchievementTest from "./pages/AchievementTest";
+import UserAchievements from "./pages/UserAchievements";
 
 const provider = new GoogleAuthProvider();
 function App() {
@@ -60,6 +61,7 @@ function App() {
               <Route path="/signup" element={<CreateAccount />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/achievement-test" element={<AchievementTest />} />
+              <Route path="/user-achievements" element={<UserAchievements />} />
             </Routes>
           ) : (
             <AuthenticatedRoutes />
