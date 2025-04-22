@@ -57,19 +57,19 @@ const NavLink = styled(Link, {
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: ${props => props.active ? '#ffffff' : 'rgba(255, 255, 255, 0.6)'};
+  color: ${props => props.isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.6)'};
   font-size: 0.6rem;
   gap: 4px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 2px 0;
   width: 100%;
-  font-weight: ${props => props.active ? '600' : '400'};
+  font-weight: ${props => props.isActive ? '600' : '400'};
 
   &:hover {
     color: #ffffff;
     transform: translateY(-1px);
 
-    ${props => !props.active && `
+    ${props => !props.isActive && `
       svg {
         transform: scale(1.1);
       }
@@ -82,9 +82,9 @@ const NavLink = styled(Link, {
 
   svg {
     font-size: 1rem;
-    filter: ${props => props.active ? 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.4))' : 'none'};
+    filter: ${props => props.isActive ? 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.4))' : 'none'};
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: ${props => props.active ? 'scale(1.1)' : 'scale(1)'};
+    transform: ${props => props.isActive ? 'scale(1.1)' : 'scale(1)'};
   }
 
   &::after {
@@ -93,12 +93,12 @@ const NavLink = styled(Link, {
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: ${props => props.active ? '4px' : '0'};
+    width: ${props => props.isActive ? '4px' : '0'};
     height: 4px;
     background: #ffffff;
     border-radius: 50%;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: ${props => props.active ? '1' : '0'};
+    opacity: ${props => props.isActive ? '1' : '0'};
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
   }
 `;
@@ -111,11 +111,11 @@ const IconWrapper = styled.div`
   height: 30px;
   border-radius: 10px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  background: ${props => props.active ? 'rgba(255, 255, 255, 0.15)' : 'transparent'};
+  background: ${props => props.isActive ? 'rgba(255, 255, 255, 0.15)' : 'transparent'};
   position: relative;
   overflow: hidden;
 
-  ${props => props.active && `
+  ${props => props.isActive && `
     &::before {
       content: '';
       position: absolute;
@@ -126,7 +126,7 @@ const IconWrapper = styled.div`
   `}
 
   &:hover {
-    background: ${props => !props.active && 'rgba(255, 255, 255, 0.08)'};
+    background: ${props => !props.isActive && 'rgba(255, 255, 255, 0.08)'};
   }
 `;
 
@@ -136,7 +136,7 @@ const Label = styled.span`
   white-space: nowrap;
   text-transform: uppercase;
   font-weight: inherit;
-  opacity: ${props => props.active ? '1' : '0.9'};
+  opacity: ${props => props.isActive ? '1' : '0.9'};
 `;
 
 const FooterNav = () => {
@@ -146,27 +146,27 @@ const FooterNav = () => {
     <NavContainer>
       <NavList>
         <NavItem>
-          <NavLink to="/" active={location.pathname === '/'}>
-            <IconWrapper active={location.pathname === '/'}>
+          <NavLink to="/" isActive={location.pathname === '/'}>
+            <IconWrapper isActive={location.pathname === '/'}>
               <FaCompass />
             </IconWrapper>
-            <Label active={location.pathname === '/'}>Home</Label>
+            <Label isActive={location.pathname === '/'}>Home</Label>
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink to="/create-habit" active={location.pathname === '/create-habit'}>
-            <IconWrapper active={location.pathname === '/create-habit'}>
+          <NavLink to="/create-habit" isActive={location.pathname === '/create-habit'}>
+            <IconWrapper isActive={location.pathname === '/create-habit'}>
               <FaBolt />
             </IconWrapper>
-            <Label active={location.pathname === '/create-habit'}>Create Habit</Label>
+            <Label isActive={location.pathname === '/create-habit'}>Create Habit</Label>
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink to="/profile" active={location.pathname === '/profile'}>
-            <IconWrapper active={location.pathname === '/profile'}>
+          <NavLink to="/profile" isActive={location.pathname === '/profile'}>
+            <IconWrapper isActive={location.pathname === '/profile'}>
               <FaUser />
             </IconWrapper>
-            <Label active={location.pathname === '/profile'}>Profile</Label>
+            <Label isActive={location.pathname === '/profile'}>Profile</Label>
           </NavLink>
         </NavItem>
       </NavList>

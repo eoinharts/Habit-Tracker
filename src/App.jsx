@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ConfigProvider, App as AntApp } from "antd";
+import "./styles/fonts.css";
 import { antdConfig } from "./theme/antdConfig";
 import CreateAccount from "./pages/CreateAccount";
 import WelcomePage from "./pages/WelcomePage";
