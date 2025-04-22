@@ -9,7 +9,7 @@ const CreateHabit = () => {
   return (
     <div>
     <HeaderContainer title={"Create Habit"} />
-      <div className="p-3">
+      <div className="p-3 container">
         <HabitForm />
       </div>
     </div>

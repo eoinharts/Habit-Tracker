@@ -19,7 +19,6 @@ export const AuthProvider = ({
   const getNewStreakCount = async (userId) => {
     try {
       const res = await getUserDetails({ userId: userId });
-      console.log(res.data.users[0]);
       setUserData({ ...userData, totalStreak: res.data.users[0].totalStreak, totalPoints: res.data.users[0].totalPoints });
     } catch (error) {
       console.log(error);

@@ -4,7 +4,9 @@ import { FaCompass, FaBolt, FaUser } from 'react-icons/fa';
 import styled from '@emotion/styled';
 
 const NavContainer = styled.nav`
-  position: relative;
+  position: fixed;
+  bottom: 0;
+  z-index: 100;
   width: 100%;
   background:rgba(56, 66, 255, 0.7);
   backdrop-filter: blur(12px);

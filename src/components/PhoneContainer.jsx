@@ -5,13 +5,12 @@ const PhoneContainer = ({ children, isSignedIn }) => {
   return (
     <Layout
       style={{
-        minWidth: "320px",
-        maxWidth: "400px",
+        // minWidth: "320px",
+        // maxWidth: "400px",
         width: "100%",
         minHeight: "100vh",
         margin: "0 auto",
         borderRadius: "12px",
-        boxShadow: "0 0 20px rgba(0,0,0,0.2)",
         display: "flex",
         flexDirection: "column",
         backgroundColor: "#F6F9FF",
@@ -20,8 +19,10 @@ const PhoneContainer = ({ children, isSignedIn }) => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
       }}
-    >
-      {children}
+    > 
+    <div style={{marginBottom: "100px"}}>
+    {children}
+    </div>
       {isSignedIn && <FooterNav />}
     </Layout>
   );

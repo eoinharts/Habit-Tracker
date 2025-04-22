@@ -8,6 +8,7 @@ import {
 } from "@firebasegen/default-connector";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useNavigate } from "react-router";
+import EmojiPicker from 'emoji-picker-react';
 import EmojiSelector from "../../components/EmojiSelector";
 
 const SubmitButton = ({ form, children, isLoading }) => {
@@ -121,6 +122,7 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
 
   return (
     <Form
+      className="row"
       form={form}
       onFinish={onFinish}
       name="habitForm"
@@ -129,6 +131,7 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
       initialValues={initialValues || { category: "Bad Habit", streakGoal: 7 }}
     >
       <Form.Item
+        className="col-12 col-md-6"
         name="name"
         label="Habit Name"
         rules={[{ required: true, message: "Please name your habit!" }]}
@@ -136,7 +139,7 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
         <Input placeholder="e.g., Drink Water" />
       </Form.Item>
 
-      <Form.Item name="category" label="Habit Type">
+      <Form.Item className="col-12 col-md-6" name="category" label="Habit Type">
         <Segmented options={["Bad Habit", "Good Habit"]} block />
       </Form.Item>
 
@@ -145,6 +148,7 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
       </Form.Item>
 
       <Form.Item
+        className="col-12 col-md-6"
         name="streakGoal"
         label="Streak Goal (Days)"
         rules={[
@@ -161,6 +165,7 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
       </Form.Item>
 
       <Form.Item
+        className="col-12 col-md-6"
         name="emoji"
         label="Emoji Icon"
         rules={[
