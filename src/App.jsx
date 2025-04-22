@@ -29,6 +29,12 @@ function App() {
           userId: user.uid,
         });
         setUserData(response.data.users[0]);
+      if (response.data.users.length === 0) { // Temporary fix (Bad one) - Will fix later (After signUp adding the user to postGres DB takes a bit of time)
+          setTimeout(async () => {
+            const res = await getUserDetails({ userId: user.uid });
+            setUserData(res.data.users[0]);
+          }, 1000);
+        }
         setSignedIn(true);
       } else {
         setUserData(false);

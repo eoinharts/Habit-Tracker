@@ -47,7 +47,7 @@ const FriendPage = () => {
   if (!friend) return <div>Friend not found</div>;
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: '20px' }} className='container'>
       <Button
         icon={<ArrowLeftOutlined />}
         onClick={() => navigate('/profile')}

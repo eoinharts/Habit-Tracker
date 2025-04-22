@@ -35,7 +35,7 @@ import AchievementsBadgeContainer from "../components/AchievementsBadgeContainer
 import AchievementPopup from "../components/AchievementPopup/AchievementPopup.jsx";
 
 import { defaultAchievements } from "../utils/achievementData";
-import { listUserAchievements } from "@firebasegen/default-connector"; 
+import { listUserAchievements } from "@firebasegen/default-connector";
 const { Title, Text } = Typography;
 
 const ProfilePage = () => {
@@ -46,9 +46,8 @@ const ProfilePage = () => {
   const [userPoints, setUserPoints] = useState(0);
   const [showFriendsModal, setShowFriendsModal] = useState(false);
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
-  
+
   const navigate = useNavigate();
-  console.log("Achievements in ProfilePage:", achievements);
 
   const fetchUserData = async (userId) => {
     try {
@@ -56,11 +55,11 @@ const ProfilePage = () => {
         debugFriendships({}, { cache: "no-store" }),
         getUserDetails({ userId }),
       ]);
-  
+
       const userData = userDetailsRes?.data?.users?.[0] || {};
       console.log("🔍 Full userData response:", userData);
       const allDebug = debugRes?.data?.friendships || [];
-  
+
       // Map accepted friendships
       const accepted = await Promise.all(
         allDebug
@@ -81,7 +80,7 @@ const ProfilePage = () => {
             };
           })
       );
-  
+
       // Map pending friendships
       const pending = await Promise.all(
         allDebug
@@ -103,16 +102,16 @@ const ProfilePage = () => {
             };
           })
       );
-  
+
       // Helper function: deduplicate by friend ID (keep first occurrence)
       const deduplicateById = (arr) => {
         return arr.filter((item, index, self) =>
           index === self.findIndex((t) => t.id === item.id)
         );
       };
-  
+
       const uniqueAccepted = deduplicateById(accepted);
-  
+
       setFriends({ accepted: uniqueAccepted, pending });
       setAchievements(
         userData.achievements && userData.achievements.length > 0
@@ -120,14 +119,14 @@ const ProfilePage = () => {
           : defaultAchievements
       );
       // TEMP fallback: use default achievements for front-end display while backend habit tracking is still in progress.
-// Once userData.achievements is implemented and contains real data, this will automatically switch to use that.
+      // Once userData.achievements is implemented and contains real data, this will automatically switch to use that.
       setUserPoints(userData.points || 0);
     } catch (err) {
       console.error("❌ Error loading profile:", err);
       message.error("Failed to load profile data");
     }
   };
-  
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (!currentUser) {
@@ -136,8 +135,8 @@ const ProfilePage = () => {
         setUser(currentUser);
         await fetchUserData(currentUser.uid);
 
-     
-        
+
+
       }
       setLoading(false);
     });
@@ -274,19 +273,19 @@ const ProfilePage = () => {
               actions={
                 friend.isIncoming
                   ? [
-                      <Button
-                        type="primary"
-                        onClick={() => handleAcceptFriend(friend.id)}
-                      >
-                        Accept
-                      </Button>,
-                      <Button
-                        danger
-                        onClick={() => handleDeclineFriend(friend.id)}
-                      >
-                        Decline
-                      </Button>,
-                    ]
+                    <Button
+                      type="primary"
+                      onClick={() => handleAcceptFriend(friend.id)}
+                    >
+                      Accept
+                    </Button>,
+                    <Button
+                      danger
+                      onClick={() => handleDeclineFriend(friend.id)}
+                    >
+                      Decline
+                    </Button>,
+                  ]
                   : null
               }
             >
@@ -308,8 +307,8 @@ const ProfilePage = () => {
   return (
     <>
       <HeaderContainer title="Your Profile" />
-      <div style={{ padding: "0 12px", flex: 1 }}>
-  <div style={{ width: "100%" }}>
+      <div style={{ padding: "0 12px", flex: 1 }} className="container">
+        <div style={{ width: "100%" }} className="mt-3">
 
 
           {/* Profile Card */}
@@ -355,10 +354,10 @@ const ProfilePage = () => {
               boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
             }}
           />
-          
-{/* Achievement Badges Section */}
 
-<AchievementsBadgeContainer achievements={achievements} />
+          {/* Achievement Badges Section */}
+
+          <AchievementsBadgeContainer achievements={achievements} />
         </div>
 
         {/* Modals */}
@@ -394,12 +393,12 @@ const ProfilePage = () => {
             }}
             onClose={() => setShowAchievementsModal(false)}
           />
-         
+
         </Modal>
 
       </div>
     </>
-    
+
   );
 };
 

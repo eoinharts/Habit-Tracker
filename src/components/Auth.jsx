@@ -82,6 +82,7 @@ const Auth = () => {
 
     const signInWithGoogle = async () => {
         try {
+            console.log()
             const userCredential = await signInWithPopup(auth, provider);
             setUser(userCredential.user);
             try {
@@ -120,11 +121,11 @@ const Auth = () => {
             backgroundPosition: 'center',
         }}>
             <Card
-            className="shadow-none "
-                style={{ width: 400, padding: '30px', borderRadius: '20px', border: "none"}}
+            className="shadow-none mx-auto"
+                style={{ maxWidth: 600, padding: '30px', borderRadius: '20px', border: "none"}}
             >
                 <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                    <img src={contentData[currentIndex].image} alt="Feature" style={{ width: '100%', borderRadius: '10px' }} />
+                    <img src={contentData[currentIndex].image} alt="Feature" style={{ width: '400px', borderRadius: '10px' }} />
                     <Title level={4} className="mt-3">{contentData[currentIndex].heading}</Title>
                     <Text>{contentData[currentIndex].text}</Text>
                     <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}>

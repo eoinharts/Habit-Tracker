@@ -62,9 +62,9 @@ const Home = () => {
 
   const unlockIfNeeded = (id, conditionMet, title, messageText, badgeImage) => {
     if (!conditionMet) return;
-  
+
     const alreadyUnlocked = hasUnlocked(id);
-  
+
     if (!alreadyUnlocked) {
       unlockAchievement({ userId: userData.id, achievementId: id })
         .then(() => {
@@ -86,10 +86,10 @@ const Home = () => {
         });
     }
   };
-  
-  
-  
-  
+
+
+
+
 
   const ACHIEVEMENTS = [
     // POINTS
@@ -177,17 +177,17 @@ const Home = () => {
   useEffect(() => {
     if (!userData) return;
     // 🎉 Show signed-up popup (only once per user)
-if (!localStorage.getItem("signedUpPopupShown")) {
-  setTimeout(() => {
-    setPopupData({
-      title: "Welcome Aboard! 🚀",
-      message: "You've officially signed up and started your habit journey!",
-      badgeImage: "/badges/blue_badge.png",
-    });
-    setPopupVisible(true);
-    localStorage.setItem("signedUpPopupShown", "true");
-  }, 800); // Optional delay for a smoother feel
-}
+    if (!localStorage.getItem("signedUpPopupShown")) {
+      setTimeout(() => {
+        setPopupData({
+          title: "Welcome Aboard! 🚀",
+          message: "You've officially signed up and started your habit journey!",
+          badgeImage: "/badges/blue_badge.png",
+        });
+        setPopupVisible(true);
+        localStorage.setItem("signedUpPopupShown", "true");
+      }, 800); // Optional delay for a smoother feel
+    }
 
     const totalPoints = userData.totalPoints;
     const goodCount = userHabits.filter((h) => h.habit.category === "Good Habit").length;
@@ -196,8 +196,8 @@ if (!localStorage.getItem("signedUpPopupShown")) {
     ACHIEVEMENTS.forEach(({ id, type, threshold, title, message, badge }) => {
       const valueToCheck =
         type === "points" ? totalPoints :
-        type === "good" ? goodCount :
-        type === "bad" ? badCount : 0;
+          type === "good" ? goodCount :
+            type === "bad" ? badCount : 0;
       unlockIfNeeded(id, valueToCheck >= threshold, title, message, badge);
     });
   }, [userData, userHabits]);
@@ -223,54 +223,64 @@ if (!localStorage.getItem("signedUpPopupShown")) {
   return (
     <div>
       <div className="bg-white shadow-btm p-3">
-        <div className="d-flex align-items-center justify-content-between">
-          <Button onClick={() => alert("calendar action")} className="rounded-btn">
-            <BellTwoTone style={{ fontSize: "18px" }} />
-          </Button>
-          <Button className="rounded-btn" onClick={logout}>
-            <LogoutOutlined style={{ fontSize: "18px" }} />
-          </Button>
-        </div>
-        <div className="d-flex align-items-center justify-content-between">
-          <div className="mt-2">
-            <Title level={4} style={{ fontWeight: "400" }} className="mb-0">
-              Hi {userData?.name || "there"} 👋
-            </Title>
-            <Text type="secondary d-block mb-2">Let's make habits together</Text>
+        <div className="container">
+          <div className="d-flex align-items-center justify-content-between">
+            <Button onClick={() => alert("calendar action")} className="rounded-btn">
+              <BellTwoTone style={{ fontSize: "18px" }} />
+            </Button>
+            <Button className="rounded-btn" onClick={logout}>
+              <LogoutOutlined style={{ fontSize: "18px" }} />
+            </Button>
           </div>
-          <img src={MoodPng} alt="emoji" className="ms-2" style={{ width: "40px", height: "40px" }} />
-        </div>
-        <div className="d-flex">
-          <div className="color-box-header d-inline-block p-2 me-2" style={{ backgroundColor: "#93d123" }}>
-            <Title level={5} style={{ fontWeight: "500", color: "white" }} className="d-block mb-1">
-              🥇 Points: &nbsp;<Badge count={userData.totalPoints} color="red" size={30} style={{ fontSize: "14px", width: "20px" }} />
-            </Title>
+          <div className="d-flex align-items-center justify-content-between">
+            <div className="mt-2">
+              <Title level={4} style={{ fontWeight: "400" }} className="mb-0">
+                Hi {userData?.name || "there"} 👋
+              </Title>
+              <Text type="secondary d-block mb-2">Let's make habits together</Text>
+            </div>
+            <img src={MoodPng} alt="emoji" className="ms-2" style={{ width: "40px", height: "40px" }} />
           </div>
-          <div className="color-box-header d-inline-block p-2" style={{ backgroundColor: "#FFC107" }}>
-            <Title level={5} style={{ fontWeight: "500", color: "white" }} className="d-block mb-1">
-              🔥 Streak: &nbsp;<Badge count={userData.totalStreak} showZero color="red" size={30} style={{ fontSize: "14px", width: "20px" }} />
-            </Title>
+          <div className="d-flex">
+            <div className="color-box-header d-inline-block p-2 me-2" style={{ backgroundColor: "#93d123" }}>
+              <Title level={5} style={{ fontWeight: "500", color: "white" }} className="d-block mb-1">
+                🥇 Points: &nbsp;<Badge count={userData.totalPoints} showZero color="red" size={30} style={{ fontSize: "14px", width: "20px" }} />
+              </Title>
+            </div>
+            <div className="color-box-header d-inline-block p-2" style={{ backgroundColor: "#FFC107" }}>
+              <Title level={5} style={{ fontWeight: "500", color: "white" }} className="d-block mb-1">
+                🔥 Streak: &nbsp;<Badge count={userData.totalStreak} showZero color="red" size={30} style={{ fontSize: "14px", width: "20px" }} />
+              </Title>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="px-3 pt-2">
+      <div className="px-3 pt-2 container">
         {userHabits.length > 0 ? (
           <>
             {userHabits.filter((h) => hasExceededOneDay(h.lastTrackedDate)).length > 0 && (
               <>
                 <Text strong className="d-block mb-1">Habits - To Do</Text>
-                {userHabits.filter((h) => hasExceededOneDay(h.lastTrackedDate)).map((h) => (
-                  <HabitsCard key={h.habit.id} habitDet={h} isDone={false} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
-                ))}
+                <div className="row">
+                  {userHabits.filter((h) => hasExceededOneDay(h.lastTrackedDate)).map((h) => (
+                    <div className="col-12 col-lg-4 col-md-6">
+                      <HabitsCard key={h.habit.id} habitDet={h} isDone={false} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
+                    </div>
+                  ))}
+                </div>
               </>
             )}
             {userHabits.filter((h) => !hasExceededOneDay(h.lastTrackedDate)).length > 0 && (
               <>
                 <Text strong className="d-block mb-1">Habits - Done</Text>
-                {userHabits.filter((h) => !hasExceededOneDay(h.lastTrackedDate)).map((h) => (
-                  <HabitsCard key={h.habit.id} habitDet={h} isDone={true} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
-                ))}
+                <div className="row">
+                  {userHabits.filter((h) => !hasExceededOneDay(h.lastTrackedDate)).map((h) => (
+                    <div className="col-12 col-lg-4 col-md-6">
+                      <HabitsCard key={h.habit.id} habitDet={h} isDone={true} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
+                    </div>
+                  ))}
+                </div>
               </>
             )}
           </>

@@ -8,7 +8,7 @@ const HeaderContainer = ({onBack, title}) => {
     const navigate = useNavigate();
     return (
       <div className="bg-white shadow-btm p-3">
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center container">
           <Button onClick={() => navigate("/")} className="rounded-btn me-3">
             <ArrowLeftOutlined style={{ fontSize: "18px" }} />
           </Button>
