@@ -1,5 +1,5 @@
 # Table of Contents
-- [**Overview**](#generated-typescript-readme)
+- [**Overview**](#generated-javascript-readme)
 - [**Accessing the connector**](#accessing-the-connector)
   - [*Connecting to the local Emulator*](#connecting-to-the-local-emulator)
 - [**Queries**](#queries)
@@ -26,7 +26,7 @@
   - [*DeleteUserHabit*](#deleteuserhabit)
 
 # Generated TypeScript README
-This README will guide you through the process of using the generated TypeScript SDK package for the connector `default`. It will also provide examples on how to use your generated SDK to call your Data Connect queries and mutations.
+This README will guide you through the process of using the generated JavaScript SDK package for the connector `default`. It will also provide examples on how to use your generated SDK to call your Data Connect queries and mutations.
 
 ***NOTE:** This README is generated alongside the generated SDK. If you make changes to this file, they will be overwritten when the SDK is regenerated.*
 
@@ -39,7 +39,7 @@ A connector is a collection of Queries and Mutations. One SDK is generated for e
 
 You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
 
@@ -52,7 +52,7 @@ By default, the connector will connect to the production service.
 To connect to the emulator, you can use the following code.
 You can also follow the emulator instructions from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#instrument-clients).
 
-```javascript
+```typescript
 import { connectDataConnectEmulator, getDataConnect } from 'firebase/data-connect';
 import { connectorConfig } from '@firebasegen/default-connector';
 
@@ -79,22 +79,37 @@ Below are examples of how to use the `default` connector's generated functions t
 
 ## GetUserDetails
 You can execute the `GetUserDetails` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 getUserDetails(vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
 
-getUserDetailsRef(vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
+interface GetUserDetailsRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
+}
+export const getUserDetailsRef: GetUserDetailsRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```javascript
+```typescript
 getUserDetails(dc: DataConnect, vars: GetUserDetailsVariables): QueryPromise<GetUserDetailsData, GetUserDetailsVariables>;
 
-getUserDetailsRef(dc: DataConnect, vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
+interface GetUserDetailsRef {
+  ...
+  (dc: DataConnect, vars: GetUserDetailsVariables): QueryRef<GetUserDetailsData, GetUserDetailsVariables>;
+}
+export const getUserDetailsRef: GetUserDetailsRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getUserDetailsRef:
+```typescript
+const name = getUserDetailsRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `GetUserDetails` query requires an argument of type `GetUserDetailsVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface GetUserDetailsVariables {
   userId: string;
 }
@@ -103,7 +118,7 @@ export interface GetUserDetailsVariables {
 Recall that executing the `GetUserDetails` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `GetUserDetailsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface GetUserDetailsData {
   users: ({
     id: string;
@@ -116,7 +131,7 @@ export interface GetUserDetailsData {
 ```
 ### Using `GetUserDetails`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, getUserDetails, GetUserDetailsVariables } from '@firebasegen/default-connector';
 
@@ -146,7 +161,7 @@ getUserDetails(getUserDetailsVars).then((response) => {
 
 ### Using `GetUserDetails`'s `QueryRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, getUserDetailsRef, GetUserDetailsVariables } from '@firebasegen/default-connector';
 
@@ -179,16 +194,31 @@ executeQuery(ref).then((response) => {
 
 ## GetAllUsers
 You can execute the `GetAllUsers` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 getAllUsers(): QueryPromise<GetAllUsersData, undefined>;
 
-getAllUsersRef(): QueryRef<GetAllUsersData, undefined>;
+interface GetAllUsersRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<GetAllUsersData, undefined>;
+}
+export const getAllUsersRef: GetAllUsersRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```javascript
+```typescript
 getAllUsers(dc: DataConnect): QueryPromise<GetAllUsersData, undefined>;
 
-getAllUsersRef(dc: DataConnect): QueryRef<GetAllUsersData, undefined>;
+interface GetAllUsersRef {
+  ...
+  (dc: DataConnect): QueryRef<GetAllUsersData, undefined>;
+}
+export const getAllUsersRef: GetAllUsersRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getAllUsersRef:
+```typescript
+const name = getAllUsersRef.operationName;
+console.log(name);
 ```
 
 ### Variables
@@ -197,7 +227,7 @@ The `GetAllUsers` query has no variables.
 Recall that executing the `GetAllUsers` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `GetAllUsersData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface GetAllUsersData {
   users: ({
     id: string;
@@ -210,7 +240,7 @@ export interface GetAllUsersData {
 ```
 ### Using `GetAllUsers`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, getAllUsers } from '@firebasegen/default-connector';
 
@@ -234,7 +264,7 @@ getAllUsers().then((response) => {
 
 ### Using `GetAllUsers`'s `QueryRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, getAllUsersRef } from '@firebasegen/default-connector';
 
@@ -261,22 +291,37 @@ executeQuery(ref).then((response) => {
 
 ## ListFriends
 You can execute the `ListFriends` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 listFriends(vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
 
-listFriendsRef(vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
+interface ListFriendsRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
+}
+export const listFriendsRef: ListFriendsRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```javascript
+```typescript
 listFriends(dc: DataConnect, vars: ListFriendsVariables): QueryPromise<ListFriendsData, ListFriendsVariables>;
 
-listFriendsRef(dc: DataConnect, vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
+interface ListFriendsRef {
+  ...
+  (dc: DataConnect, vars: ListFriendsVariables): QueryRef<ListFriendsData, ListFriendsVariables>;
+}
+export const listFriendsRef: ListFriendsRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listFriendsRef:
+```typescript
+const name = listFriendsRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `ListFriends` query requires an argument of type `ListFriendsVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface ListFriendsVariables {
   uid: string;
 }
@@ -285,7 +330,7 @@ export interface ListFriendsVariables {
 Recall that executing the `ListFriends` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `ListFriendsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface ListFriendsData {
   friendships: ({
     user1: {
@@ -302,7 +347,7 @@ export interface ListFriendsData {
 ```
 ### Using `ListFriends`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, listFriends, ListFriendsVariables } from '@firebasegen/default-connector';
 
@@ -332,7 +377,7 @@ listFriends(listFriendsVars).then((response) => {
 
 ### Using `ListFriends`'s `QueryRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, listFriendsRef, ListFriendsVariables } from '@firebasegen/default-connector';
 
@@ -365,16 +410,31 @@ executeQuery(ref).then((response) => {
 
 ## ListIncomingRequests
 You can execute the `ListIncomingRequests` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 listIncomingRequests(): QueryPromise<ListIncomingRequestsData, undefined>;
 
-listIncomingRequestsRef(): QueryRef<ListIncomingRequestsData, undefined>;
+interface ListIncomingRequestsRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListIncomingRequestsData, undefined>;
+}
+export const listIncomingRequestsRef: ListIncomingRequestsRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```javascript
+```typescript
 listIncomingRequests(dc: DataConnect): QueryPromise<ListIncomingRequestsData, undefined>;
 
-listIncomingRequestsRef(dc: DataConnect): QueryRef<ListIncomingRequestsData, undefined>;
+interface ListIncomingRequestsRef {
+  ...
+  (dc: DataConnect): QueryRef<ListIncomingRequestsData, undefined>;
+}
+export const listIncomingRequestsRef: ListIncomingRequestsRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listIncomingRequestsRef:
+```typescript
+const name = listIncomingRequestsRef.operationName;
+console.log(name);
 ```
 
 ### Variables
@@ -383,7 +443,7 @@ The `ListIncomingRequests` query has no variables.
 Recall that executing the `ListIncomingRequests` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `ListIncomingRequestsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface ListIncomingRequestsData {
   friendships: ({
     user1: {
@@ -400,7 +460,7 @@ export interface ListIncomingRequestsData {
 ```
 ### Using `ListIncomingRequests`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, listIncomingRequests } from '@firebasegen/default-connector';
 
@@ -424,7 +484,7 @@ listIncomingRequests().then((response) => {
 
 ### Using `ListIncomingRequests`'s `QueryRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, listIncomingRequestsRef } from '@firebasegen/default-connector';
 
@@ -451,22 +511,37 @@ executeQuery(ref).then((response) => {
 
 ## GetUserHabit
 You can execute the `GetUserHabit` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 getUserHabit(vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
 
-getUserHabitRef(vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
+interface GetUserHabitRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
+}
+export const getUserHabitRef: GetUserHabitRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```javascript
+```typescript
 getUserHabit(dc: DataConnect, vars: GetUserHabitVariables): QueryPromise<GetUserHabitData, GetUserHabitVariables>;
 
-getUserHabitRef(dc: DataConnect, vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
+interface GetUserHabitRef {
+  ...
+  (dc: DataConnect, vars: GetUserHabitVariables): QueryRef<GetUserHabitData, GetUserHabitVariables>;
+}
+export const getUserHabitRef: GetUserHabitRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getUserHabitRef:
+```typescript
+const name = getUserHabitRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `GetUserHabit` query requires an argument of type `GetUserHabitVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface GetUserHabitVariables {
   uid: string;
 }
@@ -475,7 +550,7 @@ export interface GetUserHabitVariables {
 Recall that executing the `GetUserHabit` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `GetUserHabitData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface GetUserHabitData {
   habits: ({
     id: UUIDString;
@@ -494,7 +569,7 @@ export interface GetUserHabitData {
 ```
 ### Using `GetUserHabit`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, getUserHabit, GetUserHabitVariables } from '@firebasegen/default-connector';
 
@@ -524,7 +599,7 @@ getUserHabit(getUserHabitVars).then((response) => {
 
 ### Using `GetUserHabit`'s `QueryRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, getUserHabitRef, GetUserHabitVariables } from '@firebasegen/default-connector';
 
@@ -557,22 +632,37 @@ executeQuery(ref).then((response) => {
 
 ## GetHabitsWithUserDetails
 You can execute the `GetHabitsWithUserDetails` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 getHabitsWithUserDetails(vars: GetHabitsWithUserDetailsVariables): QueryPromise<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
 
-getHabitsWithUserDetailsRef(vars: GetHabitsWithUserDetailsVariables): QueryRef<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+interface GetHabitsWithUserDetailsRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetHabitsWithUserDetailsVariables): QueryRef<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+}
+export const getHabitsWithUserDetailsRef: GetHabitsWithUserDetailsRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```javascript
+```typescript
 getHabitsWithUserDetails(dc: DataConnect, vars: GetHabitsWithUserDetailsVariables): QueryPromise<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
 
-getHabitsWithUserDetailsRef(dc: DataConnect, vars: GetHabitsWithUserDetailsVariables): QueryRef<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+interface GetHabitsWithUserDetailsRef {
+  ...
+  (dc: DataConnect, vars: GetHabitsWithUserDetailsVariables): QueryRef<GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables>;
+}
+export const getHabitsWithUserDetailsRef: GetHabitsWithUserDetailsRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getHabitsWithUserDetailsRef:
+```typescript
+const name = getHabitsWithUserDetailsRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `GetHabitsWithUserDetails` query requires an argument of type `GetHabitsWithUserDetailsVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface GetHabitsWithUserDetailsVariables {
   userId: string;
 }
@@ -581,7 +671,7 @@ export interface GetHabitsWithUserDetailsVariables {
 Recall that executing the `GetHabitsWithUserDetails` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `GetHabitsWithUserDetailsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface GetHabitsWithUserDetailsData {
   user?: {
     id: string;
@@ -604,7 +694,7 @@ export interface GetHabitsWithUserDetailsData {
 ```
 ### Using `GetHabitsWithUserDetails`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, getHabitsWithUserDetails, GetHabitsWithUserDetailsVariables } from '@firebasegen/default-connector';
 
@@ -634,7 +724,7 @@ getHabitsWithUserDetails(getHabitsWithUserDetailsVars).then((response) => {
 
 ### Using `GetHabitsWithUserDetails`'s `QueryRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, getHabitsWithUserDetailsRef, GetHabitsWithUserDetailsVariables } from '@firebasegen/default-connector';
 
@@ -667,22 +757,37 @@ executeQuery(ref).then((response) => {
 
 ## GetHabitById
 You can execute the `GetHabitById` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 getHabitById(vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
 
-getHabitByIdRef(vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;
+interface GetHabitByIdRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;
+}
+export const getHabitByIdRef: GetHabitByIdRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```javascript
+```typescript
 getHabitById(dc: DataConnect, vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
 
-getHabitByIdRef(dc: DataConnect, vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;
+interface GetHabitByIdRef {
+  ...
+  (dc: DataConnect, vars: GetHabitByIdVariables): QueryRef<GetHabitByIdData, GetHabitByIdVariables>;
+}
+export const getHabitByIdRef: GetHabitByIdRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getHabitByIdRef:
+```typescript
+const name = getHabitByIdRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `GetHabitById` query requires an argument of type `GetHabitByIdVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface GetHabitByIdVariables {
   habitId: UUIDString;
 }
@@ -691,7 +796,7 @@ export interface GetHabitByIdVariables {
 Recall that executing the `GetHabitById` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `GetHabitByIdData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface GetHabitByIdData {
   habit?: {
     id: UUIDString;
@@ -709,7 +814,7 @@ export interface GetHabitByIdData {
 ```
 ### Using `GetHabitById`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, getHabitById, GetHabitByIdVariables } from '@firebasegen/default-connector';
 
@@ -739,7 +844,7 @@ getHabitById(getHabitByIdVars).then((response) => {
 
 ### Using `GetHabitById`'s `QueryRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, getHabitByIdRef, GetHabitByIdVariables } from '@firebasegen/default-connector';
 
@@ -772,16 +877,31 @@ executeQuery(ref).then((response) => {
 
 ## DebugFriendships
 You can execute the `DebugFriendships` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 debugFriendships(): QueryPromise<DebugFriendshipsData, undefined>;
 
-debugFriendshipsRef(): QueryRef<DebugFriendshipsData, undefined>;
+interface DebugFriendshipsRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<DebugFriendshipsData, undefined>;
+}
+export const debugFriendshipsRef: DebugFriendshipsRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```javascript
+```typescript
 debugFriendships(dc: DataConnect): QueryPromise<DebugFriendshipsData, undefined>;
 
-debugFriendshipsRef(dc: DataConnect): QueryRef<DebugFriendshipsData, undefined>;
+interface DebugFriendshipsRef {
+  ...
+  (dc: DataConnect): QueryRef<DebugFriendshipsData, undefined>;
+}
+export const debugFriendshipsRef: DebugFriendshipsRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the debugFriendshipsRef:
+```typescript
+const name = debugFriendshipsRef.operationName;
+console.log(name);
 ```
 
 ### Variables
@@ -790,7 +910,7 @@ The `DebugFriendships` query has no variables.
 Recall that executing the `DebugFriendships` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `DebugFriendshipsData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface DebugFriendshipsData {
   friendships: ({
     user1Id: string;
@@ -801,7 +921,7 @@ export interface DebugFriendshipsData {
 ```
 ### Using `DebugFriendships`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, debugFriendships } from '@firebasegen/default-connector';
 
@@ -825,7 +945,7 @@ debugFriendships().then((response) => {
 
 ### Using `DebugFriendships`'s `QueryRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
 import { connectorConfig, debugFriendshipsRef } from '@firebasegen/default-connector';
 
@@ -867,22 +987,37 @@ Below are examples of how to use the `default` connector's generated functions t
 
 ## CreateUser
 You can execute the `CreateUser` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 createUser(vars?: CreateUserVariables): MutationPromise<CreateUserData, CreateUserVariables>;
 
-createUserRef(vars?: CreateUserVariables): MutationRef<CreateUserData, CreateUserVariables>;
+interface CreateUserRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: CreateUserVariables): MutationRef<CreateUserData, CreateUserVariables>;
+}
+export const createUserRef: CreateUserRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 createUser(dc: DataConnect, vars?: CreateUserVariables): MutationPromise<CreateUserData, CreateUserVariables>;
 
-createUserRef(dc: DataConnect, vars?: CreateUserVariables): MutationRef<CreateUserData, CreateUserVariables>;
+interface CreateUserRef {
+  ...
+  (dc: DataConnect, vars?: CreateUserVariables): MutationRef<CreateUserData, CreateUserVariables>;
+}
+export const createUserRef: CreateUserRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createUserRef:
+```typescript
+const name = createUserRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `CreateUser` mutation has an optional argument of type `CreateUserVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface CreateUserVariables {
   id?: string;
   name?: string;
@@ -893,14 +1028,14 @@ export interface CreateUserVariables {
 Recall that executing the `CreateUser` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `CreateUserData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface CreateUserData {
   user_insert: User_Key;
 }
 ```
 ### Using `CreateUser`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, createUser, CreateUserVariables } from '@firebasegen/default-connector';
 
@@ -934,7 +1069,7 @@ createUser(createUserVars).then((response) => {
 
 ### Using `CreateUser`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, createUserRef, CreateUserVariables } from '@firebasegen/default-connector';
 
@@ -971,22 +1106,37 @@ executeMutation(ref).then((response) => {
 
 ## AddFriend
 You can execute the `AddFriend` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 addFriend(vars: AddFriendVariables): MutationPromise<AddFriendData, AddFriendVariables>;
 
-addFriendRef(vars: AddFriendVariables): MutationRef<AddFriendData, AddFriendVariables>;
+interface AddFriendRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: AddFriendVariables): MutationRef<AddFriendData, AddFriendVariables>;
+}
+export const addFriendRef: AddFriendRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 addFriend(dc: DataConnect, vars: AddFriendVariables): MutationPromise<AddFriendData, AddFriendVariables>;
 
-addFriendRef(dc: DataConnect, vars: AddFriendVariables): MutationRef<AddFriendData, AddFriendVariables>;
+interface AddFriendRef {
+  ...
+  (dc: DataConnect, vars: AddFriendVariables): MutationRef<AddFriendData, AddFriendVariables>;
+}
+export const addFriendRef: AddFriendRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the addFriendRef:
+```typescript
+const name = addFriendRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `AddFriend` mutation requires an argument of type `AddFriendVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface AddFriendVariables {
   friendId: string;
   currentUserId: string;
@@ -996,14 +1146,14 @@ export interface AddFriendVariables {
 Recall that executing the `AddFriend` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `AddFriendData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface AddFriendData {
   friendship_insert: Friendship_Key;
 }
 ```
 ### Using `AddFriend`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, addFriend, AddFriendVariables } from '@firebasegen/default-connector';
 
@@ -1034,7 +1184,7 @@ addFriend(addFriendVars).then((response) => {
 
 ### Using `AddFriend`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, addFriendRef, AddFriendVariables } from '@firebasegen/default-connector';
 
@@ -1068,22 +1218,37 @@ executeMutation(ref).then((response) => {
 
 ## DeleteFriend
 You can execute the `DeleteFriend` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 deleteFriend(vars: DeleteFriendVariables): MutationPromise<DeleteFriendData, DeleteFriendVariables>;
 
-deleteFriendRef(vars: DeleteFriendVariables): MutationRef<DeleteFriendData, DeleteFriendVariables>;
+interface DeleteFriendRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteFriendVariables): MutationRef<DeleteFriendData, DeleteFriendVariables>;
+}
+export const deleteFriendRef: DeleteFriendRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 deleteFriend(dc: DataConnect, vars: DeleteFriendVariables): MutationPromise<DeleteFriendData, DeleteFriendVariables>;
 
-deleteFriendRef(dc: DataConnect, vars: DeleteFriendVariables): MutationRef<DeleteFriendData, DeleteFriendVariables>;
+interface DeleteFriendRef {
+  ...
+  (dc: DataConnect, vars: DeleteFriendVariables): MutationRef<DeleteFriendData, DeleteFriendVariables>;
+}
+export const deleteFriendRef: DeleteFriendRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteFriendRef:
+```typescript
+const name = deleteFriendRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `DeleteFriend` mutation requires an argument of type `DeleteFriendVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface DeleteFriendVariables {
   currentUserId: string;
   friendId: string;
@@ -1093,7 +1258,7 @@ export interface DeleteFriendVariables {
 Recall that executing the `DeleteFriend` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `DeleteFriendData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface DeleteFriendData {
   first?: Friendship_Key | null;
   second?: Friendship_Key | null;
@@ -1101,7 +1266,7 @@ export interface DeleteFriendData {
 ```
 ### Using `DeleteFriend`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, deleteFriend, DeleteFriendVariables } from '@firebasegen/default-connector';
 
@@ -1134,7 +1299,7 @@ deleteFriend(deleteFriendVars).then((response) => {
 
 ### Using `DeleteFriend`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, deleteFriendRef, DeleteFriendVariables } from '@firebasegen/default-connector';
 
@@ -1170,22 +1335,37 @@ executeMutation(ref).then((response) => {
 
 ## RemoveReverseFriend
 You can execute the `RemoveReverseFriend` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 removeReverseFriend(vars: RemoveReverseFriendVariables): MutationPromise<RemoveReverseFriendData, RemoveReverseFriendVariables>;
 
-removeReverseFriendRef(vars: RemoveReverseFriendVariables): MutationRef<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+interface RemoveReverseFriendRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: RemoveReverseFriendVariables): MutationRef<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+}
+export const removeReverseFriendRef: RemoveReverseFriendRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 removeReverseFriend(dc: DataConnect, vars: RemoveReverseFriendVariables): MutationPromise<RemoveReverseFriendData, RemoveReverseFriendVariables>;
 
-removeReverseFriendRef(dc: DataConnect, vars: RemoveReverseFriendVariables): MutationRef<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+interface RemoveReverseFriendRef {
+  ...
+  (dc: DataConnect, vars: RemoveReverseFriendVariables): MutationRef<RemoveReverseFriendData, RemoveReverseFriendVariables>;
+}
+export const removeReverseFriendRef: RemoveReverseFriendRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the removeReverseFriendRef:
+```typescript
+const name = removeReverseFriendRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `RemoveReverseFriend` mutation requires an argument of type `RemoveReverseFriendVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface RemoveReverseFriendVariables {
   friendId: string;
 }
@@ -1194,14 +1374,14 @@ export interface RemoveReverseFriendVariables {
 Recall that executing the `RemoveReverseFriend` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `RemoveReverseFriendData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface RemoveReverseFriendData {
   friendship_delete?: Friendship_Key | null;
 }
 ```
 ### Using `RemoveReverseFriend`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, removeReverseFriend, RemoveReverseFriendVariables } from '@firebasegen/default-connector';
 
@@ -1231,7 +1411,7 @@ removeReverseFriend(removeReverseFriendVars).then((response) => {
 
 ### Using `RemoveReverseFriend`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, removeReverseFriendRef, RemoveReverseFriendVariables } from '@firebasegen/default-connector';
 
@@ -1264,22 +1444,37 @@ executeMutation(ref).then((response) => {
 
 ## AcceptFriendRequest
 You can execute the `AcceptFriendRequest` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 acceptFriendRequest(vars: AcceptFriendRequestVariables): MutationPromise<AcceptFriendRequestData, AcceptFriendRequestVariables>;
 
-acceptFriendRequestRef(vars: AcceptFriendRequestVariables): MutationRef<AcceptFriendRequestData, AcceptFriendRequestVariables>;
+interface AcceptFriendRequestRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: AcceptFriendRequestVariables): MutationRef<AcceptFriendRequestData, AcceptFriendRequestVariables>;
+}
+export const acceptFriendRequestRef: AcceptFriendRequestRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 acceptFriendRequest(dc: DataConnect, vars: AcceptFriendRequestVariables): MutationPromise<AcceptFriendRequestData, AcceptFriendRequestVariables>;
 
-acceptFriendRequestRef(dc: DataConnect, vars: AcceptFriendRequestVariables): MutationRef<AcceptFriendRequestData, AcceptFriendRequestVariables>;
+interface AcceptFriendRequestRef {
+  ...
+  (dc: DataConnect, vars: AcceptFriendRequestVariables): MutationRef<AcceptFriendRequestData, AcceptFriendRequestVariables>;
+}
+export const acceptFriendRequestRef: AcceptFriendRequestRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the acceptFriendRequestRef:
+```typescript
+const name = acceptFriendRequestRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `AcceptFriendRequest` mutation requires an argument of type `AcceptFriendRequestVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface AcceptFriendRequestVariables {
   user1Id: string;
   user2Id: string;
@@ -1289,14 +1484,14 @@ export interface AcceptFriendRequestVariables {
 Recall that executing the `AcceptFriendRequest` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `AcceptFriendRequestData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface AcceptFriendRequestData {
   friendship_update?: Friendship_Key | null;
 }
 ```
 ### Using `AcceptFriendRequest`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, acceptFriendRequest, AcceptFriendRequestVariables } from '@firebasegen/default-connector';
 
@@ -1327,7 +1522,7 @@ acceptFriendRequest(acceptFriendRequestVars).then((response) => {
 
 ### Using `AcceptFriendRequest`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, acceptFriendRequestRef, AcceptFriendRequestVariables } from '@firebasegen/default-connector';
 
@@ -1361,22 +1556,37 @@ executeMutation(ref).then((response) => {
 
 ## DeclineFriendRequest
 You can execute the `DeclineFriendRequest` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 declineFriendRequest(vars: DeclineFriendRequestVariables): MutationPromise<DeclineFriendRequestData, DeclineFriendRequestVariables>;
 
-declineFriendRequestRef(vars: DeclineFriendRequestVariables): MutationRef<DeclineFriendRequestData, DeclineFriendRequestVariables>;
+interface DeclineFriendRequestRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeclineFriendRequestVariables): MutationRef<DeclineFriendRequestData, DeclineFriendRequestVariables>;
+}
+export const declineFriendRequestRef: DeclineFriendRequestRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 declineFriendRequest(dc: DataConnect, vars: DeclineFriendRequestVariables): MutationPromise<DeclineFriendRequestData, DeclineFriendRequestVariables>;
 
-declineFriendRequestRef(dc: DataConnect, vars: DeclineFriendRequestVariables): MutationRef<DeclineFriendRequestData, DeclineFriendRequestVariables>;
+interface DeclineFriendRequestRef {
+  ...
+  (dc: DataConnect, vars: DeclineFriendRequestVariables): MutationRef<DeclineFriendRequestData, DeclineFriendRequestVariables>;
+}
+export const declineFriendRequestRef: DeclineFriendRequestRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the declineFriendRequestRef:
+```typescript
+const name = declineFriendRequestRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `DeclineFriendRequest` mutation requires an argument of type `DeclineFriendRequestVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface DeclineFriendRequestVariables {
   user1Id: string;
   user2Id: string;
@@ -1386,14 +1596,14 @@ export interface DeclineFriendRequestVariables {
 Recall that executing the `DeclineFriendRequest` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `DeclineFriendRequestData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface DeclineFriendRequestData {
   friendship_delete?: Friendship_Key | null;
 }
 ```
 ### Using `DeclineFriendRequest`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, declineFriendRequest, DeclineFriendRequestVariables } from '@firebasegen/default-connector';
 
@@ -1424,7 +1634,7 @@ declineFriendRequest(declineFriendRequestVars).then((response) => {
 
 ### Using `DeclineFriendRequest`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, declineFriendRequestRef, DeclineFriendRequestVariables } from '@firebasegen/default-connector';
 
@@ -1458,22 +1668,37 @@ executeMutation(ref).then((response) => {
 
 ## AddReverseFriend
 You can execute the `AddReverseFriend` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 addReverseFriend(vars: AddReverseFriendVariables): MutationPromise<AddReverseFriendData, AddReverseFriendVariables>;
 
-addReverseFriendRef(vars: AddReverseFriendVariables): MutationRef<AddReverseFriendData, AddReverseFriendVariables>;
+interface AddReverseFriendRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: AddReverseFriendVariables): MutationRef<AddReverseFriendData, AddReverseFriendVariables>;
+}
+export const addReverseFriendRef: AddReverseFriendRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 addReverseFriend(dc: DataConnect, vars: AddReverseFriendVariables): MutationPromise<AddReverseFriendData, AddReverseFriendVariables>;
 
-addReverseFriendRef(dc: DataConnect, vars: AddReverseFriendVariables): MutationRef<AddReverseFriendData, AddReverseFriendVariables>;
+interface AddReverseFriendRef {
+  ...
+  (dc: DataConnect, vars: AddReverseFriendVariables): MutationRef<AddReverseFriendData, AddReverseFriendVariables>;
+}
+export const addReverseFriendRef: AddReverseFriendRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the addReverseFriendRef:
+```typescript
+const name = addReverseFriendRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `AddReverseFriend` mutation requires an argument of type `AddReverseFriendVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface AddReverseFriendVariables {
   friendId: string;
 }
@@ -1482,14 +1707,14 @@ export interface AddReverseFriendVariables {
 Recall that executing the `AddReverseFriend` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `AddReverseFriendData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface AddReverseFriendData {
   friendship_insert: Friendship_Key;
 }
 ```
 ### Using `AddReverseFriend`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, addReverseFriend, AddReverseFriendVariables } from '@firebasegen/default-connector';
 
@@ -1519,7 +1744,7 @@ addReverseFriend(addReverseFriendVars).then((response) => {
 
 ### Using `AddReverseFriend`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, addReverseFriendRef, AddReverseFriendVariables } from '@firebasegen/default-connector';
 
@@ -1552,22 +1777,37 @@ executeMutation(ref).then((response) => {
 
 ## CreateHabit
 You can execute the `CreateHabit` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 createHabit(vars: CreateHabitVariables): MutationPromise<CreateHabitData, CreateHabitVariables>;
 
-createHabitRef(vars: CreateHabitVariables): MutationRef<CreateHabitData, CreateHabitVariables>;
+interface CreateHabitRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateHabitVariables): MutationRef<CreateHabitData, CreateHabitVariables>;
+}
+export const createHabitRef: CreateHabitRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 createHabit(dc: DataConnect, vars: CreateHabitVariables): MutationPromise<CreateHabitData, CreateHabitVariables>;
 
-createHabitRef(dc: DataConnect, vars: CreateHabitVariables): MutationRef<CreateHabitData, CreateHabitVariables>;
+interface CreateHabitRef {
+  ...
+  (dc: DataConnect, vars: CreateHabitVariables): MutationRef<CreateHabitData, CreateHabitVariables>;
+}
+export const createHabitRef: CreateHabitRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createHabitRef:
+```typescript
+const name = createHabitRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `CreateHabit` mutation requires an argument of type `CreateHabitVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface CreateHabitVariables {
   uid: string;
   title: string;
@@ -1581,14 +1821,14 @@ export interface CreateHabitVariables {
 Recall that executing the `CreateHabit` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `CreateHabitData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface CreateHabitData {
   habit_insert: Habit_Key;
 }
 ```
 ### Using `CreateHabit`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, createHabit, CreateHabitVariables } from '@firebasegen/default-connector';
 
@@ -1623,7 +1863,7 @@ createHabit(createHabitVars).then((response) => {
 
 ### Using `CreateHabit`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, createHabitRef, CreateHabitVariables } from '@firebasegen/default-connector';
 
@@ -1661,22 +1901,37 @@ executeMutation(ref).then((response) => {
 
 ## UpdateHabit
 You can execute the `UpdateHabit` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 updateHabit(vars: UpdateHabitVariables): MutationPromise<UpdateHabitData, UpdateHabitVariables>;
 
-updateHabitRef(vars: UpdateHabitVariables): MutationRef<UpdateHabitData, UpdateHabitVariables>;
+interface UpdateHabitRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateHabitVariables): MutationRef<UpdateHabitData, UpdateHabitVariables>;
+}
+export const updateHabitRef: UpdateHabitRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 updateHabit(dc: DataConnect, vars: UpdateHabitVariables): MutationPromise<UpdateHabitData, UpdateHabitVariables>;
 
-updateHabitRef(dc: DataConnect, vars: UpdateHabitVariables): MutationRef<UpdateHabitData, UpdateHabitVariables>;
+interface UpdateHabitRef {
+  ...
+  (dc: DataConnect, vars: UpdateHabitVariables): MutationRef<UpdateHabitData, UpdateHabitVariables>;
+}
+export const updateHabitRef: UpdateHabitRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateHabitRef:
+```typescript
+const name = updateHabitRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `UpdateHabit` mutation requires an argument of type `UpdateHabitVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface UpdateHabitVariables {
   habitId: UUIDString;
   title?: string | null;
@@ -1690,14 +1945,14 @@ export interface UpdateHabitVariables {
 Recall that executing the `UpdateHabit` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `UpdateHabitData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface UpdateHabitData {
   habit_update?: Habit_Key | null;
 }
 ```
 ### Using `UpdateHabit`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, updateHabit, UpdateHabitVariables } from '@firebasegen/default-connector';
 
@@ -1732,7 +1987,7 @@ updateHabit(updateHabitVars).then((response) => {
 
 ### Using `UpdateHabit`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, updateHabitRef, UpdateHabitVariables } from '@firebasegen/default-connector';
 
@@ -1770,22 +2025,37 @@ executeMutation(ref).then((response) => {
 
 ## DeleteHabit
 You can execute the `DeleteHabit` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 deleteHabit(vars: DeleteHabitVariables): MutationPromise<DeleteHabitData, DeleteHabitVariables>;
 
-deleteHabitRef(vars: DeleteHabitVariables): MutationRef<DeleteHabitData, DeleteHabitVariables>;
+interface DeleteHabitRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteHabitVariables): MutationRef<DeleteHabitData, DeleteHabitVariables>;
+}
+export const deleteHabitRef: DeleteHabitRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 deleteHabit(dc: DataConnect, vars: DeleteHabitVariables): MutationPromise<DeleteHabitData, DeleteHabitVariables>;
 
-deleteHabitRef(dc: DataConnect, vars: DeleteHabitVariables): MutationRef<DeleteHabitData, DeleteHabitVariables>;
+interface DeleteHabitRef {
+  ...
+  (dc: DataConnect, vars: DeleteHabitVariables): MutationRef<DeleteHabitData, DeleteHabitVariables>;
+}
+export const deleteHabitRef: DeleteHabitRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteHabitRef:
+```typescript
+const name = deleteHabitRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `DeleteHabit` mutation requires an argument of type `DeleteHabitVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface DeleteHabitVariables {
   habitId: UUIDString;
 }
@@ -1794,14 +2064,14 @@ export interface DeleteHabitVariables {
 Recall that executing the `DeleteHabit` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `DeleteHabitData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface DeleteHabitData {
   habit_delete?: Habit_Key | null;
 }
 ```
 ### Using `DeleteHabit`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, deleteHabit, DeleteHabitVariables } from '@firebasegen/default-connector';
 
@@ -1831,7 +2101,7 @@ deleteHabit(deleteHabitVars).then((response) => {
 
 ### Using `DeleteHabit`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, deleteHabitRef, DeleteHabitVariables } from '@firebasegen/default-connector';
 
@@ -1864,22 +2134,37 @@ executeMutation(ref).then((response) => {
 
 ## UpdateHabitStreak
 You can execute the `UpdateHabitStreak` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 updateHabitStreak(vars: UpdateHabitStreakVariables): MutationPromise<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 
-updateHabitStreakRef(vars: UpdateHabitStreakVariables): MutationRef<UpdateHabitStreakData, UpdateHabitStreakVariables>;
+interface UpdateHabitStreakRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateHabitStreakVariables): MutationRef<UpdateHabitStreakData, UpdateHabitStreakVariables>;
+}
+export const updateHabitStreakRef: UpdateHabitStreakRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 updateHabitStreak(dc: DataConnect, vars: UpdateHabitStreakVariables): MutationPromise<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 
-updateHabitStreakRef(dc: DataConnect, vars: UpdateHabitStreakVariables): MutationRef<UpdateHabitStreakData, UpdateHabitStreakVariables>;
+interface UpdateHabitStreakRef {
+  ...
+  (dc: DataConnect, vars: UpdateHabitStreakVariables): MutationRef<UpdateHabitStreakData, UpdateHabitStreakVariables>;
+}
+export const updateHabitStreakRef: UpdateHabitStreakRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateHabitStreakRef:
+```typescript
+const name = updateHabitStreakRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `UpdateHabitStreak` mutation requires an argument of type `UpdateHabitStreakVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface UpdateHabitStreakVariables {
   habitId: UUIDString;
   currentStreak: number;
@@ -1891,14 +2176,14 @@ export interface UpdateHabitStreakVariables {
 Recall that executing the `UpdateHabitStreak` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `UpdateHabitStreakData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface UpdateHabitStreakData {
   userHabit_upsert: UserHabit_Key;
 }
 ```
 ### Using `UpdateHabitStreak`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, updateHabitStreak, UpdateHabitStreakVariables } from '@firebasegen/default-connector';
 
@@ -1931,7 +2216,7 @@ updateHabitStreak(updateHabitStreakVars).then((response) => {
 
 ### Using `UpdateHabitStreak`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, updateHabitStreakRef, UpdateHabitStreakVariables } from '@firebasegen/default-connector';
 
@@ -1967,22 +2252,37 @@ executeMutation(ref).then((response) => {
 
 ## DeleteUserHabit
 You can execute the `DeleteUserHabit` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [default-connector/index.d.ts](./index.d.ts):
-```javascript
+```typescript
 deleteUserHabit(vars: DeleteUserHabitVariables): MutationPromise<DeleteUserHabitData, DeleteUserHabitVariables>;
 
-deleteUserHabitRef(vars: DeleteUserHabitVariables): MutationRef<DeleteUserHabitData, DeleteUserHabitVariables>;
+interface DeleteUserHabitRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteUserHabitVariables): MutationRef<DeleteUserHabitData, DeleteUserHabitVariables>;
+}
+export const deleteUserHabitRef: DeleteUserHabitRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```javascript
+```typescript
 deleteUserHabit(dc: DataConnect, vars: DeleteUserHabitVariables): MutationPromise<DeleteUserHabitData, DeleteUserHabitVariables>;
 
-deleteUserHabitRef(dc: DataConnect, vars: DeleteUserHabitVariables): MutationRef<DeleteUserHabitData, DeleteUserHabitVariables>;
+interface DeleteUserHabitRef {
+  ...
+  (dc: DataConnect, vars: DeleteUserHabitVariables): MutationRef<DeleteUserHabitData, DeleteUserHabitVariables>;
+}
+export const deleteUserHabitRef: DeleteUserHabitRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteUserHabitRef:
+```typescript
+const name = deleteUserHabitRef.operationName;
+console.log(name);
 ```
 
 ### Variables
 The `DeleteUserHabit` mutation requires an argument of type `DeleteUserHabitVariables`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
 
-```javascript
+```typescript
 export interface DeleteUserHabitVariables {
   habitId: UUIDString;
   userId: string;
@@ -1992,14 +2292,14 @@ export interface DeleteUserHabitVariables {
 Recall that executing the `DeleteUserHabit` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
 The `data` property is an object of type `DeleteUserHabitData`, which is defined in [default-connector/index.d.ts](./index.d.ts). It has the following fields:
-```javascript
+```typescript
 export interface DeleteUserHabitData {
   userHabit_delete?: UserHabit_Key | null;
 }
 ```
 ### Using `DeleteUserHabit`'s action shortcut function
 
-```javascript
+```typescript
 import { getDataConnect } from 'firebase/data-connect';
 import { connectorConfig, deleteUserHabit, DeleteUserHabitVariables } from '@firebasegen/default-connector';
 
@@ -2030,7 +2330,7 @@ deleteUserHabit(deleteUserHabitVars).then((response) => {
 
 ### Using `DeleteUserHabit`'s `MutationRef` function
 
-```javascript
+```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
 import { connectorConfig, deleteUserHabitRef, DeleteUserHabitVariables } from '@firebasegen/default-connector';
 

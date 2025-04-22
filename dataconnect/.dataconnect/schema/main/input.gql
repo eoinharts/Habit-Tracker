@@ -461,6 +461,10 @@ input Habit_Data {
   """
   createdAt_time: Timestamp_Relative
   """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `Habit`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
   ✨ Generated from Field `Habit`.`description` of type `String`
   """
   description: String
@@ -1006,6 +1010,10 @@ input UserAchievement_Data {
   ✨ `_time` server value variant of `unlockedAt` (✨ Generated from Field `UserAchievement`.`unlockedAt` of type `Timestamp!`)
   """
   unlockedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `unlockedAt` (✨ Generated from Field `UserAchievement`.`unlockedAt` of type `Timestamp!`)
+  """
+  unlockedAt_update: [Timestamp_Update!]
 }
 """
 ✨ Generated filter input type for table 'UserAchievement'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
@@ -1202,6 +1210,10 @@ input UserHabit_Data {
   """
   createdAt_time: Timestamp_Relative
   """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `UserHabit`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
   ✨ Generated from Field `UserHabit`.`currentStreak` of type `Int!`
   """
   currentStreak: Int
@@ -1225,6 +1237,10 @@ input UserHabit_Data {
   ✨ `_time` server value variant of `lastTrackedDate` (✨ Generated from Field `UserHabit`.`lastTrackedDate` of type `Timestamp`)
   """
   lastTrackedDate_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `lastTrackedDate` (✨ Generated from Field `UserHabit`.`lastTrackedDate` of type `Timestamp`)
+  """
+  lastTrackedDate_update: [Timestamp_Update!]
   """
   ✨ Generated from Field `UserHabit`.`longestStreak` of type `Int!`
   """
