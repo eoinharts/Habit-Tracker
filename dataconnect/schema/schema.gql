@@ -59,6 +59,8 @@ type User @table {
   email: String! @col(dataType: "varchar(255)")
   imageUrl: String
   totalStreak: Int! @default(value: 0)
+  totalPoints: Int! @default(value: 0)
+  lastUpdatedStreakDate: Timestamp @default(expr: "request.time")
 
   # Relationships
 #   friendships: [Friendship!]! @link

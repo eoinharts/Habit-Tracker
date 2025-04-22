@@ -3,6 +3,7 @@ import { Layout, message, Spin } from "antd";
 import { useContext, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthProvider";
 import { getUserHabit } from "@firebasegen/default-connector";
+import { listUserAchievements } from "@firebasegen/default-connector";
 
 // Import pages
 import WelcomePage from "../pages/WelcomePage";
@@ -13,6 +14,7 @@ import FriendPage from "../pages/FriendPage";
 import AchievementTest from "../pages/AchievementTest";
 import CreateHabit from "../pages/Habit/CreateHabit";
 import EditHabit from "../pages/Habit/EditHabit";
+import UserAchievements from "../pages/UserAchievements";
 
 // Import components
 
@@ -35,6 +37,8 @@ export default function AuthenticatedRoutes() {
     }
   };
 
+
+
   // useEffect(() => {
   //   if (!userData.id) return;
   //   fetchUserHabits();
@@ -52,6 +56,7 @@ export default function AuthenticatedRoutes() {
             <Route path="/achievement-test" element={<AchievementTest />} />
             <Route path="/create-habit" element={<CreateHabit />} />
             <Route path="/edit-habit/:habitId" element={<EditHabit />} />
+            <Route path ="/user-achievements" element={<UserAchievements />} />
           </Routes>
         </>
       ) : (

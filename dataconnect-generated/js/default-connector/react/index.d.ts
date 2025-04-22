@@ -1,4 +1,4 @@
-import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, DeleteFriendData, DeleteFriendVariables, RemoveReverseFriendData, RemoveReverseFriendVariables, AcceptFriendRequestData, AcceptFriendRequestVariables, DeclineFriendRequestData, DeclineFriendRequestVariables, AddReverseFriendData, AddReverseFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, DeleteUserHabitData, DeleteUserHabitVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, ListFriendsVariables, ListIncomingRequestsData, GetUserHabitData, GetUserHabitVariables, GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables, GetHabitByIdData, GetHabitByIdVariables, DebugFriendshipsData } from '../';
+import { CreateUserData, CreateUserVariables, AddFriendData, AddFriendVariables, DeleteFriendData, DeleteFriendVariables, RemoveReverseFriendData, RemoveReverseFriendVariables, AcceptFriendRequestData, AcceptFriendRequestVariables, DeclineFriendRequestData, DeclineFriendRequestVariables, AddReverseFriendData, AddReverseFriendVariables, CreateHabitData, CreateHabitVariables, UpdateHabitData, UpdateHabitVariables, DeleteHabitData, DeleteHabitVariables, UpdateHabitStreakData, UpdateHabitStreakVariables, UpdatePointsData, UpdatePointsVariables, DeleteUserHabitData, DeleteUserHabitVariables, UnlockAchievementData, UnlockAchievementVariables, CreateAchievementData, CreateAchievementVariables, GetUserDetailsData, GetUserDetailsVariables, GetAllUsersData, ListFriendsData, ListFriendsVariables, ListIncomingRequestsData, GetUserHabitData, GetUserHabitVariables, GetHabitsWithUserDetailsData, GetHabitsWithUserDetailsVariables, GetHabitByIdData, GetHabitByIdVariables, ListAchievementsData, ListUserAchievementsData, ListUserAchievementsVariables, DebugFriendshipsData } from '../';
 import { UseDataConnectQueryResult, useDataConnectQueryOptions, UseDataConnectMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
 import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
@@ -38,8 +38,17 @@ export function useDeleteHabit(dc: DataConnect, options?: useDataConnectMutation
 export function useUpdateHabitStreak(options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseDataConnectMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 export function useUpdateHabitStreak(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateHabitStreakData, FirebaseError, UpdateHabitStreakVariables>): UseDataConnectMutationResult<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 
+export function useUpdatePoints(options?: useDataConnectMutationOptions<UpdatePointsData, FirebaseError, UpdatePointsVariables>): UseDataConnectMutationResult<UpdatePointsData, UpdatePointsVariables>;
+export function useUpdatePoints(dc: DataConnect, options?: useDataConnectMutationOptions<UpdatePointsData, FirebaseError, UpdatePointsVariables>): UseDataConnectMutationResult<UpdatePointsData, UpdatePointsVariables>;
+
 export function useDeleteUserHabit(options?: useDataConnectMutationOptions<DeleteUserHabitData, FirebaseError, DeleteUserHabitVariables>): UseDataConnectMutationResult<DeleteUserHabitData, DeleteUserHabitVariables>;
 export function useDeleteUserHabit(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteUserHabitData, FirebaseError, DeleteUserHabitVariables>): UseDataConnectMutationResult<DeleteUserHabitData, DeleteUserHabitVariables>;
+
+export function useUnlockAchievement(options?: useDataConnectMutationOptions<UnlockAchievementData, FirebaseError, UnlockAchievementVariables>): UseDataConnectMutationResult<UnlockAchievementData, UnlockAchievementVariables>;
+export function useUnlockAchievement(dc: DataConnect, options?: useDataConnectMutationOptions<UnlockAchievementData, FirebaseError, UnlockAchievementVariables>): UseDataConnectMutationResult<UnlockAchievementData, UnlockAchievementVariables>;
+
+export function useCreateAchievement(options?: useDataConnectMutationOptions<CreateAchievementData, FirebaseError, CreateAchievementVariables>): UseDataConnectMutationResult<CreateAchievementData, CreateAchievementVariables>;
+export function useCreateAchievement(dc: DataConnect, options?: useDataConnectMutationOptions<CreateAchievementData, FirebaseError, CreateAchievementVariables>): UseDataConnectMutationResult<CreateAchievementData, CreateAchievementVariables>;
 
 export function useGetUserDetails(vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseDataConnectQueryResult<GetUserDetailsData, GetUserDetailsVariables>;
 export function useGetUserDetails(dc: DataConnect, vars: GetUserDetailsVariables, options?: useDataConnectQueryOptions<GetUserDetailsData>): UseDataConnectQueryResult<GetUserDetailsData, GetUserDetailsVariables>;
@@ -61,6 +70,12 @@ export function useGetHabitsWithUserDetails(dc: DataConnect, vars: GetHabitsWith
 
 export function useGetHabitById(vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseDataConnectQueryResult<GetHabitByIdData, GetHabitByIdVariables>;
 export function useGetHabitById(dc: DataConnect, vars: GetHabitByIdVariables, options?: useDataConnectQueryOptions<GetHabitByIdData>): UseDataConnectQueryResult<GetHabitByIdData, GetHabitByIdVariables>;
+
+export function useListAchievements(options?: useDataConnectQueryOptions<ListAchievementsData>): UseDataConnectQueryResult<ListAchievementsData, undefined>;
+export function useListAchievements(dc: DataConnect, options?: useDataConnectQueryOptions<ListAchievementsData>): UseDataConnectQueryResult<ListAchievementsData, undefined>;
+
+export function useListUserAchievements(vars: ListUserAchievementsVariables, options?: useDataConnectQueryOptions<ListUserAchievementsData>): UseDataConnectQueryResult<ListUserAchievementsData, ListUserAchievementsVariables>;
+export function useListUserAchievements(dc: DataConnect, vars: ListUserAchievementsVariables, options?: useDataConnectQueryOptions<ListUserAchievementsData>): UseDataConnectQueryResult<ListUserAchievementsData, ListUserAchievementsVariables>;
 
 export function useDebugFriendships(options?: useDataConnectQueryOptions<DebugFriendshipsData>): UseDataConnectQueryResult<DebugFriendshipsData, undefined>;
 export function useDebugFriendships(dc: DataConnect, options?: useDataConnectQueryOptions<DebugFriendshipsData>): UseDataConnectQueryResult<DebugFriendshipsData, undefined>;

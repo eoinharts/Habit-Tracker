@@ -35,6 +35,7 @@ import AchievementsBadgeContainer from "../components/AchievementsBadgeContainer
 import AchievementPopup from "../components/AchievementPopup/AchievementPopup.jsx";
 
 import { defaultAchievements } from "../utils/achievementData";
+import { listUserAchievements } from "@firebasegen/default-connector"; 
 const { Title, Text } = Typography;
 
 const ProfilePage = () => {
@@ -45,9 +46,6 @@ const ProfilePage = () => {
   const [userPoints, setUserPoints] = useState(0);
   const [showFriendsModal, setShowFriendsModal] = useState(false);
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const showResetPopupButton = true; // Change to false or remove for production
-  const [bronzePopupVisible, setBronzePopupVisible] = useState(false);
   
   const navigate = useNavigate();
   console.log("Achievements in ProfilePage:", achievements);
@@ -138,10 +136,7 @@ const ProfilePage = () => {
         setUser(currentUser);
         await fetchUserData(currentUser.uid);
 
-        if (!localStorage.getItem("signedUpPopupShown")) {
-          setTimeout(() => setPopupVisible(true), 1000); // delay to make it look smooth
-          localStorage.setItem("signedUpPopupShown", "true");
-        }
+     
         
       }
       setLoading(false);
@@ -185,7 +180,6 @@ const ProfilePage = () => {
   };
 
   const handleAcceptFriend = async (friendId) => {
-    // 1) Optimistically move the friend in local state:
     setFriends((prev) => {
       const movedFriend = prev.pending.find((p) => p.id === friendId);
       return {
@@ -195,14 +189,12 @@ const ProfilePage = () => {
       };
     });
 
-    // 2) Then call the backend
     try {
       await acceptFriendRequest({ user1Id: friendId, user2Id: user.uid });
 
       await fetchUserData(user.uid);
       message.success("Friend request accepted");
     } catch (err) {
-      // If error, revert local state or show error
       console.error("Error accepting friend:", err);
       message.error("Failed to accept request");
     }
@@ -404,54 +396,7 @@ const ProfilePage = () => {
           />
          
         </Modal>
-        <AchievementPopup
-  visible={popupVisible}
-  onClose={() => setPopupVisible(false)}
-  badgeImage="/badges/blue_badge.png"
-  title="Welcome Aboard! 🚀"
-  message="You've officially signed up and started your habit journey!"
-/>
-<AchievementPopup
-  visible={bronzePopupVisible}
-  onClose={() => setBronzePopupVisible(false)}
-  badgeImage="/badges/bronze_badge.png"
-  title="You're on Your Way! 🌟"
-  message="You’ve just crushed your first habit milestone — keep that momentum going!"
-/>
-{showResetPopupButton && (
-  <div style={{ textAlign: "center", marginTop: 20 }}>
-    <Button
-      type="dashed"
-      onClick={() => {
-        localStorage.removeItem("signedUpPopupShown");
-        localStorage.removeItem("bronzePopupShown");
-        message.success("Popup reset! Refresh the page to test.");
-      }}
-    >
-      🔁 Reset Achievement Popup
-    </Button>
-    <Button
-  onClick={() => {
-    // 1. Show the popup
-    setBronzePopupVisible(true);
 
-    // 2. Mark the badge as unlocked in state
-    setAchievements((prev) =>
-      prev.map((a) =>
-        a.id === "first_good" ? { ...a, unlocked: true } : a
-      )
-    );
-
-    // 3. Optional: set localStorage for future backend simulation
-    localStorage.setItem("bronzePopupShown", "true");
-  }}
-  type="dashed"
-  style={{ marginTop: "12px" }}
->
-  🧪 Show Bronze Achievement Popup
-</Button>
-  </div>
-)}
       </div>
     </>
     

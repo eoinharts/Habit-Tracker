@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Input, message, Space } from "antd";
-import { Segmented } from "antd";
-import { createHabit, updateHabit, updateHabitStreak } from "@firebasegen/default-connector";
+import { Button, Form, Input, message, Segmented } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import {
+  createHabit,
+  updateHabit,
+  updateHabitStreak,
+} from "@firebasegen/default-connector";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useNavigate } from "react-router";
-import TextArea from "antd/es/input/TextArea";
+import EmojiSelector from "../../components/EmojiSelector";
 
 const SubmitButton = ({ form, children, isLoading }) => {
-  const [submittable, setSubmittable] = React.useState(false);
-
-  // Watch all values
+  const [submittable, setSubmittable] = useState(false);
   const values = Form.useWatch([], form);
-  React.useEffect(() => {
+
+  useEffect(() => {
     form
-      .validateFields({
-        validateOnly: true,
-      })
+      .validateFields({ validateOnly: true })
       .then(() => setSubmittable(true))
       .catch(() => setSubmittable(false));
   }, [form, values]);
-
 
   return (
     <Button
@@ -43,54 +43,79 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue(initialValues);
+    } else {
+      form.resetFields();
     }
-  }, [initialValues, form]);
+  }, [initialValues, form, isEditing]);
 
-  const onFinish = async ({ name, category, description, streakGoal, emoji }) => {
+  const createHabitFunction = async (
+    name,
+    description,
+    category,
+    streakGoal,
+    emoji
+  ) => {
+    try {
+      const res = await createHabit({
+        uid: userData.id,
+        title: name,
+        description: description || "",
+        category,
+        streakGoal: Number(streakGoal),
+        emoji,
+      });
+
+      const newHabitId = res?.data?.habit_insert?.id;
+      if (!newHabitId) throw new Error("Failed to get new habit ID.");
+
+      await updateHabitStreak({
+        habitId: newHabitId,
+        currentStreak: 0,
+        longestStreak: 0,
+        lastTrackedDate: new Date(Date.now() - 86400000).toISOString(),
+      });
+
+      message.success("Habit created successfully!");
+      return true;
+    } catch (error) {
+      console.error("Error creating habit:", error);
+      message.error(error.message || "Failed to create habit");
+      return false;
+    }
+  };
+
+  const onFinish = async (values) => {
+    const { name, category, description, streakGoal, emoji } = values;
     setIsLoading(true);
+
     try {
       if (isEditing) {
         await updateHabit({
           habitId,
           title: name,
-          description,
+          description: description || "",
           category,
           streakGoal: Number(streakGoal),
-          emoji
+          emoji,
         });
         message.success("Habit updated successfully!");
       } else {
-        await createHabitFunction(name, description, category, streakGoal, emoji);
+        const success = await createHabitFunction(
+          name,
+          description,
+          category,
+          streakGoal,
+          emoji
+        );
+        if (!success) return;
       }
-      navigate("/");
-    } catch (error) {
-      message.error(error.message);
-    }
-    setIsLoading(false);
-  };
 
-
-  const createHabitFunction = async (name, description, category, streakGoal, emoji) => {
-    console.log("here", emoji);
-    try {
-      const res = await createHabit({
-        uid: userData.id,
-        title: name,
-        description,
-        category,
-        streakGoal: Number(streakGoal),
-        emoji
-      });
-      console.log(res.data.habit_insert.id);
-      try {
-        const bes = await updateHabitStreak({ habitId: res.data.habit_insert.id, currentStreak: 0, longestStreak: 0, lastTrackedDate: new Date(new Date().getTime() - 25 * 60 * 60 * 1000).toISOString()});
-        console.log(bes);
-      } catch (error) {
-        message.error(error.message);
-      }
-      message.success("Habit created successfully!");
+      setTimeout(() => navigate("/"), 300);
     } catch (error) {
-      message.error(error.message);
+      console.error("Form error:", error);
+      message.error(error.message || "Operation failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,62 +123,54 @@ const HabitForm = ({ initialValues, habitId, isEditing }) => {
     <Form
       form={form}
       onFinish={onFinish}
-      name="validateOnly"
+      name="habitForm"
       layout="vertical"
       autoComplete="off"
+      initialValues={initialValues || { category: "Bad Habit", streakGoal: 7 }}
     >
       <Form.Item
         name="name"
-        label="Name"
-        rules={[
-          {
-            required: true,
-            message: "Please input habit name!",
-          },
-        ]}
+        label="Habit Name"
+        rules={[{ required: true, message: "Please name your habit!" }]}
       >
-        <Input />
+        <Input placeholder="e.g., Drink Water" />
       </Form.Item>
-      <Form.Item name="category" initialValue="Bad Habit" label="Habit Type">
-        <Segmented
-          options={["Bad Habit", "Good Habit"]}
-          onChange={(e) => form.setFieldValue("category", e)}
-          block
-        />
+
+      <Form.Item name="category" label="Habit Type">
+        <Segmented options={["Bad Habit", "Good Habit"]} block />
       </Form.Item>
-      <Form.Item
-        name="description"
-        label="Description"
-      >
-        <TextArea />
+
+      <Form.Item name="description" label="Description (Optional)">
+        <TextArea rows={3} placeholder="Add details or motivation (optional)" />
       </Form.Item>
+
       <Form.Item
         name="streakGoal"
-        label="Streak Goal"
+        label="Streak Goal (Days)"
         rules={[
+          { required: true, message: "Set a goal duration!" },
           {
-            required: true,
-            message: "Please input a habit goal!",
+            type: "number",
+            min: 1,
+            transform: (v) => Number(v),
+            message: "Minimum 1 day",
           },
         ]}
       >
-        <Input type="number" />
+        <Input type="number" min={1} placeholder="e.g., 7, 30" />
       </Form.Item>
+
       <Form.Item
         name="emoji"
-        label="Emoji / Placeholder"
+        label="Emoji Icon"
         rules={[
-          {
-            required: true,
-            message: "Please input an emoji!",
-          }, {
-            max: 2,
-            message: "Maximum of 2 characters allowed!",
-          }
+          { required: true, message: "Choose an emoji!" },
+          { max: 2, message: "Emoji should be 1–2 chars" },
         ]}
       >
-        <Input maxLength={2} />
+        <Input maxLength={2} placeholder="💧, 👍" style={{ width: "80px" }} />
       </Form.Item>
+
       <Form.Item>
         <SubmitButton form={form} isLoading={isLoading}>
           {isEditing ? "Update Habit" : "Add Habit"}

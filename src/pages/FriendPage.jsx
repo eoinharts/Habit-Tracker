@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, List, Button, Space, Typography, Badge } from 'antd';
-import { ArrowLeftOutlined, TrophyOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  Card,
+  Button,
+  Space,
+  Typography,
+  Statistic,
+  Row,
+  Col,
+  Avatar,
+} from 'antd';
+import {
+  ArrowLeftOutlined,
+  TrophyOutlined,
+  StarOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { getUserDetails } from '../../dataconnect-generated/js/default-connector/esm/index.esm.js';
+import AchievementsBadgeContainer from '../components/AchievementsBadgeContainer/AchievementsBadgeContainer';
 
 const { Title, Text } = Typography;
 
@@ -43,29 +58,43 @@ const FriendPage = () => {
 
       <Card>
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
-          <Title level={2}>{friend.name || 'Unnamed User'}</Title>
-          <Text>{friend.email}</Text>
-          <Badge count={friend.points || 0} style={{ backgroundColor: '#52c41a' }}>
-            <span style={{ padding: '0 8px' }}>Total Points</span>
-          </Badge>
+          <Row gutter={[24, 24]} align="middle">
+            <Col>
+              <Avatar
+                size={120}
+                src={friend.photoUrl}
+                icon={<UserOutlined />}
+                style={{
+                  border: '4px solid #f0f0f0',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                }}
+              />
+            </Col>
+            <Col flex="1">
+              <Row align="middle" justify="space-between">
+                <Col>
+                  <Title level={2} style={{ marginBottom: '4px' }}>
+                    {friend.name || 'Unnamed User'}
+                  </Title>
+                  <Text type="secondary">{friend.email}</Text>
+                </Col>
+                <Col>
+                  <Statistic
+                    title="Total Points"
+                    value={friend.totalPoints || 0}
+                    prefix={<StarOutlined />}
+                    valueStyle={{ color: '#52c41a' }}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
 
-          <Title level={4}>
-            <TrophyOutlined style={{ marginRight: '8px' }} />
-            Achievements
-          </Title>
-          <List
-            dataSource={friend.achievements || []}
-            renderItem={achievement => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={<span style={{ fontSize: '24px' }}>{achievement.icon || '🥉'}</span>}
-                  title={achievement.title}
-                  description={achievement.tier ? `Tier: ${achievement.tier}` : null}
-                />
-              </List.Item>
-            )}
-            locale={{ emptyText: 'No achievements yet' }}
-          />
+          {/* 🏆 Achievements Section using shared badge component */}
+          <div style={{ marginTop: '24px' }}>
+            
+            <AchievementsBadgeContainer userId={friendId} />
+          </div>
         </Space>
       </Card>
     </div>

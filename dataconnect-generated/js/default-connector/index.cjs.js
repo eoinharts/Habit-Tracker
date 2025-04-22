@@ -139,6 +139,18 @@ exports.updateHabitStreak = function updateHabitStreak(dcOrVars, vars) {
   return executeMutation(updateHabitStreakRef(dcOrVars, vars));
 };
 
+const updatePointsRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'updatePoints', inputVars);
+}
+updatePointsRef.operationName = 'updatePoints';
+exports.updatePointsRef = updatePointsRef;
+
+exports.updatePoints = function updatePoints(dcOrVars, vars) {
+  return executeMutation(updatePointsRef(dcOrVars, vars));
+};
+
 const deleteUserHabitRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -149,6 +161,30 @@ exports.deleteUserHabitRef = deleteUserHabitRef;
 
 exports.deleteUserHabit = function deleteUserHabit(dcOrVars, vars) {
   return executeMutation(deleteUserHabitRef(dcOrVars, vars));
+};
+
+const unlockAchievementRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UnlockAchievement', inputVars);
+}
+unlockAchievementRef.operationName = 'UnlockAchievement';
+exports.unlockAchievementRef = unlockAchievementRef;
+
+exports.unlockAchievement = function unlockAchievement(dcOrVars, vars) {
+  return executeMutation(unlockAchievementRef(dcOrVars, vars));
+};
+
+const createAchievementRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateAchievement', inputVars);
+}
+createAchievementRef.operationName = 'CreateAchievement';
+exports.createAchievementRef = createAchievementRef;
+
+exports.createAchievement = function createAchievement(dcOrVars, vars) {
+  return executeMutation(createAchievementRef(dcOrVars, vars));
 };
 
 const getUserDetailsRef = (dcOrVars, vars) => {
@@ -233,6 +269,30 @@ exports.getHabitByIdRef = getHabitByIdRef;
 
 exports.getHabitById = function getHabitById(dcOrVars, vars) {
   return executeQuery(getHabitByIdRef(dcOrVars, vars));
+};
+
+const listAchievementsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListAchievements');
+}
+listAchievementsRef.operationName = 'ListAchievements';
+exports.listAchievementsRef = listAchievementsRef;
+
+exports.listAchievements = function listAchievements(dc) {
+  return executeQuery(listAchievementsRef(dc));
+};
+
+const listUserAchievementsRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListUserAchievements', inputVars);
+}
+listUserAchievementsRef.operationName = 'ListUserAchievements';
+exports.listUserAchievementsRef = listUserAchievementsRef;
+
+exports.listUserAchievements = function listUserAchievements(dcOrVars, vars) {
+  return executeQuery(listUserAchievementsRef(dcOrVars, vars));
 };
 
 const debugFriendshipsRef = (dc) => {

@@ -39,6 +39,17 @@ export interface AddReverseFriendVariables {
   friendId: string;
 }
 
+export interface CreateAchievementData {
+  achievement_insert: Achievement_Key;
+}
+
+export interface CreateAchievementVariables {
+  title: string;
+  description?: string | null;
+  criteria?: string | null;
+  icon?: string | null;
+}
+
 export interface CreateHabitData {
   habit_insert: Habit_Key;
 }
@@ -172,6 +183,8 @@ export interface GetUserDetailsData {
     email: string;
     imageUrl?: string | null;
     totalStreak: number;
+    totalPoints: number;
+    lastUpdatedStreakDate?: TimestampString | null;
   } & User_Key)[];
 }
 
@@ -202,6 +215,16 @@ export interface GetUserHabitVariables {
 export interface Habit_Key {
   id: UUIDString;
   __typename?: 'Habit_Key';
+}
+
+export interface ListAchievementsData {
+  achievements: ({
+    id: UUIDString;
+    title: string;
+    description?: string | null;
+    criteria?: string | null;
+    icon?: string | null;
+  } & Achievement_Key)[];
 }
 
 export interface ListFriendsData {
@@ -236,12 +259,38 @@ export interface ListIncomingRequestsData {
   })[];
 }
 
+export interface ListUserAchievementsData {
+  userAchievements: ({
+    achievement: {
+      id: UUIDString;
+      title: string;
+      description?: string | null;
+      criteria?: string | null;
+      icon?: string | null;
+    } & Achievement_Key;
+      unlockedAt: TimestampString;
+  })[];
+}
+
+export interface ListUserAchievementsVariables {
+  userId: string;
+}
+
 export interface RemoveReverseFriendData {
   friendship_delete?: Friendship_Key | null;
 }
 
 export interface RemoveReverseFriendVariables {
   friendId: string;
+}
+
+export interface UnlockAchievementData {
+  userAchievement_insert: UserAchievement_Key;
+}
+
+export interface UnlockAchievementVariables {
+  userId: string;
+  achievementId: UUIDString;
 }
 
 export interface UpdateHabitData {
@@ -257,6 +306,8 @@ export interface UpdateHabitStreakVariables {
   currentStreak: number;
   longestStreak: number;
   lastTrackedDate: TimestampString;
+  userId?: string | null;
+  points?: number | null;
 }
 
 export interface UpdateHabitVariables {
@@ -266,6 +317,17 @@ export interface UpdateHabitVariables {
   category?: string | null;
   streakGoal?: number | null;
   emoji: string;
+}
+
+export interface UpdatePointsData {
+  user_update?: User_Key | null;
+}
+
+export interface UpdatePointsVariables {
+  userId: string;
+  points: number;
+  totalStreak: number;
+  newDate: TimestampString;
 }
 
 export interface UserAchievement_Key {
@@ -417,6 +479,18 @@ export const updateHabitStreakRef: UpdateHabitStreakRef;
 export function updateHabitStreak(vars: UpdateHabitStreakVariables): MutationPromise<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 export function updateHabitStreak(dc: DataConnect, vars: UpdateHabitStreakVariables): MutationPromise<UpdateHabitStreakData, UpdateHabitStreakVariables>;
 
+interface UpdatePointsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdatePointsVariables): MutationRef<UpdatePointsData, UpdatePointsVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdatePointsVariables): MutationRef<UpdatePointsData, UpdatePointsVariables>;
+  operationName: string;
+}
+export const updatePointsRef: UpdatePointsRef;
+
+export function updatePoints(vars: UpdatePointsVariables): MutationPromise<UpdatePointsData, UpdatePointsVariables>;
+export function updatePoints(dc: DataConnect, vars: UpdatePointsVariables): MutationPromise<UpdatePointsData, UpdatePointsVariables>;
+
 interface DeleteUserHabitRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars: DeleteUserHabitVariables): MutationRef<DeleteUserHabitData, DeleteUserHabitVariables>;
@@ -428,6 +502,30 @@ export const deleteUserHabitRef: DeleteUserHabitRef;
 
 export function deleteUserHabit(vars: DeleteUserHabitVariables): MutationPromise<DeleteUserHabitData, DeleteUserHabitVariables>;
 export function deleteUserHabit(dc: DataConnect, vars: DeleteUserHabitVariables): MutationPromise<DeleteUserHabitData, DeleteUserHabitVariables>;
+
+interface UnlockAchievementRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UnlockAchievementVariables): MutationRef<UnlockAchievementData, UnlockAchievementVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UnlockAchievementVariables): MutationRef<UnlockAchievementData, UnlockAchievementVariables>;
+  operationName: string;
+}
+export const unlockAchievementRef: UnlockAchievementRef;
+
+export function unlockAchievement(vars: UnlockAchievementVariables): MutationPromise<UnlockAchievementData, UnlockAchievementVariables>;
+export function unlockAchievement(dc: DataConnect, vars: UnlockAchievementVariables): MutationPromise<UnlockAchievementData, UnlockAchievementVariables>;
+
+interface CreateAchievementRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateAchievementVariables): MutationRef<CreateAchievementData, CreateAchievementVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateAchievementVariables): MutationRef<CreateAchievementData, CreateAchievementVariables>;
+  operationName: string;
+}
+export const createAchievementRef: CreateAchievementRef;
+
+export function createAchievement(vars: CreateAchievementVariables): MutationPromise<CreateAchievementData, CreateAchievementVariables>;
+export function createAchievement(dc: DataConnect, vars: CreateAchievementVariables): MutationPromise<CreateAchievementData, CreateAchievementVariables>;
 
 interface GetUserDetailsRef {
   /* Allow users to create refs without passing in DataConnect */
@@ -512,6 +610,30 @@ export const getHabitByIdRef: GetHabitByIdRef;
 
 export function getHabitById(vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
 export function getHabitById(dc: DataConnect, vars: GetHabitByIdVariables): QueryPromise<GetHabitByIdData, GetHabitByIdVariables>;
+
+interface ListAchievementsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListAchievementsData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListAchievementsData, undefined>;
+  operationName: string;
+}
+export const listAchievementsRef: ListAchievementsRef;
+
+export function listAchievements(): QueryPromise<ListAchievementsData, undefined>;
+export function listAchievements(dc: DataConnect): QueryPromise<ListAchievementsData, undefined>;
+
+interface ListUserAchievementsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: ListUserAchievementsVariables): QueryRef<ListUserAchievementsData, ListUserAchievementsVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: ListUserAchievementsVariables): QueryRef<ListUserAchievementsData, ListUserAchievementsVariables>;
+  operationName: string;
+}
+export const listUserAchievementsRef: ListUserAchievementsRef;
+
+export function listUserAchievements(vars: ListUserAchievementsVariables): QueryPromise<ListUserAchievementsData, ListUserAchievementsVariables>;
+export function listUserAchievements(dc: DataConnect, vars: ListUserAchievementsVariables): QueryPromise<ListUserAchievementsData, ListUserAchievementsVariables>;
 
 interface DebugFriendshipsRef {
   /* Allow users to create refs without passing in DataConnect */
