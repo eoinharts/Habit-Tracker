@@ -165,7 +165,7 @@ const HabitsCard = ({
       >
         <Card
           className={`${className}`}
-          bodyStyle={{ padding: '12px' }}
+          styles={{ body: { padding: '12px' } }}
           onTouchStart={isDone ? null : handleTouchStart}
           onTouchMove={isDone ? null : handleTouchMove}
           onTouchEnd={isDone ? null : handleTouchEnd}
