@@ -3,10 +3,12 @@
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import React, { useState, useEffect } from "react";
-import { Button, message, Empty, Badge } from "antd";
+import { Button, Empty, Badge, List, Typography, Popover, App } from "antd";
 import {
   BellTwoTone,
   LogoutOutlined,
+  DeleteOutlined,
+  ClearOutlined
 } from "@ant-design/icons";
 import ChallengesCard from "../components/Cards/ChallengesCard";
 import HabitsCard from "../components/Cards/HabitsCard";
@@ -17,18 +19,22 @@ import {
   deleteHabit,
   unlockAchievement,
   listUserAchievements,
-} from "@firebasegen/default-connector";
+} from "../../dataconnect-generated/js/default-connector/esm/index.esm.js";
 import { useNavigate } from "react-router-dom";
 import AchievementPopup from "../components/AchievementPopup/AchievementPopup.jsx";
 
 const Home = () => {
   const { logout, userData } = useAuth();
   const navigate = useNavigate();
+  const { message } = App.useApp();
 
   const [userHabits, setUserHabits] = useState([]);
   const [userAchievements, setUserAchievements] = useState([]);
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupData, setPopupData] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [hasNewNotifications, setHasNewNotifications] = useState(false);
+  const processingRef = React.useRef(new Set());
 
   const fetchUserHabits = async () => {
     try {
@@ -60,30 +66,56 @@ const Home = () => {
     }
   };
 
-  const unlockIfNeeded = (id, conditionMet, title, messageText, badgeImage) => {
+  const unlockIfNeeded = async (id, conditionMet, title, messageText, badgeImage) => {
     if (!conditionMet) return;
-  
-    const alreadyUnlocked = hasUnlocked(id);
-  
-    if (!alreadyUnlocked) {
-      unlockAchievement({ userId: userData.id, achievementId: id })
-        .then(() => {
-          console.log(`✅ Unlocked ${title}`);
+    
+    try {
+      // Check if we're already processing this achievement
+      if (processingRef.current.has(id)) {
+        console.log(`Already processing achievement ${id}`);
+        return;
+      }
+      
+      // Mark this achievement as being processed
+      processingRef.current.add(id);
+      
+      try {
+        // First check if it's already unlocked
+        const achievements = await listUserAchievements({ userId: userData.id });
+        const unlockedIds = achievements.data.userAchievements.map((ua) => ua.achievement.id);
+        
+        if (unlockedIds.includes(id)) {
+          console.log(`Achievement ${id} is already unlocked`);
+          return;
+        }
+
+        // Try to unlock the achievement
+        await unlockAchievement({ userId: userData.id, achievementId: id });
+        console.log(`✅ Unlocked ${title}`);
+
+        // Only show popup if it hasn't been shown before
+        if (!localStorage.getItem(`popupShown_${id}`)) {
           setPopupData({ title, message: messageText, badgeImage });
           setPopupVisible(true);
-          // No need for localStorage anymore
-        })
-        .catch((err) => {
-          if (
-            err.message?.includes("duplicate key value") ||
-            err.message?.includes("already exists")
-          ) {
-            console.warn(`⚠️ ${id} already unlocked. Popup will NOT show again.`);
-            // Do nothing — popup won't show for previously unlocked ones
-          } else {
-            console.error("Error unlocking achievement:", err);
-          }
-        });
+          localStorage.setItem(`popupShown_${id}`, "true");
+        }
+
+        // Update achievements list
+        setUserAchievements(prev => [...prev, id]);
+      } catch (err) {
+        // If it's a duplicate key error, just ignore it
+        if (err.message?.includes("duplicate key value") || 
+            err.message?.includes("already exists")) {
+          console.log(`Achievement ${title} was already unlocked`);
+          return;
+        }
+        throw err; // Re-throw other errors
+      }
+    } catch (err) {
+      console.error("Error unlocking achievement:", err);
+    } finally {
+      // Remove this achievement from the processing set
+      processingRef.current.delete(id);
     }
   };
   
@@ -169,6 +201,51 @@ const Home = () => {
     },
   ];
 
+  const loadNotifications = async () => {
+    if (!userData?.id) return;
+
+    try {
+      // Load notifications from localStorage
+      const localStorageNotifications = JSON.parse(localStorage.getItem('habitNotifications') || '[]');
+      
+      // Filter notifications for the current user
+      const userNotifications = localStorageNotifications
+        .filter(n => n.toUserId === userData.id)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      
+      setNotifications(userNotifications);
+    } catch (err) {
+      console.error('Error loading notifications:', err);
+    }
+  };
+
+  const handleDeleteNotification = (notificationId) => {
+    try {
+      const allNotifications = JSON.parse(localStorage.getItem('habitNotifications') || '[]');
+      const updatedNotifications = allNotifications.filter(n => n.id !== notificationId);
+      localStorage.setItem('habitNotifications', JSON.stringify(updatedNotifications));
+      loadNotifications();
+      message.success('Notification deleted');
+    } catch (err) {
+      console.error('Error deleting notification:', err);
+      message.error('Failed to delete notification');
+    }
+  };
+
+  const handleClearAllNotifications = () => {
+    try {
+      const allNotifications = JSON.parse(localStorage.getItem('habitNotifications') || '[]');
+      const otherUsersNotifications = allNotifications.filter(n => n.toUserId !== userData.id);
+      localStorage.setItem('habitNotifications', JSON.stringify(otherUsersNotifications));
+      loadNotifications();
+      setHasNewNotifications(false);
+      message.success('All notifications cleared');
+    } catch (err) {
+      console.error('Error clearing notifications:', err);
+      message.error('Failed to clear notifications');
+    }
+  };
+
   useEffect(() => {
     fetchUserHabits();
     fetchAchievements();
@@ -176,18 +253,17 @@ const Home = () => {
 
   useEffect(() => {
     if (!userData) return;
-    // 🎉 Show signed-up popup (only once per user)
-if (!localStorage.getItem("signedUpPopupShown")) {
-  setTimeout(() => {
-    setPopupData({
-      title: "Welcome Aboard! 🚀",
-      message: "You've officially signed up and started your habit journey!",
-      badgeImage: "/badges/blue_badge.png",
-    });
-    setPopupVisible(true);
-    localStorage.setItem("signedUpPopupShown", "true");
-  }, 800); // Optional delay for a smoother feel
-}
+    if (!localStorage.getItem("signedUpPopupShown")) {
+      setTimeout(() => {
+        setPopupData({
+          title: "Welcome Aboard! 🚀",
+          message: "You've officially signed up and started your habit journey!",
+          badgeImage: "/badges/blue_badge.png",
+        });
+        setPopupVisible(true);
+        localStorage.setItem("signedUpPopupShown", "true");
+      }, 800);
+    }
 
     const totalPoints = userData.totalPoints;
     const goodCount = userHabits.filter((h) => h.habit.category === "Good Habit").length;
@@ -201,6 +277,32 @@ if (!localStorage.getItem("signedUpPopupShown")) {
       unlockIfNeeded(id, valueToCheck >= threshold, title, message, badge);
     });
   }, [userData, userHabits]);
+
+  // Listen for new notifications
+  const handleNewNotification = (event) => {
+    const { notification } = event.detail;
+    if (notification.toUserId === userData?.id) {
+      setHasNewNotifications(true);
+      message.info("You have a new notification! 🔔");
+      loadNotifications(); // Reload notifications from localStorage
+    }
+  };
+
+  useEffect(() => {
+    if (userData?.id) {
+      fetchUserHabits();
+      fetchAchievements();
+      loadNotifications();
+
+      // Add event listener for new notifications
+      window.addEventListener('newNotification', handleNewNotification);
+
+      // Cleanup
+      return () => {
+        window.removeEventListener('newNotification', handleNewNotification);
+      };
+    }
+  }, [userData?.id]);
 
   const handleEdit = (habitId) => navigate(`/edit-habit/${habitId}`);
 
@@ -220,13 +322,74 @@ if (!localStorage.getItem("signedUpPopupShown")) {
     return now - then > 86400000;
   };
 
+  const NotificationsList = () => (
+    <List
+      style={{ maxWidth: '300px', maxHeight: '400px', overflow: 'auto' }}
+      size="small"
+      header={
+        <div className="d-flex justify-content-between align-items-center">
+          <Typography.Text strong>Notifications</Typography.Text>
+          {notifications.length > 0 && (
+            <Button
+              type="text"
+              icon={<ClearOutlined />}
+              size="small"
+              onClick={() => {
+                handleClearAllNotifications();
+              }}
+            >
+              Clear all
+            </Button>
+          )}
+        </div>
+      }
+      locale={{ emptyText: 'No notifications' }}
+      dataSource={notifications}
+      renderItem={(notification) => (
+        <List.Item
+          actions={[
+            <Button
+              type="text"
+              icon={<DeleteOutlined />}
+              size="small"
+              onClick={() => handleDeleteNotification(notification.id)}
+            />
+          ]}
+        >
+          <List.Item.Meta
+            title={notification.message}
+            description={
+              <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
+                {new Date(notification.timestamp).toLocaleString()}
+              </Typography.Text>
+            }
+          />
+        </List.Item>
+      )}
+    />
+  );
+
   return (
     <div>
       <div className="bg-white shadow-btm p-3">
         <div className="d-flex align-items-center justify-content-between">
-          <Button onClick={() => alert("calendar action")} className="rounded-btn">
-            <BellTwoTone style={{ fontSize: "18px" }} />
-          </Button>
+          <Popover 
+            content={<NotificationsList />}
+            trigger="click"
+            placement="bottomLeft"
+            onOpenChange={(visible) => {
+              if (visible) {
+                setHasNewNotifications(false);
+                loadNotifications();
+              }
+            }}
+          >
+            <Button className="rounded-btn">
+              <Badge dot={hasNewNotifications}>
+                <BellTwoTone style={{ fontSize: "18px" }} />
+              </Badge>
+            </Button>
+          </Popover>
           <Button className="rounded-btn" onClick={logout}>
             <LogoutOutlined style={{ fontSize: "18px" }} />
           </Button>
