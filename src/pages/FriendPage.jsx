@@ -9,6 +9,7 @@ import {
   Row,
   Col,
   Avatar,
+  Divider,
 } from 'antd';
 import {
   ArrowLeftOutlined,
@@ -16,8 +17,9 @@ import {
   StarOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { getUserDetails } from '../../dataconnect-generated/js/default-connector/esm/index.esm.js';
+import { getUserDetails, getHabitsWithUserDetails } from '../../dataconnect-generated/js/default-connector/esm/index.esm.js';
 import AchievementsBadgeContainer from '../components/AchievementsBadgeContainer/AchievementsBadgeContainer';
+import HabitsCard from '../components/Cards/HabitsCard';
 
 const { Title, Text } = Typography;
 
@@ -26,13 +28,22 @@ const FriendPage = () => {
   const navigate = useNavigate();
   const [friend, setFriend] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [habits, setHabits] = useState([]);
 
   useEffect(() => {
     const loadFriendData = async () => {
       try {
-        const res = await getUserDetails({ userId: friendId });
-        const friendData = res?.data?.users?.[0];
+        const [userRes, habitsRes] = await Promise.all([
+          getUserDetails({ userId: friendId }),
+          getHabitsWithUserDetails({ userId: friendId })
+        ]);
+        
+        const friendData = userRes?.data?.users?.[0];
         setFriend(friendData || null);
+        
+        if (habitsRes?.data?.user?.userHabits_on_user) {
+          setHabits(habitsRes.data.user.userHabits_on_user);
+        }
       } catch (err) {
         console.error('❌ Error loading friend data:', err);
       } finally {
@@ -90,10 +101,33 @@ const FriendPage = () => {
             </Col>
           </Row>
 
-          {/* 🏆 Achievements Section using shared badge component */}
+          {/* 🏆 Achievements Section */}
           <div style={{ marginTop: '24px' }}>
-            
+            <Title level={4}>Achievements</Title>
             <AchievementsBadgeContainer userId={friendId} />
+          </div>
+
+          {/* Habits Section */}
+          <Divider />
+          <div>
+            <Title level={4}>Habits</Title>
+            {habits.length > 0 ? (
+              <div className="row">
+                {habits.map((habitData) => (
+                  <div key={habitData.habit.id} className="col-12 col-lg-4 col-md-6">
+                    <HabitsCard 
+                      habitDet={habitData} 
+                      isDone={true} 
+                      fetchUserHabits={() => {}} 
+                      onEdit={() => {}} 
+                      onDelete={() => {}} 
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <Text type="secondary">No habits found</Text>
+            )}
           </div>
         </Space>
       </Card>
