@@ -3,6 +3,8 @@ import { Card, List, Button, Typography, Space, Tooltip, App } from 'antd';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { getHabitsWithUserDetails } from '../../dataconnect-generated/js/default-connector/esm/index.esm.js';
 import { useAuth } from '../contexts/AuthProvider';
+import { createLikeNotification } from '../utils/notifications';
+import { addLike, removeLike, getLikesForHabits } from '../utils/likes';
 import './FriendHabits.css';
 
 const { Text } = Typography;
@@ -28,6 +30,19 @@ const FriendHabits = ({ userId }) => {
           emoji: uh.habit.emoji,
           liked: false
         }));
+
+        // Get like status for all habits
+        if (userData?.id && habitsData.length > 0) {
+          const habitIds = habitsData.map(h => h.id);
+          console.log('🔍 Fetching like status for habits:', habitIds);
+          const likeStatus = await getLikesForHabits(habitIds, userData.id);
+          console.log('✅ Like status received:', likeStatus);
+          habitsData.forEach(habit => {
+            habit.liked = likeStatus[habit.id];
+          });
+          console.log('📝 Updated habits data:', habitsData);
+        }
+
         setHabits(habitsData);
       } catch (err) {
         console.error('❌ Error loading habits:', err);
@@ -37,7 +52,7 @@ const FriendHabits = ({ userId }) => {
     };
 
     fetchHabits();
-  }, [userId]);
+  }, [userId, userData?.id]);
 
   const handleLike = async (habitId) => {
     try {
@@ -70,42 +85,33 @@ const FriendHabits = ({ userId }) => {
 
       // Only create notification when liking, not unliking
       if (newLikedState) {
-        // Store notification in localStorage
-        const notifications = JSON.parse(localStorage.getItem('habitNotifications') || '[]');
-        const newNotification = {
-          id: Date.now(),
-          message: `${userData.name} liked your habit "${habit.title}"`,
-          timestamp: new Date().toISOString(),
-          habitId: habitId,
-          fromUserId: userData.id,
-          toUserId: userId,
-          type: 'like'
-        };
-        
-        notifications.push(newNotification);
-        localStorage.setItem('habitNotifications', JSON.stringify(notifications));
-
-        // Trigger a custom event to notify the Home component
-        window.dispatchEvent(new CustomEvent('newHabitNotification', { 
-          detail: { notification: newNotification }
-        }));
-      }
-
-      // Store like state
-      const likedHabits = JSON.parse(localStorage.getItem('likedHabits') || '{}');
-      if (newLikedState) {
-        if (!likedHabits[userId]) {
-          likedHabits[userId] = [];
-        }
-        if (!likedHabits[userId].includes(habitId)) {
-          likedHabits[userId].push(habitId);
-        }
-      } else {
-        if (likedHabits[userId]) {
-          likedHabits[userId] = likedHabits[userId].filter(id => id !== habitId);
+        try {
+          await createLikeNotification(
+            userId, // owner of the habit
+            userData.id, // user who liked
+            userData.name,
+            habitId,
+            habit.title
+          );
+        } catch (err) {
+          console.error('Failed to create notification:', err);
+          message.error('Failed to send notification');
         }
       }
-      localStorage.setItem('likedHabits', JSON.stringify(likedHabits));
+
+      // Update like in Firestore
+      try {
+        console.log(`${newLikedState ? '❤️ Adding' : '💔 Removing'} like for habit:`, habitId);
+        if (newLikedState) {
+          await addLike(habitId, userId, userData.id);
+        } else {
+          await removeLike(habitId, userData.id);
+        }
+        console.log('✅ Like status updated in Firestore');
+      } catch (err) {
+        console.error('❌ Error updating like in Firestore:', err);
+        throw err;
+      }
 
       // Remove the success message popup
       // message.success(newLikedState ? 'Habit liked!' : 'Habit unliked');
@@ -115,20 +121,7 @@ const FriendHabits = ({ userId }) => {
     }
   };
 
-  // Load liked state from localStorage on component mount
-  useEffect(() => {
-    const likedHabits = JSON.parse(localStorage.getItem('likedHabits') || '{}');
-    const userLikedHabits = likedHabits[userId] || [];
-    
-    if (userLikedHabits.length > 0) {
-      setHabits(prevHabits => 
-        prevHabits.map(habit => ({
-          ...habit,
-          liked: userLikedHabits.includes(habit.id)
-        }))
-      );
-    }
-  }, [userId]);
+
 
   if (loading) return <div>Loading habits...</div>;
 

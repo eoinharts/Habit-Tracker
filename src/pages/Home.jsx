@@ -20,6 +20,8 @@ import {
   unlockAchievement,
   listUserAchievements,
 } from "../../dataconnect-generated/js/default-connector/esm/index.esm.js";
+import { collection, query, where, onSnapshot, deleteDoc, doc, addDoc, orderBy } from 'firebase/firestore';
+import { db } from '../utils/firebaseConfig';
 import { useNavigate } from "react-router-dom";
 import AchievementPopup from "../components/AchievementPopup/AchievementPopup.jsx";
 
@@ -197,30 +199,44 @@ const Home = () => {
     },
   ];
 
-  const loadNotifications = async () => {
+  const loadNotifications = () => {
     if (!userData?.id) return;
 
     try {
-      // Load notifications from localStorage
-      const localStorageNotifications = JSON.parse(localStorage.getItem('habitNotifications') || '[]');
-      
-      // Filter notifications for the current user
-      const userNotifications = localStorageNotifications
-        .filter(n => n.toUserId === userData.id)
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      
-      setNotifications(userNotifications);
+      const notificationsRef = collection(db, 'notifications');
+      const q = query(
+        notificationsRef,
+        where('userId', '==', userData.id)
+      );
+
+      // Set up real-time listener
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const notificationsList = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          timestamp: doc.data().createdAt?.toDate() // Convert Firestore Timestamp to Date
+        }));
+        // Sort notifications by createdAt on the client side
+        notificationsList.sort((a, b) => b.timestamp - a.timestamp);
+        setNotifications(notificationsList);
+        setHasNewNotifications(notificationsList.length > 0);
+      }, (error) => {
+        console.error('Error loading notifications:', error);
+        message.error('Failed to load notifications');
+      });
+
+      // Store the unsubscribe function for cleanup
+      return unsubscribe;
     } catch (err) {
-      console.error('Error loading notifications:', err);
+      console.error('Error setting up notifications listener:', err);
+      message.error('Failed to load notifications');
     }
   };
 
-  const handleDeleteNotification = (notificationId) => {
+  const handleDeleteNotification = async (notificationId) => {
     try {
-      const allNotifications = JSON.parse(localStorage.getItem('habitNotifications') || '[]');
-      const updatedNotifications = allNotifications.filter(n => n.id !== notificationId);
-      localStorage.setItem('habitNotifications', JSON.stringify(updatedNotifications));
-      loadNotifications();
+      const notificationRef = doc(db, 'notifications', notificationId);
+      await deleteDoc(notificationRef);
       message.success('Notification deleted');
     } catch (err) {
       console.error('Error deleting notification:', err);
@@ -228,13 +244,12 @@ const Home = () => {
     }
   };
 
-  const handleClearAllNotifications = () => {
+  const handleClearAllNotifications = async () => {
     try {
-      const allNotifications = JSON.parse(localStorage.getItem('habitNotifications') || '[]');
-      const otherUsersNotifications = allNotifications.filter(n => n.toUserId !== userData.id);
-      localStorage.setItem('habitNotifications', JSON.stringify(otherUsersNotifications));
-      loadNotifications();
-      setHasNewNotifications(false);
+      const deletePromises = notifications.map(notification => 
+        deleteDoc(doc(db, 'notifications', notification.id))
+      );
+      await Promise.all(deletePromises);
       message.success('All notifications cleared');
     } catch (err) {
       console.error('Error clearing notifications:', err);
@@ -242,10 +257,7 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    fetchUserHabits();
-    fetchAchievements();
-  }, []);
+
 
   useEffect(() => {
     if (!userData) return;
@@ -261,41 +273,37 @@ const Home = () => {
       }, 800);
     }
 
-    const totalPoints = userData.totalPoints;
-    const goodCount = userHabits.filter((h) => h.habit.category === "Good Habit").length;
-    const badCount = userHabits.filter((h) => h.habit.category === "Bad Habit").length;
+    // Use a timeout to debounce achievement checks
+    const checkTimeout = setTimeout(() => {
+      const totalPoints = userData.totalPoints;
+      const goodCount = userHabits.filter((h) => h.habit.category === "Good Habit").length;
+      const badCount = userHabits.filter((h) => h.habit.category === "Bad Habit").length;
 
-    ACHIEVEMENTS.forEach(({ id, type, threshold, title, message, badge }) => {
-      const valueToCheck =
-        type === "points" ? totalPoints :
-          type === "good" ? goodCount :
-            type === "bad" ? badCount : 0;
-      unlockIfNeeded(id, valueToCheck >= threshold, title, message, badge);
-    });
+      ACHIEVEMENTS.forEach(({ id, type, threshold, title, message, badge }) => {
+        const valueToCheck =
+          type === "points" ? totalPoints :
+            type === "good" ? goodCount :
+              type === "bad" ? badCount : 0;
+        unlockIfNeeded(id, valueToCheck >= threshold, title, message, badge);
+      });
+    }, 1000); // Wait 1 second before checking achievements
+
+    return () => clearTimeout(checkTimeout);
   }, [userData, userHabits]);
 
-  // Listen for new notifications
-  const handleNewNotification = (event) => {
-    const { notification } = event.detail;
-    if (notification.toUserId === userData?.id) {
-      setHasNewNotifications(true);
-      message.info("You have a new notification! 🔔");
-      loadNotifications(); // Reload notifications from localStorage
-    }
-  };
+
 
   useEffect(() => {
     if (userData?.id) {
       fetchUserHabits();
       fetchAchievements();
-      loadNotifications();
-
-      // Add event listener for new notifications
-      window.addEventListener('newNotification', handleNewNotification);
+      
+      // Set up real-time notifications listener
+      const unsubscribe = loadNotifications();
 
       // Cleanup
       return () => {
-        window.removeEventListener('newNotification', handleNewNotification);
+        if (unsubscribe) unsubscribe();
       };
     }
   }, [userData?.id]);
@@ -370,9 +378,18 @@ const Home = () => {
       <div className="bg-white shadow-btm p-3">
         <div className="container">
           <div className="d-flex align-items-center justify-content-between">
-            <Button onClick={() => alert("calendar action")} className="rounded-btn">
-              <BellTwoTone style={{ fontSize: "18px" }} />
-            </Button>
+            <Popover 
+              content={<NotificationsList />}
+              trigger="click"
+              placement="bottomRight"
+              overlayStyle={{ width: '300px' }}
+            >
+              <Badge dot={hasNewNotifications}>
+                <Button className="rounded-btn">
+                  <BellTwoTone style={{ fontSize: "18px" }} />
+                </Button>
+              </Badge>
+            </Popover>
             <Button className="rounded-btn" onClick={logout}>
               <LogoutOutlined style={{ fontSize: "18px" }} />
             </Button>
@@ -409,8 +426,8 @@ const Home = () => {
                 <Text strong className="d-block mb-1">Habits - To Do</Text>
                 <div className="row">
                   {userHabits.filter((h) => hasExceededOneDay(h.lastTrackedDate)).map((h) => (
-                    <div className="col-12 col-lg-4 col-md-6">
-                      <HabitsCard key={h.habit.id} habitDet={h} isDone={false} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
+                    <div key={h.habit.id} className="col-12 col-lg-4 col-md-6">
+                      <HabitsCard habitDet={h} isDone={false} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
                     </div>
                   ))}
                 </div>
@@ -421,8 +438,8 @@ const Home = () => {
                 <Text strong className="d-block mb-1">Habits - Done</Text>
                 <div className="row">
                   {userHabits.filter((h) => !hasExceededOneDay(h.lastTrackedDate)).map((h) => (
-                    <div className="col-12 col-lg-4 col-md-6">
-                      <HabitsCard key={h.habit.id} habitDet={h} isDone={true} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
+                    <div key={h.habit.id} className="col-12 col-lg-4 col-md-6">
+                      <HabitsCard habitDet={h} isDone={true} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
                     </div>
                   ))}
                 </div>
