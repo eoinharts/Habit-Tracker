@@ -21,7 +21,7 @@ const contentData = [
     {
         image: "image1.jpg",
         heading: "Create Good Habits",
-        text: "Change your life by slowly adding new healthy habits and sticking to them"
+        text: "Change your life by adding new healthy habits and sticking to them"
     },
     {
         image: "image2.jpg",
