@@ -32,4 +32,13 @@ export default defineConfig({
       globPatterns: ["**/*.{js,css,html,ico,png,svg,webmanifest}"],
     }
   })],
+  server: {
+    port: 5173,
+    host: '127.0.0.1',
+    hmr: {
+      protocol: 'ws',
+      host: '127.0.0.1',
+      port: 5173
+    }
+  }
 })

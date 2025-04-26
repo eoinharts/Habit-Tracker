@@ -1,0 +1,32 @@
+.friend-habits-container {
+  margin-top: 24px;
+}
+
+.friend-habits-list {
+  width: 100%;
+}
+
+.friend-habits-list .ant-list-item {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.friend-habits-list .ant-list-item:last-child {
+  border-bottom: none;
+}
+
+.friend-habits-list .ant-list-item-meta-title {
+  margin-bottom: 8px;
+}
+
+.friend-habits-list .ant-list-item-meta-description {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.friend-habits-list .ant-btn {
+  padding: 4px 8px;
+}
+
+.friend-habits-list .ant-btn:hover {
+  background: rgba(0, 0, 0, 0.02);
+} 

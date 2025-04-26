@@ -83,11 +83,6 @@ const AchievementsBadgeContainer = ({ userId: overrideUserId }) => {
 
   return (
     <div className="achievements-wrapper">
-      <Title level={4}>
-              <TrophyOutlined style={{ marginRight: '8px', color: '#faad14' }} />
-              Achievements
-            </Title>
-
       <div className="scroll-arrow-container">
         <button className="arrow-button left" onClick={() => scroll("left")}>
           <LeftOutlined />

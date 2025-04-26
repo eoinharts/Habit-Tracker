@@ -24,14 +24,13 @@ a:hover {
 
 body {
   margin: 0;
-  padding: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-image: url('/purple_background.jpg'); /* Your background image */
+  background-color: #f0f2f5; /* Fallback color */
+  /* background-image: url('/purple_background.jpg'); Remove or update this line */
   background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
 h1 {

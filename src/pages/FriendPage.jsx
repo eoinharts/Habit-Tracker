@@ -9,6 +9,7 @@ import {
   Row,
   Col,
   Avatar,
+  Divider,
 } from 'antd';
 import {
   ArrowLeftOutlined,
@@ -16,8 +17,9 @@ import {
   StarOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { getUserDetails } from '../../dataconnect-generated/js/default-connector/esm/index.esm.js';
+import { getUserDetails, getHabitsWithUserDetails } from '../../dataconnect-generated/js/default-connector/esm/index.esm.js';
 import AchievementsBadgeContainer from '../components/AchievementsBadgeContainer/AchievementsBadgeContainer';
+import FriendHabits from '../components/FriendHabits';
 
 const { Title, Text } = Typography;
 
@@ -90,11 +92,21 @@ const FriendPage = () => {
             </Col>
           </Row>
 
-          {/* 🏆 Achievements Section using shared badge component */}
-          <div style={{ marginTop: '24px' }}>
-            
+          <Divider />
+
+          {/* 🏆 Achievements Section */}
+          <div>
+            <Title level={4}>
+              <TrophyOutlined style={{ marginRight: '8px', color: '#faad14' }} />
+              Achievements
+            </Title>
             <AchievementsBadgeContainer userId={friendId} />
           </div>
+
+          <Divider />
+
+          {/* 📝 Habits Section */}
+          <FriendHabits userId={friendId} />
         </Space>
       </Card>
     </div>

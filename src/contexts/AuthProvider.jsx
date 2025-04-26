@@ -1,11 +1,17 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { auth } from "../utils/firebaseConfig";
-import {
-    signOut,
-} from "firebase/auth";
-import { getUserDetails } from "@firebasegen/default-connector";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { auth } from '../utils/firebaseConfig';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { getUserDetails } from '@firebasegen/default-connector';
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider = ({
   children,
@@ -15,6 +21,7 @@ export const AuthProvider = ({
 }) => {
   const [signedIn, setSignedIn] = useState(isSignedIn);
   const [userData, setUserData] = useState(userDetails);
+  const [loading, setLoading] = useState(true);
 
   const getNewStreakCount = async (userId) => {
     try {
@@ -23,55 +30,63 @@ export const AuthProvider = ({
     } catch (error) {
       console.log(error);
     }
-  }
-  
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const response = await getUserDetails({
+            userId: user.uid,
+          });
+          setUserData(response.data.users[0]);
+          setSignedIn(true);
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+          setUserData(null);
+          setSignedIn(false);
+        }
+      } else {
+        setUserData(null);
+        setSignedIn(false);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   useEffect(() => {
     setSignedIn(isSignedIn);
     setUserData(userDetails);
   }, [userDetails, isSignedIn]);
-  // const getUser = async () => {
-  //       onAuthStateChanged(auth, async (user) => {
-  //           if (user) {
-  //               setUser(user);
-  //               console.log("🔄 User session restored:", user.uid);
-  //               await getUserDetails({ userId: user.uid });
-  //           } else {
-  //               setUser(null);
-  //           }
-  //   });
-  // }
 
   const logout = async () => {
     try {
       await signOut(auth);
-      clearUserData();
+      if (clearUserData) {
+        clearUserData();
+      }
       setSignedIn(false);
       setUserData(null);
-    } catch (err) {
-      console.error(err.message);
+    } catch (error) {
+      console.error('Error signing out:', error);
     }
   };
 
+  const value = {
+    signedIn,
+    setSignedIn,
+    userData,
+    setUserData,
+    loading,
+    logout,
+    getNewStreakCount
+  };
+
   return (
-    <AuthContext.Provider
-      value={{
-        signedIn,
-        setSignedIn,
-        userData,
-        setUserData,
-        logout,
-        getNewStreakCount
-      }}
-    >
-      {children}
+    <AuthContext.Provider value={value}>
+      {!loading && children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 };

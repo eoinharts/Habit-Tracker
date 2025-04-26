@@ -3,10 +3,12 @@
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import React, { useState, useEffect } from "react";
-import { Button, message, Empty, Badge } from "antd";
+import { Button, Empty, Badge, List, Typography, Popover, App } from "antd";
 import {
   BellTwoTone,
   LogoutOutlined,
+  DeleteOutlined,
+  ClearOutlined
 } from "@ant-design/icons";
 import ChallengesCard from "../components/Cards/ChallengesCard";
 import HabitsCard from "../components/Cards/HabitsCard";
@@ -17,18 +19,24 @@ import {
   deleteHabit,
   unlockAchievement,
   listUserAchievements,
-} from "@firebasegen/default-connector";
+} from "../../dataconnect-generated/js/default-connector/esm/index.esm.js";
+import { collection, query, where, onSnapshot, deleteDoc, doc, addDoc, orderBy } from 'firebase/firestore';
+import { db } from '../utils/firebaseConfig';
 import { useNavigate } from "react-router-dom";
 import AchievementPopup from "../components/AchievementPopup/AchievementPopup.jsx";
 
 const Home = () => {
   const { logout, userData } = useAuth();
   const navigate = useNavigate();
+  const { message } = App.useApp();
 
   const [userHabits, setUserHabits] = useState([]);
   const [userAchievements, setUserAchievements] = useState([]);
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupData, setPopupData] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [hasNewNotifications, setHasNewNotifications] = useState(false);
+  const processingRef = React.useRef(new Set());
 
   const fetchUserHabits = async () => {
     try {
@@ -60,36 +68,58 @@ const Home = () => {
     }
   };
 
-  const unlockIfNeeded = (id, conditionMet, title, messageText, badgeImage) => {
+  const unlockIfNeeded = async (id, conditionMet, title, messageText, badgeImage) => {
     if (!conditionMet) return;
+    
+    try {
+      // Check if we're already processing this achievement
+      if (processingRef.current.has(id)) {
+        console.log(`Already processing achievement ${id}`);
+        return;
+      }
+      
+      // Mark this achievement as being processed
+      processingRef.current.add(id);
+      
+      try {
+        // First check if it's already unlocked
+        const achievements = await listUserAchievements({ userId: userData.id });
+        const unlockedIds = achievements.data.userAchievements.map((ua) => ua.achievement.id);
+        
+        if (unlockedIds.includes(id)) {
+          console.log(`Achievement ${id} is already unlocked`);
+          return;
+        }
 
-    const alreadyUnlocked = hasUnlocked(id);
+        // Try to unlock the achievement
+        await unlockAchievement({ userId: userData.id, achievementId: id });
+        console.log(`✅ Unlocked ${title}`);
 
-    if (!alreadyUnlocked) {
-      unlockAchievement({ userId: userData.id, achievementId: id })
-        .then(() => {
-          console.log(`✅ Unlocked ${title}`);
+        // Only show popup if it hasn't been shown before
+        if (!localStorage.getItem(`popupShown_${id}`)) {
           setPopupData({ title, message: messageText, badgeImage });
           setPopupVisible(true);
-          // No need for localStorage anymore
-        })
-        .catch((err) => {
-          if (
-            err.message?.includes("duplicate key value") ||
-            err.message?.includes("already exists")
-          ) {
-            console.warn(`⚠️ ${id} already unlocked. Popup will NOT show again.`);
-            // Do nothing — popup won't show for previously unlocked ones
-          } else {
-            console.error("Error unlocking achievement:", err);
-          }
-        });
+          localStorage.setItem(`popupShown_${id}`, "true");
+        }
+
+        // Update achievements list
+        setUserAchievements(prev => [...prev, id]);
+      } catch (err) {
+        // If it's a duplicate key error, just ignore it
+        if (err.message?.includes("duplicate key value") || 
+            err.message?.includes("already exists")) {
+          console.log(`Achievement ${title} was already unlocked`);
+          return;
+        }
+        throw err; // Re-throw other errors
+      }
+    } catch (err) {
+      console.error("Error unlocking achievement:", err);
+    } finally {
+      // Remove this achievement from the processing set
+      processingRef.current.delete(id);
     }
   };
-
-
-
-
 
   const ACHIEVEMENTS = [
     // POINTS
@@ -169,14 +199,68 @@ const Home = () => {
     },
   ];
 
-  useEffect(() => {
-    fetchUserHabits();
-    fetchAchievements();
-  }, []);
+  const loadNotifications = () => {
+    if (!userData?.id) return;
+
+    try {
+      const notificationsRef = collection(db, 'notifications');
+      const q = query(
+        notificationsRef,
+        where('userId', '==', userData.id)
+      );
+
+      // Set up real-time listener
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const notificationsList = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          timestamp: doc.data().createdAt?.toDate() // Convert Firestore Timestamp to Date
+        }));
+        // Sort notifications by createdAt on the client side
+        notificationsList.sort((a, b) => b.timestamp - a.timestamp);
+        setNotifications(notificationsList);
+        setHasNewNotifications(notificationsList.length > 0);
+      }, (error) => {
+        console.error('Error loading notifications:', error);
+        message.error('Failed to load notifications');
+      });
+
+      // Store the unsubscribe function for cleanup
+      return unsubscribe;
+    } catch (err) {
+      console.error('Error setting up notifications listener:', err);
+      message.error('Failed to load notifications');
+    }
+  };
+
+  const handleDeleteNotification = async (notificationId) => {
+    try {
+      const notificationRef = doc(db, 'notifications', notificationId);
+      await deleteDoc(notificationRef);
+      message.success('Notification deleted');
+    } catch (err) {
+      console.error('Error deleting notification:', err);
+      message.error('Failed to delete notification');
+    }
+  };
+
+  const handleClearAllNotifications = async () => {
+    try {
+      const deletePromises = notifications.map(notification => 
+        deleteDoc(doc(db, 'notifications', notification.id))
+      );
+      await Promise.all(deletePromises);
+      message.success('All notifications cleared');
+    } catch (err) {
+      console.error('Error clearing notifications:', err);
+      message.error('Failed to clear notifications');
+    }
+  };
+
+
 
   useEffect(() => {
     if (!userData) return;
-    // 🎉 Show signed-up popup (only once per user)
     if (!localStorage.getItem("signedUpPopupShown")) {
       setTimeout(() => {
         setPopupData({
@@ -186,21 +270,43 @@ const Home = () => {
         });
         setPopupVisible(true);
         localStorage.setItem("signedUpPopupShown", "true");
-      }, 800); // Optional delay for a smoother feel
+      }, 800);
     }
 
-    const totalPoints = userData.totalPoints;
-    const goodCount = userHabits.filter((h) => h.habit.category === "Good Habit").length;
-    const badCount = userHabits.filter((h) => h.habit.category === "Bad Habit").length;
+    // Use a timeout to debounce achievement checks
+    const checkTimeout = setTimeout(() => {
+      const totalPoints = userData.totalPoints;
+      const goodCount = userHabits.filter((h) => h.habit.category === "Good Habit").length;
+      const badCount = userHabits.filter((h) => h.habit.category === "Bad Habit").length;
 
-    ACHIEVEMENTS.forEach(({ id, type, threshold, title, message, badge }) => {
-      const valueToCheck =
-        type === "points" ? totalPoints :
-          type === "good" ? goodCount :
-            type === "bad" ? badCount : 0;
-      unlockIfNeeded(id, valueToCheck >= threshold, title, message, badge);
-    });
+      ACHIEVEMENTS.forEach(({ id, type, threshold, title, message, badge }) => {
+        const valueToCheck =
+          type === "points" ? totalPoints :
+            type === "good" ? goodCount :
+              type === "bad" ? badCount : 0;
+        unlockIfNeeded(id, valueToCheck >= threshold, title, message, badge);
+      });
+    }, 1000); // Wait 1 second before checking achievements
+
+    return () => clearTimeout(checkTimeout);
   }, [userData, userHabits]);
+
+
+
+  useEffect(() => {
+    if (userData?.id) {
+      fetchUserHabits();
+      fetchAchievements();
+      
+      // Set up real-time notifications listener
+      const unsubscribe = loadNotifications();
+
+      // Cleanup
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
+    }
+  }, [userData?.id]);
 
   const handleEdit = (habitId) => navigate(`/edit-habit/${habitId}`);
 
@@ -220,14 +326,70 @@ const Home = () => {
     return now - then > 86400000;
   };
 
+  const NotificationsList = () => (
+    <List
+      style={{ maxWidth: '300px', maxHeight: '400px', overflow: 'auto' }}
+      size="small"
+      header={
+        <div className="d-flex justify-content-between align-items-center">
+          <Typography.Text strong>Notifications</Typography.Text>
+          {notifications.length > 0 && (
+            <Button
+              type="text"
+              icon={<ClearOutlined />}
+              size="small"
+              onClick={() => {
+                handleClearAllNotifications();
+              }}
+            >
+              Clear all
+            </Button>
+          )}
+        </div>
+      }
+      locale={{ emptyText: 'No notifications' }}
+      dataSource={notifications}
+      renderItem={(notification) => (
+        <List.Item
+          actions={[
+            <Button
+              type="text"
+              icon={<DeleteOutlined />}
+              size="small"
+              onClick={() => handleDeleteNotification(notification.id)}
+            />
+          ]}
+        >
+          <List.Item.Meta
+            title={notification.message}
+            description={
+              <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
+                {new Date(notification.timestamp).toLocaleString()}
+              </Typography.Text>
+            }
+          />
+        </List.Item>
+      )}
+    />
+  );
+
   return (
     <div>
       <div className="bg-white shadow-btm p-3">
         <div className="container">
           <div className="d-flex align-items-center justify-content-between">
-            <Button onClick={() => alert("calendar action")} className="rounded-btn">
-              <BellTwoTone style={{ fontSize: "18px" }} />
-            </Button>
+            <Popover 
+              content={<NotificationsList />}
+              trigger="click"
+              placement="bottomRight"
+              overlayStyle={{ width: '300px' }}
+            >
+              <Badge dot={hasNewNotifications}>
+                <Button className="rounded-btn">
+                  <BellTwoTone style={{ fontSize: "18px" }} />
+                </Button>
+              </Badge>
+            </Popover>
             <Button className="rounded-btn" onClick={logout}>
               <LogoutOutlined style={{ fontSize: "18px" }} />
             </Button>
@@ -264,8 +426,8 @@ const Home = () => {
                 <Text strong className="d-block mb-1">Habits - To Do</Text>
                 <div className="row">
                   {userHabits.filter((h) => hasExceededOneDay(h.lastTrackedDate)).map((h) => (
-                    <div className="col-12 col-lg-4 col-md-6">
-                      <HabitsCard key={h.habit.id} habitDet={h} isDone={false} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
+                    <div key={h.habit.id} className="col-12 col-lg-4 col-md-6">
+                      <HabitsCard habitDet={h} isDone={false} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
                     </div>
                   ))}
                 </div>
@@ -276,8 +438,8 @@ const Home = () => {
                 <Text strong className="d-block mb-1">Habits - Done</Text>
                 <div className="row">
                   {userHabits.filter((h) => !hasExceededOneDay(h.lastTrackedDate)).map((h) => (
-                    <div className="col-12 col-lg-4 col-md-6">
-                      <HabitsCard key={h.habit.id} habitDet={h} isDone={true} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
+                    <div key={h.habit.id} className="col-12 col-lg-4 col-md-6">
+                      <HabitsCard habitDet={h} isDone={true} fetchUserHabits={fetchUserHabits} onEdit={() => handleEdit(h.habit.id)} onDelete={() => handleDelete(h.habit.id)} />
                     </div>
                   ))}
                 </div>
