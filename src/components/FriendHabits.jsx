@@ -113,8 +113,6 @@ const FriendHabits = ({ userId }) => {
         throw err;
       }
 
-      // Remove the success message popup
-      // message.success(newLikedState ? 'Habit liked!' : 'Habit unliked');
     } catch (err) {
       console.error('❌ Error in handleLike:', err);
       message.error('Failed to update like status');

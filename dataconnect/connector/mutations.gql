@@ -136,17 +136,6 @@ mutation CreateAchievement(
 }
 
 # Create a notification
-mutation CreateNotification($userId: String!, $type: String!, $message: String!, $fromUserId: String!, $habitId: UUID!) @auth(level: USER) {
-  notification_insert(
-    data: {
-      user: { id: $userId }
-      type: $type
-      message: $message
-      fromUser: { id: $fromUserId }
-      habit: { id: $habitId }
-    }
-  )
-}
 
 # # Create a challenge
 # mutation CreateChallenge($habitId: UUID!, $name: String!, $description: String!, $startDate: Timestamp!, $endDate: Timestamp!) @auth(level: USER) {
@@ -178,45 +167,5 @@ mutation CreateNotification($userId: String!, $type: String!, $message: String!,
 # }
 
 # Get user notifications
-query ListUserNotifications($userId: String!) @auth(level: USER) {
-  notifications(
-    where: { user: { id: $userId } }
-    orderBy: { createdAt: DESC }
-  ) {
-    id
-    type
-    message
-    createdAt
-    read
-    fromUser {
-      id
-      name
-    }
-    habit {
-      id
-      title
-    }
-  }
-}
 
-# Export the query
-export query ListUserNotifications($userId: String!) @auth(level: USER) {
-  notifications(
-    where: { user: { id: $userId } }
-    orderBy: { createdAt: DESC }
-  ) {
-    id
-    type
-    message
-    createdAt
-    read
-    fromUser {
-      id
-      name
-    }
-    habit {
-      id
-      title
-    }
-  }
-}
+

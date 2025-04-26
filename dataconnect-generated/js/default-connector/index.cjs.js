@@ -7,126 +7,6 @@ const connectorConfig = {
 };
 exports.connectorConfig = connectorConfig;
 
-const getUserDetailsRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetUserDetails', inputVars);
-}
-getUserDetailsRef.operationName = 'GetUserDetails';
-exports.getUserDetailsRef = getUserDetailsRef;
-
-exports.getUserDetails = function getUserDetails(dcOrVars, vars) {
-  return executeQuery(getUserDetailsRef(dcOrVars, vars));
-};
-
-const getAllUsersRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetAllUsers');
-}
-getAllUsersRef.operationName = 'GetAllUsers';
-exports.getAllUsersRef = getAllUsersRef;
-
-exports.getAllUsers = function getAllUsers(dc) {
-  return executeQuery(getAllUsersRef(dc));
-};
-
-const listFriendsRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListFriends', inputVars);
-}
-listFriendsRef.operationName = 'ListFriends';
-exports.listFriendsRef = listFriendsRef;
-
-exports.listFriends = function listFriends(dcOrVars, vars) {
-  return executeQuery(listFriendsRef(dcOrVars, vars));
-};
-
-const listIncomingRequestsRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListIncomingRequests');
-}
-listIncomingRequestsRef.operationName = 'ListIncomingRequests';
-exports.listIncomingRequestsRef = listIncomingRequestsRef;
-
-exports.listIncomingRequests = function listIncomingRequests(dc) {
-  return executeQuery(listIncomingRequestsRef(dc));
-};
-
-const getUserHabitRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetUserHabit', inputVars);
-}
-getUserHabitRef.operationName = 'GetUserHabit';
-exports.getUserHabitRef = getUserHabitRef;
-
-exports.getUserHabit = function getUserHabit(dcOrVars, vars) {
-  return executeQuery(getUserHabitRef(dcOrVars, vars));
-};
-
-const getHabitsWithUserDetailsRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetHabitsWithUserDetails', inputVars);
-}
-getHabitsWithUserDetailsRef.operationName = 'GetHabitsWithUserDetails';
-exports.getHabitsWithUserDetailsRef = getHabitsWithUserDetailsRef;
-
-exports.getHabitsWithUserDetails = function getHabitsWithUserDetails(dcOrVars, vars) {
-  return executeQuery(getHabitsWithUserDetailsRef(dcOrVars, vars));
-};
-
-const getHabitByIdRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetHabitById', inputVars);
-}
-getHabitByIdRef.operationName = 'GetHabitById';
-exports.getHabitByIdRef = getHabitByIdRef;
-
-exports.getHabitById = function getHabitById(dcOrVars, vars) {
-  return executeQuery(getHabitByIdRef(dcOrVars, vars));
-};
-
-const listAchievementsRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListAchievements');
-}
-listAchievementsRef.operationName = 'ListAchievements';
-exports.listAchievementsRef = listAchievementsRef;
-
-exports.listAchievements = function listAchievements(dc) {
-  return executeQuery(listAchievementsRef(dc));
-};
-
-const listUserAchievementsRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListUserAchievements', inputVars);
-}
-listUserAchievementsRef.operationName = 'ListUserAchievements';
-exports.listUserAchievementsRef = listUserAchievementsRef;
-
-exports.listUserAchievements = function listUserAchievements(dcOrVars, vars) {
-  return executeQuery(listUserAchievementsRef(dcOrVars, vars));
-};
-
-const debugFriendshipsRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'DebugFriendships');
-}
-debugFriendshipsRef.operationName = 'DebugFriendships';
-exports.debugFriendshipsRef = debugFriendshipsRef;
-
-exports.debugFriendships = function debugFriendships(dc) {
-  return executeQuery(debugFriendshipsRef(dc));
-};
-
 const createUserRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
   dcInstance._useGeneratedSdk();
@@ -305,4 +185,124 @@ exports.createAchievementRef = createAchievementRef;
 
 exports.createAchievement = function createAchievement(dcOrVars, vars) {
   return executeMutation(createAchievementRef(dcOrVars, vars));
+};
+
+const getUserDetailsRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetUserDetails', inputVars);
+}
+getUserDetailsRef.operationName = 'GetUserDetails';
+exports.getUserDetailsRef = getUserDetailsRef;
+
+exports.getUserDetails = function getUserDetails(dcOrVars, vars) {
+  return executeQuery(getUserDetailsRef(dcOrVars, vars));
+};
+
+const getAllUsersRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetAllUsers');
+}
+getAllUsersRef.operationName = 'GetAllUsers';
+exports.getAllUsersRef = getAllUsersRef;
+
+exports.getAllUsers = function getAllUsers(dc) {
+  return executeQuery(getAllUsersRef(dc));
+};
+
+const listFriendsRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListFriends', inputVars);
+}
+listFriendsRef.operationName = 'ListFriends';
+exports.listFriendsRef = listFriendsRef;
+
+exports.listFriends = function listFriends(dcOrVars, vars) {
+  return executeQuery(listFriendsRef(dcOrVars, vars));
+};
+
+const listIncomingRequestsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListIncomingRequests');
+}
+listIncomingRequestsRef.operationName = 'ListIncomingRequests';
+exports.listIncomingRequestsRef = listIncomingRequestsRef;
+
+exports.listIncomingRequests = function listIncomingRequests(dc) {
+  return executeQuery(listIncomingRequestsRef(dc));
+};
+
+const getUserHabitRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetUserHabit', inputVars);
+}
+getUserHabitRef.operationName = 'GetUserHabit';
+exports.getUserHabitRef = getUserHabitRef;
+
+exports.getUserHabit = function getUserHabit(dcOrVars, vars) {
+  return executeQuery(getUserHabitRef(dcOrVars, vars));
+};
+
+const getHabitsWithUserDetailsRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetHabitsWithUserDetails', inputVars);
+}
+getHabitsWithUserDetailsRef.operationName = 'GetHabitsWithUserDetails';
+exports.getHabitsWithUserDetailsRef = getHabitsWithUserDetailsRef;
+
+exports.getHabitsWithUserDetails = function getHabitsWithUserDetails(dcOrVars, vars) {
+  return executeQuery(getHabitsWithUserDetailsRef(dcOrVars, vars));
+};
+
+const getHabitByIdRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetHabitById', inputVars);
+}
+getHabitByIdRef.operationName = 'GetHabitById';
+exports.getHabitByIdRef = getHabitByIdRef;
+
+exports.getHabitById = function getHabitById(dcOrVars, vars) {
+  return executeQuery(getHabitByIdRef(dcOrVars, vars));
+};
+
+const listAchievementsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListAchievements');
+}
+listAchievementsRef.operationName = 'ListAchievements';
+exports.listAchievementsRef = listAchievementsRef;
+
+exports.listAchievements = function listAchievements(dc) {
+  return executeQuery(listAchievementsRef(dc));
+};
+
+const listUserAchievementsRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListUserAchievements', inputVars);
+}
+listUserAchievementsRef.operationName = 'ListUserAchievements';
+exports.listUserAchievementsRef = listUserAchievementsRef;
+
+exports.listUserAchievements = function listUserAchievements(dcOrVars, vars) {
+  return executeQuery(listUserAchievementsRef(dcOrVars, vars));
+};
+
+const debugFriendshipsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'DebugFriendships');
+}
+debugFriendshipsRef.operationName = 'DebugFriendships';
+exports.debugFriendshipsRef = debugFriendshipsRef;
+
+exports.debugFriendships = function debugFriendships(dc) {
+  return executeQuery(debugFriendshipsRef(dc));
 };
