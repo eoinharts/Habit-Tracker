@@ -56,7 +56,7 @@ npm i --save @tanstack/react-query @tanstack-query-firebase/react
 npm i --save firebase@latest # Note: React has a peer dependency on ^11.3.0
 ```
 
-You can also follow the installation instructions from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#install_tanstack_query_firebase_packages), or the [TanStack Query Firebase documentation](https://react-query-firebase.invertase.dev/react) and [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/installation).
+You can also follow the installation instructions from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#tanstack-install), or the [TanStack Query Firebase documentation](https://react-query-firebase.invertase.dev/react) and [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/installation).
 
 ## Configuring TanStack Query
 In order to use the React generated SDK in your application, you must wrap your application's component tree in a `QueryClientProvider` component from TanStack React Query. None of your generated React SDK hooks will work without this provider.
@@ -95,7 +95,7 @@ const dataConnect = getDataConnect(connectorConfig);
 By default, the connector will connect to the production service.
 
 To connect to the emulator, you can use the following code.
-You can also follow the emulator instructions from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#emulator-react).
+You can also follow the emulator instructions from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#emulator-react-angular).
 
 ```javascript
 import { connectDataConnectEmulator, getDataConnect } from 'firebase/data-connect';
@@ -130,7 +130,7 @@ Here's a general overview of how to use the generated Query hooks in your code:
 - Query hooks functions can be called with or without passing in an `options` argument of type `useDataConnectQueryOptions`. To learn more about the `options` argument, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/guides/query-options).
   - ***Special case:***  If the Query has all optional variables and you would like to provide an `options` argument to the Query hook function without providing any variables, you must pass `undefined` where you would normally pass the Query's variables, and then may provide the `options` argument.
 
-Below are examples of how to use the `default` connector's generated Query hook functions to execute each Query. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#use_queries_and_mutations_in_your_react_client).
+Below are examples of how to use the `default` connector's generated Query hook functions to execute each Query. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#operations-react-angular).
 
 ## GetUserDetails
 You can execute the `GetUserDetails` Query using the following Query hook function, which is defined in [default-connector/react/index.d.ts](./index.d.ts):
@@ -181,7 +181,6 @@ import { connectorConfig, GetUserDetailsVariables } from '@firebasegen/default-c
 import { useGetUserDetails } from '@firebasegen/default-connector/react'
 
 export default function GetUserDetailsComponent() {
-
   // The `useGetUserDetails` Query hook requires an argument of type `GetUserDetailsVariables`:
   const getUserDetailsVars: GetUserDetailsVariables = {
     userId: ..., 
@@ -264,8 +263,6 @@ import { connectorConfig } from '@firebasegen/default-connector';
 import { useGetAllUsers } from '@firebasegen/default-connector/react'
 
 export default function GetAllUsersComponent() {
-
-
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
   const query = useGetAllUsers();
@@ -351,7 +348,6 @@ import { connectorConfig, ListFriendsVariables } from '@firebasegen/default-conn
 import { useListFriends } from '@firebasegen/default-connector/react'
 
 export default function ListFriendsComponent() {
-
   // The `useListFriends` Query hook requires an argument of type `ListFriendsVariables`:
   const listFriendsVars: ListFriendsVariables = {
     uid: ..., 
@@ -438,8 +434,6 @@ import { connectorConfig } from '@firebasegen/default-connector';
 import { useListIncomingRequests } from '@firebasegen/default-connector/react'
 
 export default function ListIncomingRequestsComponent() {
-
-
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
   const query = useListIncomingRequests();
@@ -527,7 +521,6 @@ import { connectorConfig, GetUserHabitVariables } from '@firebasegen/default-con
 import { useGetUserHabit } from '@firebasegen/default-connector/react'
 
 export default function GetUserHabitComponent() {
-
   // The `useGetUserHabit` Query hook requires an argument of type `GetUserHabitVariables`:
   const getUserHabitVars: GetUserHabitVariables = {
     uid: ..., 
@@ -626,7 +619,6 @@ import { connectorConfig, GetHabitsWithUserDetailsVariables } from '@firebasegen
 import { useGetHabitsWithUserDetails } from '@firebasegen/default-connector/react'
 
 export default function GetHabitsWithUserDetailsComponent() {
-
   // The `useGetHabitsWithUserDetails` Query hook requires an argument of type `GetHabitsWithUserDetailsVariables`:
   const getHabitsWithUserDetailsVars: GetHabitsWithUserDetailsVariables = {
     userId: ..., 
@@ -720,7 +712,6 @@ import { connectorConfig, GetHabitByIdVariables } from '@firebasegen/default-con
 import { useGetHabitById } from '@firebasegen/default-connector/react'
 
 export default function GetHabitByIdComponent() {
-
   // The `useGetHabitById` Query hook requires an argument of type `GetHabitByIdVariables`:
   const getHabitByIdVars: GetHabitByIdVariables = {
     habitId: ..., 
@@ -803,8 +794,6 @@ import { connectorConfig } from '@firebasegen/default-connector';
 import { useListAchievements } from '@firebasegen/default-connector/react'
 
 export default function ListAchievementsComponent() {
-
-
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
   const query = useListAchievements();
@@ -889,7 +878,6 @@ import { connectorConfig, ListUserAchievementsVariables } from '@firebasegen/def
 import { useListUserAchievements } from '@firebasegen/default-connector/react'
 
 export default function ListUserAchievementsComponent() {
-
   // The `useListUserAchievements` Query hook requires an argument of type `ListUserAchievementsVariables`:
   const listUserAchievementsVars: ListUserAchievementsVariables = {
     userId: ..., 
@@ -970,8 +958,6 @@ import { connectorConfig } from '@firebasegen/default-connector';
 import { useDebugFriendships } from '@firebasegen/default-connector/react'
 
 export default function DebugFriendshipsComponent() {
-
-
   // You don't have to do anything to "execute" the Query.
   // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
   const query = useDebugFriendships();
@@ -1029,7 +1015,7 @@ Here's a general overview of how to use the generated Mutation hooks in your cod
   - `UseMutationResult.mutate()` also accepts an `options` argument of type `useDataConnectMutationOptions`.
   - ***Special case:*** If the Mutation has no arguments (or all optional arguments and you wish to provide none), and you want to pass `options` to `UseMutationResult.mutate()`, you must pass `undefined` where you would normally pass the Mutation's arguments, and then may provide the options argument.
 
-Below are examples of how to use the `default` connector's generated Mutation hook functions to execute each Mutation. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#use_queries_and_mutations_in_your_react_client).
+Below are examples of how to use the `default` connector's generated Mutation hook functions to execute each Mutation. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#operations-react-angular).
 
 ## CreateUser
 You can execute the `CreateUser` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [default-connector/react/index.d.ts](./index.d.ts)):
